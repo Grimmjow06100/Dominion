@@ -14,7 +14,7 @@
 
 //----------------------------------------------------------------------------------------------------------------------
 //méthodes de la classe Player
-Player::Player(){
+Player::Player(std::string name):m_name(name){
     m_actions = 1;
     m_buys = 1;
     m_money = 0;
