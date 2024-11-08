@@ -40,6 +40,7 @@ int main()
     std::cout<<"la taille de la defausse est de "<<p.getDefausse().size()<<std::endl;
     std::cout<<"le joueur a "<<p.getPoints()<<" points"<<std::endl;
     std::cout<<"le joueur a "<<p.getMoney()<<" pieces"<<std::endl;
+    std::cout<<"samy est un bg"<<std::endl;
 
     return 0;
 }
