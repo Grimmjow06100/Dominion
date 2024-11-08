@@ -42,6 +42,8 @@ enum Kingdom
 class KingdomCard : public Card{
 private:
     Kingdom m_kingdom;
+    bool m_attack;
+    bool m_reaction;
 public :
     explicit KingdomCard(Kingdom kingdom);
     [[nodiscard]] Kingdom getKingdom()const;
