@@ -5,6 +5,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <vector>
+#include "Reserve.h"
 class Card;
 
 
@@ -14,6 +15,7 @@ private:
     std::vector<Card*> m_hand;
     std::vector<Card*> m_defausse;
     std::vector<Card*> m_played;
+    Reserve& m_reserve;
     int m_points;
     int m_money;
     int m_actions;
