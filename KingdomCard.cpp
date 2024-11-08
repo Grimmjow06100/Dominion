@@ -134,6 +134,7 @@ Kingdom KingdomCard::getKingdom() const
 void KingdomCard::action(Player &p)
 {
     //TODO
+
 }
 
 

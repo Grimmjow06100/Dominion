@@ -45,5 +45,12 @@ Treasure TreasureCard::getTreasure() const
 
 void TreasureCard::action(Player &p)
 {
-    //TODO
+    for(auto i:p.getDeck())
+    {
+        const TreasureCard* t=dynamic_cast<const TreasureCard*>(i);
+        if(t!=nullptr)
+        {
+            p.setMoney(p.getMoney()+t->getTreasure());
+        }
+    }
 }
