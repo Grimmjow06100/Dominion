@@ -4,6 +4,9 @@
 
 #include "VictoryCard.h"
 #include <iostream>
+#include "Jeux.h"
+#include "Player.h"
+
 VictoryCard::VictoryCard(Victory victory) :  m_victory(victory)
 {
     if(m_victory==DOMAINE)
@@ -40,6 +43,7 @@ Victory VictoryCard::getVictory() const {
     return m_victory;
 }
 
-void VictoryCard::action(Player &p) {
+void VictoryCard::action(Jeux &j) {
+    Player &p=j.getActif();
     p.setPoints(p.getPoints()+m_victory);
 }

@@ -6,6 +6,9 @@
 
 #include <iostream>
 
+#include "Player.h"
+#include "Jeux.h"
+
 
 TreasureCard::TreasureCard( Treasure treasure) :  m_treasure(treasure)
 {
@@ -43,7 +46,9 @@ Treasure TreasureCard::getTreasure() const
     return m_treasure;
 }
 
-void TreasureCard::action(Player &p)
+void TreasureCard::action(Jeux &j)
 {
+    Player &p=j.getActif();
     p.setMoney(p.getMoney()+m_treasure);
+
 }

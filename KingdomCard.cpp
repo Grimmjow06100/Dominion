@@ -131,7 +131,7 @@ Kingdom KingdomCard::getKingdom() const
     return m_kingdom;
 }
 
-void KingdomCard::action(Player &p)
+void KingdomCard::action(Jeux &j)
 {
     //TODO
 

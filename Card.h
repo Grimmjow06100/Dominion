@@ -4,21 +4,17 @@
 
 #ifndef CARD_H
 #define CARD_H
-#include "Player.h"
 
+class Jeux;
 
-
-class Card
-{
+class Card{
 protected:
     int m_cost=0;
-public :
+public:
     virtual ~Card()=default;
     virtual void affichage();
-    virtual void action(Player &p);
+    virtual void action(Jeux &j);
     [[nodiscard ]] int getCost() const;
 };
-
-
 
 #endif //CARD_H

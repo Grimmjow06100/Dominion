@@ -20,7 +20,7 @@ public:
     explicit TreasureCard(Treasure treasure);
     [[nodiscard]]Treasure getTreasure() const;
     void affichage() override;
-    void action(Player &p) override;
+    void action(Jeux &j) override;
 };
 
 

@@ -15,7 +15,6 @@ int main()
     for(auto i : p.getDeck())
     {
         i->affichage();
-        i->action(p);
     }
     card.stream();
     std::vector<Card*> c=std::move(card.getStream());

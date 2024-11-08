@@ -9,3 +9,14 @@
 76	1710	7527651654684535	CMakeFiles/Dominion.dir/Reserve.cpp.obj	c8bb5173def30cce
 1711	3928	7527651671036320	CMakeFiles/Dominion.dir/Player.cpp.obj	480549cb5eef6a8
 1888	4832	7527651672798763	CMakeFiles/Dominion.dir/Cardstream.cpp.obj	93b8687d84279a1f
+114	592	7527781408684062	CMakeFiles/Dominion.dir/Reserve.cpp.obj	c8bb5173def30cce
+68	2515	7527781408219305	CMakeFiles/Dominion.dir/Card.cpp.obj	c38b152830817adb
+16	2911	7527781407703670	CMakeFiles/Dominion.dir/main.cpp.obj	67c7a7b66605fcb5
+54	2958	7527781408079361	CMakeFiles/Dominion.dir/KingdomCard.cpp.obj	b54b3d25e43cff1e
+593	3868	7527781413467348	CMakeFiles/Dominion.dir/Player.cpp.obj	480549cb5eef6a8
+28	1856	7527782039390726	CMakeFiles/Dominion.dir/VictoryCard.cpp.obj	6f7766575d689891
+39	3363	7527782039493666	CMakeFiles/Dominion.dir/CardStream.cpp.obj	56708f7a49745589
+39	1441	7527782947610206	CMakeFiles/Dominion.dir/Jeux.cpp.obj	c9ba99677893a9b9
+16	1590	7527782947374338	CMakeFiles/Dominion.dir/TreasureCard.cpp.obj	e37ff692c885a8ab
+28	1624	7527782947491173	CMakeFiles/Dominion.dir/VictoryCard.cpp.obj	6f7766575d689891
+1624	2691	7527782963449990	Dominion.exe	e8a66a15c4e15dec

@@ -11,7 +11,7 @@ int Card::getCost() const
 void Card::affichage()
 {std::cout<<"This is a card"<<std::endl;}
 
-void Card::action(Player &p)
+void Card::action(Jeux &p)
 {
     std::cout<<"This is a card"<<std::endl;
 }

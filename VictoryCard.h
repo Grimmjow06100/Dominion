@@ -20,7 +20,7 @@ public:
     explicit VictoryCard( Victory victory);
     [[nodiscard]]Victory getVictory() const ;
     void affichage() override;
-    void action(Player &p) override;
+    void action(Jeux &j) override;
 };
 
 

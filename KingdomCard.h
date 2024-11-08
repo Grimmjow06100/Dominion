@@ -49,7 +49,7 @@ public :
     [[nodiscard]] Kingdom getKingdom()const;
 
     void affichage() override;
-    void action(Player &p) override;
+    void action(Jeux &j) override;
 };
 
 
