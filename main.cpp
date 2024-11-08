@@ -15,6 +15,7 @@ int main()
     for(auto i : p.getDeck())
     {
         i->affichage();
+        i->action(p);
     }
     card.stream();
     std::vector<Card*> c=std::move(card.getStream());
@@ -37,6 +38,8 @@ int main()
     p.defausse();
 
     std::cout<<"la taille de la defausse est de "<<p.getDefausse().size()<<std::endl;
+    std::cout<<"le joueur a "<<p.getPoints()<<" points"<<std::endl;
+    std::cout<<"le joueur a "<<p.getMoney()<<" pieces"<<std::endl;
 
     return 0;
 }

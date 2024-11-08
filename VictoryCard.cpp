@@ -41,12 +41,5 @@ Victory VictoryCard::getVictory() const {
 }
 
 void VictoryCard::action(Player &p) {
-    for(auto i:p.getDeck())
-    {
-        const VictoryCard* v=dynamic_cast<const VictoryCard*>(i);
-        if(v!=nullptr)
-        {
-            p.setPoints(p.getPoints()+v->getVictory());
-        }
-    }
+    p.setPoints(p.getPoints()+m_victory);
 }
