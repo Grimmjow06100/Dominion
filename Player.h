@@ -6,7 +6,6 @@
 #define PLAYER_H
 #include <string>
 #include <vector>
-#include "Reserve.h"
 class Card;
 
 

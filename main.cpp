@@ -8,7 +8,7 @@
 int main()
 {
 
-    Player p;
+    Player p("samy");
     CardStream card;
     std::cout<<"la taille du deck initial est de "<<p.getDeck().size()<<std::endl;
     std::cout<<"affichage du deck du joueur"<<std::endl;
