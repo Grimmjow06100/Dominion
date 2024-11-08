@@ -18,4 +18,6 @@ add_executable(Dominion main.cpp
         Player.h
         Cardstream.cpp
         Cardstream.h
+        Jeux.cpp
+        Jeux.h
 )
