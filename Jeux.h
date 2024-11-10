@@ -21,6 +21,12 @@ public:
     [[nodiscard]]std::vector<Reserve> getReserve()const;
     [[nodiscard]]std::vector<Player&>&getPlayers()const;
     [[nodiscard]]Player& getActif()const;
+
+    Jeux(std::vector<Player&>& m_players, Player& m_actif)
+        : m_players(m_players),
+          m_actif(m_actif)
+    {
+    }
 };
 
 

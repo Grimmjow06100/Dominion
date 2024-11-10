@@ -17,7 +17,7 @@ int main()
         i->affichage();
     }
     card.stream();
-    std::vector<Card*> c=std::move(card.getStream());
+    std::vector<Card*> c=card.getStream();
     p.setDefausse(c);
 
     std::cout<<"le joueur pioche 11 cartes"<<std::endl;

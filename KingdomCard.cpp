@@ -3,7 +3,7 @@
 //
 
 #include "KingdomCard.h"
-
+#include "Jeux.h"
 #include <iostream>
 
 
@@ -12,24 +12,45 @@ KingdomCard::KingdomCard(Kingdom kingdom):m_kingdom(kingdom)
     if (m_kingdom == ATELIER || m_kingdom == BUCHERON || m_kingdom == CHANCELIER ||
     m_kingdom == RENOVATION || m_kingdom == VILLAGE) {
         m_cost = 3;
+        m_attack = false;
+        m_reaction = false;
     }
     else if (m_kingdom == AVENTURIER) {
         m_cost = 6;
+        m_attack = false;
+        m_reaction = false;
     }
     else if (m_kingdom == BIBLIOTHEQUE || m_kingdom == CHAMBRE_DU_CONSEIL ||
              m_kingdom == FESTIVAL || m_kingdom == LABORATOIRE ||
-             m_kingdom == MARCHE || m_kingdom == MINE || m_kingdom == SORCIERE) {
+             m_kingdom == MARCHE || m_kingdom == MINE ) {
         m_cost = 5;
              }
-    else if (m_kingdom == BUREAUCRATE || m_kingdom == ESPION || m_kingdom == FESTIN ||
-             m_kingdom == MILICE || m_kingdom == SALLE_DU_TRONE ||
-             m_kingdom == VOLEUR || m_kingdom == JARDIN) {
+    else if (  m_kingdom == ESPION || m_kingdom == FESTIN || m_kingdom == SALLE_DU_TRONE || m_kingdom == JARDIN) {
         m_cost = 4;
-             }
-    else if (m_kingdom == CAVE || m_kingdom == CHAPELLE || m_kingdom == DOUVES ||
+    }
+    else if (m_kingdom == MILICE||m_kingdom==BUREAUCRATE)
+    {
+        m_cost=4;
+        m_attack=true;
+        m_reaction=false;
+    }
+    else if (m_kingdom == CAVE || m_kingdom == CHAPELLE  ||
              m_kingdom == PRETEUR_SUR_GAGES) {
         m_cost = 2;
              }
+    else if(m_kingdom==DOUVES)
+    {
+        m_cost=2;
+        m_attack=false;
+        m_reaction=true;
+    }
+    else if(m_kingdom==SORCIERE || m_kingdom==VOLEUR)
+    {
+        m_cost=5;
+        m_attack=true;
+        m_reaction=false;
+    }
+
     else if (m_kingdom == FORGE) {
         m_cost = 7;
     }
@@ -134,6 +155,8 @@ Kingdom KingdomCard::getKingdom() const
 void KingdomCard::action(Jeux &j)
 {
     //TODO
+    Player& player=j.getActif();
+    player.pioche(2);
 
 
 }

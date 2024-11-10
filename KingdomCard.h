@@ -5,7 +5,6 @@
 #ifndef KINGDOMCARD_H
 #define KINGDOMCARD_H
 #include "Card.h"
-#include "Player.h"
 
 enum Kingdom
 {

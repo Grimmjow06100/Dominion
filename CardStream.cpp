@@ -23,6 +23,7 @@ std::unordered_map<std::string,EnumCard> CardMap={
     {"CUIVRE",CUIVRE},
     {"ARGENT",ARGENT},
     {"OR",OR},
+    //------------------------------------------
     {"ATELIER",ATELIER},
     {"BUCHERON",BUCHERON},
     {"CHANCELIER",CHANCELIER},
@@ -94,7 +95,7 @@ void CardStream::stream() {
     std::string element;
     while (flux >> element)
     {
-        if(isFound(element))
+        if(isFound( element))
         {
             EnumCard c = CardMap.at(normalize(element));
             if (std::holds_alternative<Kingdom>(c)) {

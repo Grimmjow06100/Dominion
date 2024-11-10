@@ -3,6 +3,9 @@
 //
 #include "Card.h"
 #include <iostream>
+
+#include "Jeux.h"
+
 int Card::getCost() const
 {
     return m_cost;
@@ -13,6 +16,8 @@ void Card::affichage()
 
 void Card::action(Jeux &p)
 {
+    Player& player=p.getActif();
+    player.pioche(2);
     std::cout<<"This is a card"<<std::endl;
 }
 
