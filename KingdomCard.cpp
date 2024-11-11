@@ -16,8 +16,8 @@ KingdomCard::KingdomCard(std::string nom, int cost, bool attack, bool reaction, 
 {
     m_cost=cost;
 }
-KingdomCard::KingdomCard(KingdomCard& card)
-    :m_attack(card.m_attack),m_reaction(card.m_reaction),m_description(card.m_description),m_nom(card.m_nom)
+KingdomCard::KingdomCard(const KingdomCard& card)
+    :m_nom(card.m_nom),m_attack(card.m_attack),m_reaction(card.m_reaction),m_description(card.m_description)
 {
     m_cost=card.m_cost;
 }

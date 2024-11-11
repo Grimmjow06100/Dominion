@@ -22,7 +22,7 @@ public :
     static void GenerateKingdomFromFile(const std::string& nomFichier);
 
     KingdomCard(std::string nom,int cost,bool attack,bool reaction,std::string description);
-    KingdomCard(KingdomCard& card);
+    KingdomCard(const KingdomCard& card);
     ~KingdomCard() override = default;
 
     void affichage() override;

@@ -46,17 +46,17 @@ void CardStream::streamCard()
 {
     std::string element;
     std::cin>>element;
-    bool found=false;
+    bool existe=false;
     if(isFound(element))
     {
         EnumCard c = CardMap.at(normalize(element));
         if (std::holds_alternative<Victory>(c)) {
             m_stream=new VictoryCard(std::get<Victory>(c));
-            found=true;
+            existe=true;
         }
         else if (std::holds_alternative<Treasure>(c)) {
             m_stream=new TreasureCard(std::get<Treasure>(c));
-            found=true;
+            existe=true;
         }
     }
     else
@@ -66,12 +66,12 @@ void CardStream::streamCard()
             {
                 i.affichage();
                 m_stream=new KingdomCard(i);
-                found=true;
+                existe=true;
                 break;
             }
         }
-    if (found==false)
-        std::cerr<<"Carte inexistante ou carte royaume entré"<<std::endl;
+    if (existe==false)
+        std::cerr<<"Carte inexistante"<<std::endl;
 }
 
 
