@@ -1,0 +1,30 @@
+sorciere
+5
+true          
+false
+la mechante sorciere 
+
+voleur
+5
+true 
+false 
+le mechant arabe
+
+forge
+7
+false
+false
+le forgerons de ta daronne 
+
+douves
+2
+false
+true
+c'est ton père la douves 
+
+cave 
+2
+false 
+false 
+ta daronne elle la connait la cave batard
+

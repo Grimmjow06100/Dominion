@@ -4,22 +4,29 @@
 
 #ifndef CARDSTREAM_H
 #define CARDSTREAM_H
-#include <vector>
 #include "Card.h"
+#include <variant>
+#include <unordered_map>
+#include "KingdomCard.h"
+#include "VictoryCard.h"
+#include "TreasureCard.h"
 
-
+using EnumCard = std::variant<Victory,Treasure>;
+extern std::unordered_map<std::string,EnumCard> CardMap;
 
 class CardStream {
 private:
-    std::vector<Card*> m_stream;
-    void clean();
+    Card* m_stream;
 public:
     CardStream();
     ~CardStream();
-    void stream();
-    [[nodiscard]] std::vector<Card*> getStream() const;
+    void streamCard();
+    [[nodiscard]] Card* getStream() const;
 
 };
+
+std::string normalize(const std::string& s);
+bool isFound(const std::string& s);
 
 
 

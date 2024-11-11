@@ -4,51 +4,31 @@
 
 #ifndef KINGDOMCARD_H
 #define KINGDOMCARD_H
+#include <string>
+#include <vector>
+
 #include "Card.h"
-
-enum Kingdom
-{
-    ATELIER,
-    AVENTURIER,
-    BIBLIOTHEQUE,
-    BUCHERON,
-    BUREAUCRATE,
-    CAVE,
-    CHANCELIER,
-    CHAMBRE_DU_CONSEIL,
-    CHAPELLE,
-    DOUVES,
-    ESPION,
-    FESTIN,
-    FESTIVAL,
-    FORGE,
-    LABORATOIRE,
-    MARCHE,
-    MILICE,
-    MINE,
-    PRETEUR_SUR_GAGES,
-    RENOVATION,
-    SALLE_DU_TRONE,
-    SORCIERE,
-    VILLAGE,
-    VOLEUR,
-    JARDIN,
-
-};
 
 
 
 class KingdomCard : public Card{
 private:
-    Kingdom m_kingdom;
+    std::string m_nom;
     bool m_attack;
     bool m_reaction;
+    std::string m_description;
 public :
-    explicit KingdomCard(Kingdom kingdom);
-    [[nodiscard]] Kingdom getKingdom()const;
+    static std::vector<KingdomCard> DataCards;
+    static void GenerateKingdomFromFile(const std::string& nomFichier);
+
+    KingdomCard(std::string nom,int cost,bool attack,bool reaction,std::string description);
+    KingdomCard(KingdomCard& card);
+    ~KingdomCard() override = default;
 
     void affichage() override;
     void action(Jeux &j) override;
+
+    [[nodiscard]] std::string getNom()const;
 };
 
 

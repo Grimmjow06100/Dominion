@@ -14,15 +14,15 @@ class Reserve;
 class Jeux {
 private:
     std::vector<Reserve> m_reserve;
-    std::vector<Player&> &m_players;
+    std::vector<Player>&m_players;
     Player& m_actif;
 public:
     //getters
     [[nodiscard]]std::vector<Reserve> getReserve()const;
-    [[nodiscard]]std::vector<Player&>&getPlayers()const;
+    [[nodiscard]]std::vector<Player>&getPlayers()const;
     [[nodiscard]]Player& getActif()const;
 
-    Jeux(std::vector<Player&>& m_players, Player& m_actif)
+    Jeux(std::vector<Player>& m_players, Player& m_actif)
         : m_players(m_players),
           m_actif(m_actif)
     {

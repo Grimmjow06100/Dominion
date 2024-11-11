@@ -10,7 +10,7 @@ std::vector<Reserve> Jeux::getReserve()const
     return m_reserve;
 }
 
-std::vector<Player&> &Jeux::getPlayers()const
+std::vector<Player>&Jeux::getPlayers()const
 {
     return m_players;
 }

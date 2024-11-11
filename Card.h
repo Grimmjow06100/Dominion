@@ -4,12 +4,14 @@
 
 #ifndef CARD_H
 #define CARD_H
+#include <string>
 
 class Jeux;
 
 class Card{
 protected:
     int m_cost=0;
+
 public:
     virtual ~Card()=default;
     virtual void affichage();
