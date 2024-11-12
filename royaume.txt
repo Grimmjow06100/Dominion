@@ -1,30 +1,151 @@
-sorciere
+Artisan
+6
+false
+false
+Gagnez une carte coûtant jusqu'à 5 pièces dans votre main. Placez une carte de votre main sur votre deck.
+
+Bandit
 5
-true          
+true
 false
-la mechante sorciere 
+Gagnez une carte Or. Chaque autre joueur révèle les deux premières cartes de son deck, trashe une carte Trésor non-Cuivre révélée, et défausse les autres.
 
-voleur
+Bureaucrate
+4
+true
+false
+Gagnez une carte Argent sur votre deck. Chaque autre joueur révèle une carte Victoire de sa main et la place sur son deck (ou révèle une main sans carte Victoire).
+
+Cellier
+2
+false
+false
+Défaussez autant de cartes que vous voulez, puis piochez le même nombre de cartes.
+
+Chapelle
+2
+false
+false
+Trashing jusqu’à 4 cartes de votre main.
+
+Conteur
+3
+false
+false
++2 cartes, +1 action, chaque joueur défausse la première carte de son deck.
+
+Festin
+4
+false
+false
+Trashing cette carte. Gagnez une carte coûtant jusqu'à 5 pièces.
+
+Forgeron
+4
+false
+false
+Piochez 3 cartes.
+
+Jardinier
+4
+false
+true
++1 action, chaque joueur gagne 1 pioche.
+
+Labo
 5
-true 
-false 
-le mechant arabe
-
-forge
-7
 false
 false
-le forgerons de ta daronne 
+Piochez 2 cartes, +1 action.
 
-douves
+Marche
+5
+false
+false
++1 carte, +1 action, +1 achat, +1 pièce.
+
+Mine
+5
+false
+false
+Trashing une carte Trésor de votre main, gagnez une carte Trésor coûtant jusqu'à 3 pièces de plus que celle défaussée.
+
+Milice
+4
+true
+false
++2 pièces. Chaque autre joueur défausse jusqu'à avoir 3 cartes en main.
+
+Douves
 2
 false
 true
-c'est ton père la douves 
+Piochez 2 cartes. En Réaction, si un autre joueur joue une carte Attaque, vous pouvez révéler cette carte pour vous protéger de l'attaque.
 
-cave 
+Place du Village
+3
+false
+false
++1 carte, +2 actions.
+
+Preteur sur Gages
+4
+false
+false
++3 pièces, Trashing une carte de votre main.
+
+Scierie
+5
+false
+false
++1 carte, +2 actions.
+
+Sorciere
+5
+true
+false
+Piochez 2 cartes. Chaque autre joueur gagne une carte Malédiction.
+
+Trone de Fer
+4
+false
+false
+Vous jouez deux fois une carte Action de votre main.
+
+Village
+3
+false
+false
++1 carte, +2 actions.
+
+Atelier
+3
+false
+false
+Gagnez une carte coûtant jusqu'à 4 pièces.
+
+Bucheron
+3
+false
+false
++1 achat, +2 pièces.
+
+Sorciere-Lingot
+6
+false
+false
+Piochez 3 cartes, +1 action.
+
+Gardien
 2
-false 
-false 
-ta daronne elle la connait la cave batard
+false
+false
++1 achat, chaque joueur défausse une carte.
+
+Emissaire
+4
+false
+false
++1 carte, chaque joueur reçoit +2 achats.
+
 

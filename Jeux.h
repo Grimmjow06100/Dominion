@@ -14,19 +14,16 @@ class Reserve;
 class Jeux {
 private:
     std::vector<Reserve> m_reserve;
-    std::vector<Player>&m_players;
-    Player& m_actif;
+    std::vector<Player*>m_players;
+    int actifIndex=0;
 public:
     //getters
     [[nodiscard]]std::vector<Reserve> getReserve()const;
-    [[nodiscard]]std::vector<Player>&getPlayers()const;
+    [[nodiscard]]std::vector<Player*>getPlayers()const;
     [[nodiscard]]Player& getActif()const;
+    [[nodiscard]]int getActifIndex()const;
 
-    Jeux(std::vector<Player>& m_players, Player& m_actif)
-        : m_players(m_players),
-          m_actif(m_actif)
-    {
-    }
+
 };
 
 

@@ -14,7 +14,7 @@
 
 //----------------------------------------------------------------------------------------------------------------------
 //méthodes de la classe Player
-Player::Player(std::string name):m_name(name){
+Player::Player(std::string name):m_name(std::move(name)){
     m_actions = 1;
     m_buys = 1;
     m_money = 0;
@@ -100,6 +100,8 @@ void Player::shuffle() {
     std::default_random_engine engine(rd());
     std::shuffle(m_deck.begin(), m_deck.end(), engine);
 }
+
+
 
 
 
