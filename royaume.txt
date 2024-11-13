@@ -2,43 +2,43 @@ Artisan
 6
 false
 false
-Gagnez une carte coûtant jusqu'à 5 pièces dans votre main. Placez une carte de votre main sur votre deck.
+Gagnez une carte coutant jusqu'a 5 pieces dans votre main. Placez une carte de votre main sur votre deck.
 
 Bandit
 5
 true
 false
-Gagnez une carte Or. Chaque autre joueur révèle les deux premières cartes de son deck, trashe une carte Trésor non-Cuivre révélée, et défausse les autres.
+Gagnez une carte Or. Chaque autre joueur revele les deux premieres cartes de son deck, trashe une carte Tresor non-Cuivre revelee, et defausse les autres.
 
 Bureaucrate
 4
 true
 false
-Gagnez une carte Argent sur votre deck. Chaque autre joueur révèle une carte Victoire de sa main et la place sur son deck (ou révèle une main sans carte Victoire).
+Gagnez une carte Argent sur votre deck. Chaque autre joueur revele une carte Victoire de sa main et la place sur son deck (ou revele une main sans carte Victoire).
 
 Cellier
 2
 false
 false
-Défaussez autant de cartes que vous voulez, puis piochez le même nombre de cartes.
+Defaussez autant de cartes que vous voulez, puis piochez le même nombre de cartes.
 
 Chapelle
 2
 false
 false
-Trashing jusqu’à 4 cartes de votre main.
+Trashing jusqu'a 4 cartes de votre main.
 
 Conteur
 3
 false
 false
-+2 cartes, +1 action, chaque joueur défausse la première carte de son deck.
++2 cartes, +1 action, chaque joueur défausse la premiere carte de son deck.
 
 Festin
 4
 false
 false
-Trashing cette carte. Gagnez une carte coûtant jusqu'à 5 pièces.
+Trashing cette carte. Gagnez une carte coutant jusqu'a 5 pieces.
 
 Forgeron
 4
@@ -52,7 +52,7 @@ false
 true
 +1 action, chaque joueur gagne 1 pioche.
 
-Labo
+Laboratoire
 5
 false
 false
@@ -62,37 +62,37 @@ Marche
 5
 false
 false
-+1 carte, +1 action, +1 achat, +1 pièce.
++1 carte, +1 action, +1 achat, +1 piece.
 
 Mine
 5
 false
 false
-Trashing une carte Trésor de votre main, gagnez une carte Trésor coûtant jusqu'à 3 pièces de plus que celle défaussée.
+Trashing une carte Tresor de votre main, gagnez une carte Tresor coutant jusqu'à 3 pieces de plus que celle defaussee.
 
 Milice
 4
 true
 false
-+2 pièces. Chaque autre joueur défausse jusqu'à avoir 3 cartes en main.
++2 pieces. Chaque autre joueur défausse jusqu'a avoir 3 cartes en main.
 
 Douves
 2
 false
 true
-Piochez 2 cartes. En Réaction, si un autre joueur joue une carte Attaque, vous pouvez révéler cette carte pour vous protéger de l'attaque.
+Piochez 2 cartes. En Reaction, si un autre joueur joue une carte Attaque, vous pouvez reveler cette carte pour vous proteger de l'attaque.
 
-Place du Village
+Place_du_Village
 3
 false
 false
 +1 carte, +2 actions.
 
-Preteur sur Gages
+Preteur_sur_Gages
 4
 false
 false
-+3 pièces, Trashing une carte de votre main.
++3 pieces, Trashing une carte de votre main.
 
 Scierie
 5
@@ -104,9 +104,9 @@ Sorciere
 5
 true
 false
-Piochez 2 cartes. Chaque autre joueur gagne une carte Malédiction.
+Piochez 2 cartes. Chaque autre joueur gagne une carte Malediction.
 
-Trone de Fer
+Trone_de_Fer
 4
 false
 false
@@ -122,13 +122,13 @@ Atelier
 3
 false
 false
-Gagnez une carte coûtant jusqu'à 4 pièces.
+Gagnez une carte coutant jusqu'a 4 pieces.
 
 Bucheron
 3
 false
 false
-+1 achat, +2 pièces.
++1 achat, +2 pieces.
 
 Sorciere-Lingot
 6
@@ -140,7 +140,7 @@ Gardien
 2
 false
 false
-+1 achat, chaque joueur défausse une carte.
++1 achat, chaque joueur defausse une carte.
 
 Emissaire
 4
@@ -148,4 +148,8 @@ false
 false
 +1 carte, chaque joueur reçoit +2 achats.
 
-
+Jardins
+4
+false
+false
+gagnez 1 point de victoire pour chaque 10 cartes dans votre deck (arrondi a l'unite inferieure).

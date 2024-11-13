@@ -5,10 +5,6 @@
 #include "Jeux.h"
 
 
-std::vector<Reserve> Jeux::getReserve()const
-{
-    return m_reserve;
-}
 
 std::vector<Player*>Jeux::getPlayers()const
 {

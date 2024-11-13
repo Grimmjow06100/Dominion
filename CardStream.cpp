@@ -4,82 +4,102 @@
 
 #include "Cardstream.h"
 #include "KingdomCard.h"
-#include <algorithm>
+#include "TreasureCard.h"
+#include "VictoryCard.h"
 #include <sstream>
 #include <iostream>
 
 
-std::unordered_map<std::string,EnumCard> CardMap={
-    {"DOMAINE",DOMAINE},
-    {"DUCHE",DUCHE},
-    {"PROVINCE",PROVINCE},
-    {"CUIVRE",CUIVRE},
-    {"ARGENT",ARGENT},
-    {"OR",OR},
-};
 
 
-
-// Normalisation de la chaine de caractères (majuscule)
-std::string normalize(const std::string& s) {
-    std::string res = s;
-    std::transform(res.begin(), res.end(), res.begin(), ::toupper);
-    return res;
-}
-// Vérification de l'existence de la carte
-bool isFound(const std::string& s) {
-    return CardMap.find(normalize(s)) != CardMap.end();
-}
-CardStream::CardStream()
-{
-    m_stream = nullptr;
-}
-CardStream::~CardStream()
-{
-    delete m_stream;
-}
-
-
-
-// Recupération du flux de carte saisi par le joueur
-void CardStream::streamCard()
-{
-    std::string element;
-    std::cin>>element;
-    bool existe=false;
-    if(isFound(element))
+bool isFound(const std::string& s,int* index) {
+    for(size_t i=0;i<KingdomCard::DataCards.size();i++)
     {
-        EnumCard c = CardMap.at(normalize(element));
-        if (std::holds_alternative<Victory>(c)) {
-            m_stream=new VictoryCard(std::get<Victory>(c));
-            existe=true;
-        }
-        else if (std::holds_alternative<Treasure>(c)) {
-            m_stream=new TreasureCard(std::get<Treasure>(c));
-            existe=true;
+        if(KingdomCard::DataCards[i].getNom()==normalize(s))
+        {
+            *index=i;
+            return true;
         }
     }
-    else
-        for(auto i:KingdomCard::DataCards)
-        {
-            if(i.getNom()==normalize(element))
-            {
-                i.affichage();
-                m_stream=new KingdomCard(i);
-                existe=true;
-                break;
-            }
-        }
-    if (existe==false)
-        std::cerr<<"Carte inexistante"<<std::endl;
+    return false;
 }
 
 
 
-
-Card* CardStream::getStream() const
+// Recupération d'une carte saisi par le joueur
+Card* CardStream::streamCard()
 {
-    return m_stream;
+    Card* stream=nullptr;
+    int* res=new int;
+    std::string element;
+    std::cin>>element;
+    std::cin.ignore();
+    std::string normalized=normalize(element);
+    if ( normalized=="CUIVRE"||normalized=="ARGENT"||normalized=="OR")
+    {
+        stream=new TreasureCard(normalized);
+    }
+    else if (normalized=="DOMAINE"||normalized=="DUCHE"||normalized=="PROVINCE"||normalized=="MALEDICTION")
+    {
+        stream=new VictoryCard(normalized);
+    }
+    else if (isFound(normalized,res))
+    {
+
+        stream=new KingdomCard(KingdomCard::DataCards[*res]);
+    }
+    else
+        std::cerr<<"Carte non reconnu"<<std::endl;
+
+    delete res;
+    return stream;
 }
+
+// Recupération d'une liste de carte saisi par le joueur
+std::vector<Card*> CardStream::streamCardArray()
+{
+    std::vector<Card*> stream;
+    int* res=new int;
+    int registered(0);
+    int failed(0);
+
+
+    std::string ligne;
+    std::getline (std::cin,ligne);
+    std::string element;
+    std::istringstream iss(ligne);
+    while(iss>>element)
+    {
+        std::string normalized=normalize(element);
+        if (normalized=="CUIVRE"||normalized=="ARGENT"||normalized=="OR")
+        {
+            stream.push_back(new TreasureCard(element));
+            registered++;
+        }
+        else if (normalized=="DOMAINE"||normalized=="DUCHE"||normalized=="PROVINCE"||normalized=="MALEDICTION")
+        {
+            stream.push_back(new VictoryCard(element));
+            registered++;
+        }
+        else if (isFound(normalized,res))
+        {
+
+            stream.push_back(new KingdomCard(KingdomCard::DataCards[*res]));
+            registered++;
+        }
+        else
+            failed++;
+
+    }
+    std::cout<<"Cartes enregistrees : "<<registered<<std::endl;
+    if(failed>0)
+        std::cerr<<"Cartes non reconnu : "<<failed<<std::endl;
+    delete res;
+    return stream;
+}
+
+
+
+
 
 

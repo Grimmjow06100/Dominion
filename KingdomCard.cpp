@@ -6,36 +6,55 @@
 #include "Jeux.h"
 #include <iostream>
 #include <fstream>
-
 #include "CardStream.h"
 
 
+
 std::vector<KingdomCard> KingdomCard::DataCards;
+std::map<std::string,KingdomCard> KingdomCard::KingdomCardMap;
+
+
 KingdomCard::KingdomCard(std::string nom, int cost, bool attack, bool reaction, std::string description)
-    :m_nom(std::move(nom)),m_attack(attack),m_reaction(reaction),m_description(std::move(description))
-{
-    m_cost=cost;
-}
-KingdomCard::KingdomCard(const KingdomCard& card)
-    :m_nom(card.m_nom),m_attack(card.m_attack),m_reaction(card.m_reaction),m_description(card.m_description)
-{
-    m_cost=card.m_cost;
+    :Card(std::move(nom),cost),m_attack(attack),m_reaction(reaction),m_description(std::move(description))
+{}
+KingdomCard::KingdomCard()
+    : Card("",0), m_attack(false), m_reaction(false), m_description("")
+{}
+KingdomCard::KingdomCard(KingdomCard const&card)
+    :Card(card.m_nom,card.m_cost),m_attack(card.m_attack),m_reaction(card.m_reaction),m_description(card.m_description)
+{}
+
+KingdomCard& KingdomCard::operator=(KingdomCard const& other) {
+    if (this != &other) {  // Vérification d'auto-affectation
+        m_nom = other.m_nom;
+        m_cost = other.m_cost;
+        m_attack = other.m_attack;
+        m_reaction = other.m_reaction;
+        m_description = other.m_description;
+    }
+    return *this;
 }
 
 
 void KingdomCard::affichage()
 {
-    std::cout<<"Nom : "<<m_nom<<std::endl;
-    std::cout<<"Cout : "<<m_cost<<std::endl;
-    std::cout<<"Description : "<<m_description<<std::endl;
+    std::cout<<normalize(m_nom)<<" "<<m_cost<<std::endl;
+    std::cout<<m_description<<std::endl;
     if(m_attack)
     {
-        std::cout<<"Carte d'attaque"<<std::endl;
+        std::cout<<"ACTION-ATTAQUE"<<std::endl;
     }
-    if(m_reaction)
+    else if(m_reaction)
     {
-        std::cout<<"Carte de reaction"<<std::endl;
+        std::cout<<"ACTION-REACTION"<<std::endl;
     }
+    else if(normalize(m_nom)== "JARDINS")
+    {
+        std::cout<<"VICTOIRE"<<std::endl;
+    }
+    else
+        std::cout<<"ACTION"<<std::endl;
+    std::cout<<"---------------------------------"<<std::endl;
 }
 
 std::string KingdomCard::getNom() const
@@ -74,6 +93,7 @@ void KingdomCard::GenerateKingdomFromFile(const std::string& nomFichier) {
             // Créer une nouvelle carte quand une ligne vide est rencontrée
             if (!nom.empty() && !description.empty() ) {
                 DataCards.emplace_back(normalize(nom),cout,attack,reaction,description);
+                KingdomCardMap[normalize(nom)] = KingdomCard(nom, cout, attack, reaction, description);
             }
             // Réinitialiser les attributs pour la prochaine carte
             nom.clear();
@@ -96,6 +116,7 @@ void KingdomCard::GenerateKingdomFromFile(const std::string& nomFichier) {
     // Ajouter la dernière carte si elle n'est pas vide
     if (!nom.empty() && !description.empty()) {
         DataCards.emplace_back(normalize(nom),cout,attack,reaction,description);
+        KingdomCardMap[normalize(nom)] = KingdomCard(nom, cout, attack, reaction, description);
     }
     fichier.close();
 }

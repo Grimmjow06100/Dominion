@@ -4,8 +4,8 @@
 
 #ifndef JEUX_H
 #define JEUX_H
+#include "Plateau.h"
 #include "Player.h"
-#include "Reserve.h"
 #include "vector"
 
 class Reserve;
@@ -13,12 +13,12 @@ class Reserve;
 
 class Jeux {
 private:
-    std::vector<Reserve> m_reserve;
+    Plateau m_plateau;
     std::vector<Player*>m_players;
     int actifIndex=0;
 public:
     //getters
-    [[nodiscard]]std::vector<Reserve> getReserve()const;
+
     [[nodiscard]]std::vector<Player*>getPlayers()const;
     [[nodiscard]]Player& getActif()const;
     [[nodiscard]]int getActifIndex()const;

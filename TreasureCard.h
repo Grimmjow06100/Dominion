@@ -6,19 +6,15 @@
 #define TREASURECARD_H
 #include "Card.h"
 
-enum Treasure
-{
-    CUIVRE=1,
-    ARGENT,
-    OR
-};
+
 
 class TreasureCard : public Card{
 private:
-    Treasure m_treasure;
+    int m_treasure;
 public:
-    explicit TreasureCard(Treasure treasure);
-    [[nodiscard]]Treasure getTreasure() const;
+    explicit TreasureCard(std::string const& nom);
+    TreasureCard(TreasureCard const& card);
+    [[nodiscard]]int getTreasure() const ;
     void affichage() override;
     void action(Jeux &j) override;
 };

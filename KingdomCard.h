@@ -6,24 +6,28 @@
 #define KINGDOMCARD_H
 #include <string>
 #include <vector>
-
 #include "Card.h"
+#include <map>
+
 
 
 
 class KingdomCard : public Card{
 private:
-    std::string m_nom;
     bool m_attack;
     bool m_reaction;
     std::string m_description;
 public :
     static std::vector<KingdomCard> DataCards;
+    static std::map<std::string,KingdomCard> KingdomCardMap;
     static void GenerateKingdomFromFile(const std::string& nomFichier);
 
+
     KingdomCard(std::string nom,int cost,bool attack,bool reaction,std::string description);
-    KingdomCard(const KingdomCard& card);
+    KingdomCard(KingdomCard const& card);
+    KingdomCard();
     ~KingdomCard() override = default;
+    KingdomCard& operator=(KingdomCard const& other) ;
 
     void affichage() override;
     void action(Jeux &j) override;

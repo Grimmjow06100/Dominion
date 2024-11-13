@@ -5,20 +5,15 @@
 #ifndef VICTORYCARD_H
 #define VICTORYCARD_H
 #include "Card.h"
-enum Victory
-{
-    DOMAINE=1,
-    DUCHE=3,
-    PROVINCE=6,
-    MALÉDICTION=-1
-};
+
 
 class VictoryCard : public Card{
 private:
-    Victory m_victory;
+    int m_victory;
 public:
-    explicit VictoryCard( Victory victory);
-    [[nodiscard]]Victory getVictory() const ;
+    explicit VictoryCard(std::string const& nom);
+    VictoryCard(VictoryCard const& card);
+    [[nodiscard]]int getVictory() const ;
     void affichage() override;
     void action(Jeux &j) override;
 };

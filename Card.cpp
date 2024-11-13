@@ -2,10 +2,13 @@
 // Created by Asus on 03/11/2024.
 //
 #include "Card.h"
+#include <algorithm>
 #include <iostream>
-
 #include "Jeux.h"
 
+
+
+Card::Card(std::string nom,int cost):m_nom(std::move(nom)),m_cost(cost){};
 int Card::getCost() const
 {
     return m_cost;
@@ -19,5 +22,12 @@ void Card::action(Jeux &p)
     Player& player=p.getActif();
     player.pioche(2);
     std::cout<<"This is a card"<<std::endl;
+}
+
+// Normalisation de la chaine de caractères (majuscule)
+std::string normalize(const std::string& s) {
+    std::string res = s;
+    std::transform(res.begin(), res.end(), res.begin(), ::toupper);
+    return res;
 }
 

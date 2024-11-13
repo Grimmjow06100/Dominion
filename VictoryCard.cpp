@@ -7,39 +7,43 @@
 #include "Jeux.h"
 #include "Player.h"
 
-VictoryCard::VictoryCard(Victory victory) :  m_victory(victory)
+VictoryCard::VictoryCard(std::string const&nom) : Card(normalize(nom),0), m_victory(0)
 {
-    if(m_victory==DOMAINE)
+    if(m_nom=="DOMAINE")
+    {
         m_cost=2;
-    else if(m_victory==DUCHE)
+        m_victory=1;
+    }
+    else if(m_nom=="DUCHE")
+    {
         m_cost=5;
-    else if(m_victory==PROVINCE)
+        m_victory=3;
+    }
+    else if(m_nom=="PROVINCE")
+    {
         m_cost=8;
-    else if(m_victory==MALÉDICTION)
+        m_victory=6;
+    }
+    else if(m_nom=="MALEDICTION")
+    {
         m_cost=0;
+        m_victory=-1;
+    }
+    else
+        std::cerr<<"erreur la carte ne fait pas partie du jeu"<<std::endl;
 
 }
+
+VictoryCard::VictoryCard(VictoryCard const &card) : Card(card.m_nom,card.m_cost), m_victory(card.m_victory)
+{}
 
 void VictoryCard::affichage()
 {
-    switch (m_victory){
-        case (DOMAINE):
-            std::cout << "DOMAINE "<<m_cost<< std::endl;
-            break;
-        case DUCHE:
-            std::cout<<"DUCHE "<<m_cost<<std::endl;
-            break;
-        case PROVINCE:
-            std::cout<<"PROVINCE "<<m_cost<<std::endl;
-            break;
-        case MALÉDICTION:
-            std::cout<<"MALEDICTION "<<m_cost<<std::endl;
-            break;
-
-    }
+    std::cout<<m_nom<<" "<<m_cost<<std::endl;
+    std::cout<<"---------------------------------"<<std::endl;
 }
 
-Victory VictoryCard::getVictory() const {
+int VictoryCard::getVictory() const {
     return m_victory;
 }
 

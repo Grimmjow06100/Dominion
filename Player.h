@@ -25,7 +25,7 @@ private:
     std::string m_name;
     void shuffle();
 public:
-    Player(std::string name);
+    explicit Player(std::string name);
     ~Player();
     void pioche(int x);
     void defausse();

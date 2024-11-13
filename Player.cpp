@@ -4,7 +4,7 @@
 
 #include "Player.h"
 
-#include "VictoryCard.h"
+
 #include "TreasureCard.h"
 #include <algorithm>
 #include <random>
@@ -19,21 +19,6 @@ Player::Player(std::string name):m_name(std::move(name)){
     m_buys = 1;
     m_money = 0;
     m_points = 0;
-    std::vector<Card*> c(10);
-    std::vector<Card*> empty(0);
-    for (int i = 0; i < 10; i++)
-    {
-        if (i <= 6)
-        {
-            c[i] = new TreasureCard(CUIVRE);
-        }
-        else
-            c[i] = new VictoryCard(DOMAINE);
-    }
-    m_deck = std::move(c);
-    m_hand = std::move(empty);
-    m_defausse = std::move(empty);
-    shuffle();
 }
 
 Player::~Player()

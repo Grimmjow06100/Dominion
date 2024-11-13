@@ -10,41 +10,44 @@
 #include "Jeux.h"
 
 
-TreasureCard::TreasureCard( Treasure treasure) :  m_treasure(treasure)
+TreasureCard::TreasureCard(std::string const&nom) :  Card(normalize(nom),0),m_treasure(0)
 {
-    if(m_treasure == CUIVRE)
+    if(m_nom=="CUIVRE")
     {
         m_cost = 0;
+        m_treasure = 1;
     }
-    else if(m_treasure == ARGENT)
+    else if( m_nom == "ARGENT")
     {
         m_cost = 3;
+        m_treasure = 2;
     }
-    else if(m_treasure == OR)
+    else if(m_nom == "OR")
     {
         m_cost = 6;
+        m_treasure = 3;
     }
-}
-void TreasureCard::affichage()
-{
-    switch (m_treasure)
-    {
-        case CUIVRE:
-            std::cout<<"CUIVRE "<<m_cost<<std::endl;
-            break;
-        case ARGENT:
-            std::cout<<"ARGENT "<<m_cost<<std::endl;
-            break;
-        case OR:
-            std::cout<<"OR "<<m_cost<<std::endl;
-            break;
-    }
+    else
+        std::cerr<<"erreur la carte ne fait pas partie du jeu"<<std::endl;
 }
 
-Treasure TreasureCard::getTreasure() const
+TreasureCard::TreasureCard(TreasureCard const& card):Card(card.m_nom,card.m_cost),m_treasure(card.m_treasure)
+{}
+
+int TreasureCard::getTreasure() const
 {
     return m_treasure;
 }
+
+
+void TreasureCard::affichage()
+{
+
+    std::cout<<m_nom<<" "<<m_cost<<std::endl;
+    std::cout<<"---------------------------------"<<std::endl;
+}
+
+
 
 void TreasureCard::action(Jeux &j)
 {
