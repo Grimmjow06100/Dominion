@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include "CardStream.h"
+#include "Reserve.h"
 
 
 
@@ -65,11 +66,36 @@ std::string KingdomCard::getNom() const
 void KingdomCard::action(Jeux &j)
 {
     //TODO
-    Player& player=j.getActif();
-    player.pioche(2);
+    //Player& player=j.getActif();
+    //player.pioche(2);
+
+    if(m_nom == "ARTISAN") {
+        std::cout<<"cas artisan"<<std::endl;
+        std::cout<<"Choisissez une carte :"<< std::endl;
+
+        CardStream card;
+        card.streamCard();
+        /*Card* carteChoisi = card.getStream();
+        for (const auto& i : j.getReserve()) {
+            //trouver un moyen de lier a la carte reserve pour voir le nb de carte
+        }
+        while(carteChoisi == nullptr or carteChoisi->getCost()>5) {
+            card.streamCard();
+            carteChoisi = card.getStream();
+            std::cout<<"Choisissez une autre carte :"<< std::endl;
+        }*/
+        //deplacement carte
 
 
+    }
+        //Gagnez une carte coûtant jusqu'à 5 pièces
+        //dans votre main. Placez une carte de votre main sur votre deck.
 }
+
+
+
+
+
 
 void KingdomCard::GenerateKingdomFromFile(const std::string& nomFichier) {
     std::ifstream fichier(nomFichier);
