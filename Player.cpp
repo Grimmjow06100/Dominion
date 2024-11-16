@@ -11,13 +11,10 @@
 
 
 
-
-//----------------------------------------------------------------------------------------------------------------------
-//méthodes de la classe Player
 Player::Player(std::string name):m_name(std::move(name)){
     m_actions = 1;
     m_buys = 1;
-    m_money = 0;
+    m_coins = 0;
     m_points = 0;
 }
 
@@ -87,11 +84,6 @@ void Player::shuffle() {
 }
 
 
-
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
 //getters
 std::vector<Card*> Player::getDeck() const
 {
@@ -113,9 +105,9 @@ int Player::getPoints() const
 {
     return m_points;
 }
-int Player::getMoney() const
+int Player::getCoins() const
 {
-    return m_money;
+    return m_coins;
 }
 int Player::getActions() const
 {
@@ -125,9 +117,6 @@ int Player::getBuys() const
 {
     return m_buys;
 }
-
-
-//----------------------------------------------------------------------------------------------------------------------
 
 //setters
 void Player::setDeck(std::vector<Card*> deck)
@@ -150,9 +139,9 @@ void Player::setPoints(int points)
 {
     m_points = points;
 }
-void Player::setMoney(int money)
+void Player::setCoins(int Coins)
 {
-    m_money = money;
+    m_coins = Coins;
 }
 void Player::setActions(int actions)
 {
@@ -162,4 +151,4 @@ void Player::setBuys(int buys)
 {
     m_buys = buys;
 }
-//----------------------------------------------------------------------------------------------------------------------
+

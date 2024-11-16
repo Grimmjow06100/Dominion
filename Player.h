@@ -19,7 +19,7 @@ private:
     std::vector<Card*> m_defausse;
     std::vector<Card*> m_played;
     int m_points;
-    int m_money;
+    int m_coins;
     int m_actions;
     int m_buys;
     std::string m_name;
@@ -43,7 +43,7 @@ public:
     [[nodiscard]]std::vector<Card*> getDefausse() const;
     [[nodiscard]]std::vector<Card*> getPlayed() const;
     [[nodiscard]]int getPoints() const;
-    [[nodiscard]]int getMoney() const;
+    [[nodiscard]]int getCoins() const;
     [[nodiscard]]int getActions() const;
     [[nodiscard]]int getBuys() const;
 
@@ -54,13 +54,9 @@ public:
     void setDefausse(std::vector<Card*> discard);
     void setPlayed(std::vector<Card*> played);
     void setPoints(int points);
-    void setMoney(int money);
+    void setCoins(int coins);
     void setActions(int actions);
     void setBuys(int buys);
-
-
-
-
 
 };
 

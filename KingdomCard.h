@@ -17,13 +17,17 @@ private:
     bool m_attack;
     bool m_reaction;
     std::string m_description;
+    int m_cards;
+    int m_actions;
+    int m_coins;
+    int m_buys;
 public :
     static std::vector<KingdomCard> DataCards;
     static std::map<std::string,KingdomCard> KingdomCardMap;
     static void GenerateKingdomFromFile(const std::string& nomFichier);
 
 
-    KingdomCard(std::string nom,int cost,bool attack,bool reaction,std::string description);
+    KingdomCard(std::string nom,int cost,bool attack,bool reaction,std::string description,int cards,int actions,int coins,int buys);
     KingdomCard(KingdomCard const& card);
     KingdomCard();
     ~KingdomCard() override = default;
@@ -33,6 +37,10 @@ public :
     void action(Jeux &j) override;
 
     [[nodiscard]] std::string getNom()const;
+    [[nodiscard]] bool isAttack()const;
+    [[nodiscard]] bool isReaction()const;
+    [[nodiscard]] int getCards()const;
+    [[nodiscard]] int getActions()const;
 };
 
 

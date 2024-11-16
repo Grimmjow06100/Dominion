@@ -7,7 +7,6 @@
 #include <iostream>
 #include <fstream>
 #include "CardStream.h"
-#include "Reserve.h"
 
 
 
@@ -15,14 +14,14 @@ std::vector<KingdomCard> KingdomCard::DataCards;
 std::map<std::string,KingdomCard> KingdomCard::KingdomCardMap;
 
 
-KingdomCard::KingdomCard(std::string nom, int cost, bool attack, bool reaction, std::string description)
-    :Card(std::move(nom),cost),m_attack(attack),m_reaction(reaction),m_description(std::move(description))
+KingdomCard::KingdomCard(std::string nom, int cost, bool attack, bool reaction, std::string description,int cards,int actions,int coins,int buys)
+    :Card(std::move(nom),cost),m_attack(attack),m_reaction(reaction),m_description(std::move(description)),m_cards(cards),m_actions(actions),m_coins(coins),m_buys(buys)
 {}
 KingdomCard::KingdomCard()
-    : Card("",0), m_attack(false), m_reaction(false), m_description("")
+    : Card("",0), m_attack(false), m_reaction(false), m_description(""),m_cards(0),m_actions(0),m_coins(0),m_buys(0)
 {}
 KingdomCard::KingdomCard(KingdomCard const&card)
-    :Card(card.m_nom,card.m_cost),m_attack(card.m_attack),m_reaction(card.m_reaction),m_description(card.m_description)
+    :Card(card.m_nom,card.m_cost),m_attack(card.m_attack),m_reaction(card.m_reaction),m_description(card.m_description),m_cards(card.m_cards),m_actions(card.m_actions),m_coins(card.m_coins),m_buys(card.m_buys)
 {}
 
 KingdomCard& KingdomCard::operator=(KingdomCard const& other) {
@@ -32,6 +31,10 @@ KingdomCard& KingdomCard::operator=(KingdomCard const& other) {
         m_attack = other.m_attack;
         m_reaction = other.m_reaction;
         m_description = other.m_description;
+        m_cards = other.m_cards;
+        m_actions = other.m_actions;
+        m_coins = other.m_coins;
+        m_buys = other.m_buys;
     }
     return *this;
 }
@@ -65,37 +68,15 @@ std::string KingdomCard::getNom() const
 
 void KingdomCard::action(Jeux &j)
 {
-    //TODO
-    //Player& player=j.getActif();
-    //player.pioche(2);
 
-    if(m_nom == "ARTISAN") {
-        std::cout<<"cas artisan"<<std::endl;
-        std::cout<<"Choisissez une carte :"<< std::endl;
-
-        CardStream card;
-        card.streamCard();
-        /*Card* carteChoisi = card.getStream();
-        for (const auto& i : j.getReserve()) {
-            //trouver un moyen de lier a la carte reserve pour voir le nb de carte
-        }
-        while(carteChoisi == nullptr or carteChoisi->getCost()>5) {
-            card.streamCard();
-            carteChoisi = card.getStream();
-            std::cout<<"Choisissez une autre carte :"<< std::endl;
-        }*/
-        //deplacement carte
+    Player& player=j.getActif();
+    player.setActions(player.getActions()+m_actions);
+    player.pioche(m_cards);
+    player.setCoins(player.getCoins()+m_coins);
+    player.setBuys(player.getBuys()+m_buys);
 
 
-    }
-        //Gagnez une carte coûtant jusqu'à 5 pièces
-        //dans votre main. Placez une carte de votre main sur votre deck.
 }
-
-
-
-
-
 
 void KingdomCard::GenerateKingdomFromFile(const std::string& nomFichier) {
     std::ifstream fichier(nomFichier);
@@ -107,32 +88,36 @@ void KingdomCard::GenerateKingdomFromFile(const std::string& nomFichier) {
 
     std::string ligne;
     std::string nom;
-    int cout = 0;
-    bool attack=false;
-    bool reaction=false;
+    int cout;
+    bool attack;
+    bool reaction;
     std::string description;
+    int cards;
+    int actions;
+    int coins;
+    int buys;
 
-    int ligneCompteur = 0;
+    int ligneCompteur=0;
 
     while (std::getline(fichier, ligne)) {
         if (ligne.empty()) {
             // Créer une nouvelle carte quand une ligne vide est rencontrée
             if (!nom.empty() && !description.empty() ) {
-                DataCards.emplace_back(normalize(nom),cout,attack,reaction,description);
-                KingdomCardMap[normalize(nom)] = KingdomCard(nom, cout, attack, reaction, description);
+                DataCards.emplace_back(normalize(nom),cout,attack,reaction,description,cards,actions,coins,buys);
+                KingdomCardMap[normalize(nom)] = KingdomCard(nom, cout, attack, reaction, description,cards,actions,coins,buys);
             }
-            // Réinitialiser les attributs pour la prochaine carte
-            nom.clear();
-            cout = 0;
-            description.clear();
             ligneCompteur = 0;
         } else {
             switch (ligneCompteur) {
-            case 0: nom = ligne; break;           // Ligne 1 : Nom
-            case 1: cout = std::stoi(ligne); break; // Ligne 2 : Coût
-            case 2:  if(ligne=="true") attack=true; else attack=false; break; // Ligne 3 : attack
-            case 3: if(ligne=="true") reaction=true;else reaction=false;break;   // Ligne 3 : reaction
-            case 4: description=ligne;break;
+            case 0: nom = ligne; break;
+            case 1: cout = std::stoi(ligne); break;
+            case 2:  if(ligne=="true") attack=true; else attack=false; break;
+            case 3: if(ligne=="true") reaction=true;else reaction=false;break;
+            case 4:cards=std::stoi(ligne);break;
+            case 5:actions=std::stoi(ligne);break;
+            case 6:coins=std::stoi(ligne);break;
+            case 7:buys=std::stoi(ligne);break;
+            case 8: description=ligne;break;
             default: break;
             }
             ligneCompteur++;
@@ -141,8 +126,27 @@ void KingdomCard::GenerateKingdomFromFile(const std::string& nomFichier) {
 
     // Ajouter la dernière carte si elle n'est pas vide
     if (!nom.empty() && !description.empty()) {
-        DataCards.emplace_back(normalize(nom),cout,attack,reaction,description);
-        KingdomCardMap[normalize(nom)] = KingdomCard(nom, cout, attack, reaction, description);
+        DataCards.emplace_back(normalize(nom),cout,attack,reaction,description,cards,actions,coins,buys);
+        KingdomCardMap[normalize(nom)] = KingdomCard(nom, cout, attack, reaction, description,cards,actions,coins,buys);
     }
     fichier.close();
+}
+
+int KingdomCard::getActions() const
+{
+    return m_actions;
+}
+int KingdomCard::getCards()const
+{
+    return m_cards;
+}
+
+bool KingdomCard::isAttack() const
+{
+    return m_attack;
+}
+
+bool KingdomCard::isReaction() const
+{
+    return m_reaction;
 }
