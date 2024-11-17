@@ -40,6 +40,10 @@ Player::~Player()
     }
 }
 
+/**
+ * Pioche x cartes de deck et les met dans hand
+ * @param x
+ */
 void Player::pioche(int x)
 {
     for (int i = 0; i < x; i++)
@@ -63,6 +67,9 @@ void Player::pioche(int x)
 
 }
 
+/**
+ * Defausse toutes les cartes de la main et de played
+ */
 void Player::defausse()
 {
     for(Card* const&i: m_hand)
