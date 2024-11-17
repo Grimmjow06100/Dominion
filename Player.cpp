@@ -10,7 +10,9 @@
 #include <random>
 
 
-
+/**
+ * Constructeur de Player
+ */
 Player::Player(std::string name):m_name(std::move(name)){
     m_actions = 1;
     m_buys = 1;
