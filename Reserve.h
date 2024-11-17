@@ -19,6 +19,7 @@ public :
     Reserve(TreasureCard const&card,int taille);
     Reserve(VictoryCard const&card ,int taille );
     Reserve(Reserve &&other) noexcept ;
+    Reserve(const Reserve& other);
     Reserve();
     ~Reserve();
     [[nodiscard]]bool isEmpty()const ;

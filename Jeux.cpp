@@ -9,7 +9,7 @@
 Jeux::Jeux(Plateau plateau, const std::vector<Player*>& players, int actifIndex)
     : m_plateau(std::move(plateau)), m_players(players), actifIndex(actifIndex) {}
 
-void Jeux::playGame(){
+Jeux Jeux::initGame() {
     std::cout << "Bienvenue dans le jeu Dominion !" << std::endl;
 
     int nbJoueurs = 0;
@@ -19,7 +19,7 @@ void Jeux::playGame(){
         std::cout << "Combien etes-vous de joueurs ? (entre 2 et 4) : ";
         std::cin >> nbJoueurs;
         if (nbJoueurs < 2 || nbJoueurs > 4) {
-            std::cout << "Le nombre de joueurs doit etre entre 2 et 4 !" << std::endl;
+            std::cout <<std::endl<< "Le nombre de joueurs doit etre entre 2 et 4 !" << std::endl;
         }
     }
 
@@ -27,7 +27,7 @@ void Jeux::playGame(){
     std::string nom;
 
     // Demande les noms des joueurs
-    std::cout << "Entrez les noms des " << nbJoueurs << " joueurs :" << std::endl;
+    std::cout <<std::endl<< "Entrez les noms des " << nbJoueurs << " joueurs :" << std::endl;
     for (int i = 0; i < nbJoueurs; ++i) {
         std::cout << "Nom du joueur " << i + 1 << " : ";
         std::cin >> nom;
@@ -40,7 +40,7 @@ void Jeux::playGame(){
     std::ranges::shuffle(players, g);
 
     // Affiche l'ordre aléatoire des joueurs
-    std::cout << "L'ordre des joueurs est le suivant : " << std::endl;
+    std::cout << std::endl << "L'ordre des joueurs est le suivant : " << std::endl;
     for (size_t i = 0; i < players.size(); ++i) {
         std::cout << "Joueur " << i + 1 << " : " << players[i]->getName() << std::endl;
     }
@@ -50,11 +50,12 @@ void Jeux::playGame(){
     plateau.built();
 
     //creation du jeu
-    //auto jeux = Jeux(plateau,players,0);
+    auto jeux = Jeux(plateau,players,0);
+    return(jeux);
+}
 
-    std::cout << "Le jeu peut commencer ! Bonne chance à tous !" << std::endl;
-
-
+void Jeux::playGame(){
+    std::cout << std::endl << "Le jeu peut commencer ! Bonne chance a tous !" << std::endl;
 }
 
 std::vector<Player*>Jeux::getPlayers()const

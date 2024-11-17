@@ -23,6 +23,24 @@ Reserve::Reserve(Reserve &&other) noexcept :m_card(other.m_card),m_taille(other.
     other.m_taille=0;
 }
 
+Reserve::Reserve(const Reserve& other) {
+    if (other.m_card != nullptr) {
+        // On doit savoir quel type de carte c'est pour dupliquer l'objet correctement
+        if (dynamic_cast<KingdomCard*>(other.m_card)) {
+            m_card = new KingdomCard(*dynamic_cast<KingdomCard*>(other.m_card));
+        } else if (dynamic_cast<TreasureCard*>(other.m_card)) {
+            m_card = new TreasureCard(*dynamic_cast<TreasureCard*>(other.m_card));
+        } else if (dynamic_cast<VictoryCard*>(other.m_card)) {
+            m_card = new VictoryCard(*dynamic_cast<VictoryCard*>(other.m_card));
+        }
+    } else {
+        m_card = nullptr;
+    }
+
+    // Copie de la taille
+    m_taille = other.m_taille;
+}
+
 
 void Reserve::affichage() const {
     m_card->affichage();
