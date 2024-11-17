@@ -15,7 +15,7 @@ private:
     Card* m_card;
     int m_taille;
 public :
-    Reserve( KingdomCard const&card,int taille);
+    Reserve(KingdomCard const&card,int taille);
     Reserve(TreasureCard const&card,int taille);
     Reserve(VictoryCard const&card ,int taille );
     Reserve(Reserve &&other) noexcept ;

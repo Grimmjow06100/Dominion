@@ -122,6 +122,9 @@ int Player::getActions() const
 {
     return m_actions;
 }
+std::string Player::getName() const {
+    return m_name;
+}
 int Player::getBuys() const
 {
     return m_buys;

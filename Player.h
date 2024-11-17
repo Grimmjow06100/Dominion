@@ -46,6 +46,7 @@ public:
     [[nodiscard]]int getCoins() const;
     [[nodiscard]]int getActions() const;
     [[nodiscard]]int getBuys() const;
+    [[nodiscard]] std::string getName() const;
 
 
     //setters

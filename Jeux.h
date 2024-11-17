@@ -17,8 +17,9 @@ private:
     std::vector<Player*>m_players;
     int actifIndex=0;
 public:
+    Jeux(Plateau plateau, const std::vector<Player*>& players, int actifIndex);
+    static void playGame();
     //getters
-
     [[nodiscard]]std::vector<Player*>getPlayers()const;
     [[nodiscard]]Player& getActif()const;
     [[nodiscard]]int getActifIndex()const;
