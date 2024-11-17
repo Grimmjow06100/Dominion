@@ -111,7 +111,7 @@ void KingdomCard::GenerateKingdomFromFile(const std::string& nomFichier) {
             switch (ligneCompteur) {
             case 0: nom = ligne; break;
             case 1: cout = std::stoi(ligne); break;
-            case 2:  if(ligne=="true") attack=true; else attack=false; break;
+            case 2: if(ligne=="true") attack=true; else attack=false; break;
             case 3: if(ligne=="true") reaction=true;else reaction=false;break;
             case 4:cards=std::stoi(ligne);break;
             case 5:actions=std::stoi(ligne);break;

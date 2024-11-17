@@ -10,8 +10,12 @@
 #include <iostream>
 
 
-
-
+/**
+ * Renvoie true si s est dans Datacards et stocke son index dans index
+ * @param s
+ * @param index
+ * @return
+ */
 bool isFound(const std::string& s,int* index) {
     for(size_t i=0;i<KingdomCard::DataCards.size();i++)
     {
