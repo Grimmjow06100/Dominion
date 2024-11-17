@@ -52,6 +52,6 @@ void TreasureCard::affichage()
 void TreasureCard::action(Jeux &j)
 {
     Player &p=j.getActif();
-    p.setMoney(p.getMoney()+m_treasure);
+    p.setCoins(p.getCoins()+m_treasure);
 
 }
