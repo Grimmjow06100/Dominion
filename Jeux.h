@@ -18,12 +18,13 @@ private:
     int actifIndex=0;
 public:
     Jeux();
-    void playGame();
+    ~Jeux();
     void initGame();
-    void playerBoard();
-    void actionPhase();
-    void buyPhase();
-    void endTurn();
+    void playGame();
+    void playerBoard(Player* player);
+    void actionPhase(Player* player);
+    void buyPhase(Player* player);
+    void endTurn(Player* player);
     //getters
     [[nodiscard]]std::vector<Player*>getPlayers()const;
     [[nodiscard]]Player& getActif()const;

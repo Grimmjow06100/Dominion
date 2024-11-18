@@ -25,14 +25,14 @@ private:
     int m_actions;
     int m_buys;
     std::string m_name;
-    void shuffle();
+
 public:
     explicit Player(std::string name);
     ~Player();
     void pioche(int x);
     void defausse();
     void playCard(Card* card,Jeux &jeux);
-
+    void shuffle();
 
     //getters
     [[nodiscard]]std::vector<Card*> getDeck() const;

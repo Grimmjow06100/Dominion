@@ -21,6 +21,12 @@ public :
     explicit Plateau (int nbrJoueur);
     void built();
     void affichage()const;
+    bool isProvinceEmpty()const;
+    bool threePileEmpty()const;
+
+    std::vector<Reserve>& getReserve();
+
+
 
   };
 
