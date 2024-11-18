@@ -6,6 +6,8 @@
 #define PLAYER_H
 #include <string>
 #include <vector>
+
+#include "Jeux.h"
 class Card;
 
 
@@ -29,12 +31,7 @@ public:
     ~Player();
     void pioche(int x);
     void defausse();
-
-    //LE DUR DE LA VIE
-    void playBuy();
-    void playAction();
-    void Adjustment();
-
+    void playCard(Card* card,Jeux &jeux);
 
 
     //getters

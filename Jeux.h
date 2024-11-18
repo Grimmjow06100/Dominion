@@ -13,13 +13,17 @@ class Reserve;
 
 class Jeux {
 private:
-    Plateau m_plateau;
+    Plateau* m_plateau;
     std::vector<Player*>m_players;
     int actifIndex=0;
 public:
-    Jeux(Plateau plateau, const std::vector<Player*>& players, int actifIndex);
+    Jeux();
     void playGame();
-    static Jeux initGame();
+    void initGame();
+    void playerBoard();
+    void actionPhase();
+    void buyPhase();
+    void endTurn();
     //getters
     [[nodiscard]]std::vector<Player*>getPlayers()const;
     [[nodiscard]]Player& getActif()const;

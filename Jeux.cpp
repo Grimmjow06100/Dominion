@@ -6,10 +6,10 @@
 #include <algorithm>
 #include <random>
 
-Jeux::Jeux(Plateau plateau, const std::vector<Player*>& players, int actifIndex)
-    : m_plateau(std::move(plateau)), m_players(players), actifIndex(actifIndex) {}
+Jeux::Jeux()
+    : m_plateau(nullptr){}
 
-Jeux Jeux::initGame() {
+void Jeux::initGame() {
     std::cout << "Bienvenue dans le jeu Dominion !" << std::endl;
 
     int nbJoueurs = 0;
@@ -23,7 +23,6 @@ Jeux Jeux::initGame() {
         }
     }
 
-    std::vector<Player*>players;
     std::string nom;
 
     // Demande les noms des joueurs
@@ -31,27 +30,23 @@ Jeux Jeux::initGame() {
     for (int i = 0; i < nbJoueurs; ++i) {
         std::cout << "Nom du joueur " << i + 1 << " : ";
         std::cin >> nom;
-        players.push_back(new Player(nom));
+        m_players.push_back(new Player(nom));
     }
 
     // Mélange aléatoire de l'ordre des joueurs
     std::random_device rd;  // Génère une graine aléatoire
     std::mt19937 g(rd());   // Générateur Mersenne Twister
-    std::ranges::shuffle(players, g);
+    std::shuffle(m_players.begin(),m_players.end(), g);
 
     // Affiche l'ordre aléatoire des joueurs
     std::cout << std::endl << "L'ordre des joueurs est le suivant : " << std::endl;
-    for (size_t i = 0; i < players.size(); ++i) {
-        std::cout << "Joueur " << i + 1 << " : " << players[i]->getName() << std::endl;
+    for (size_t i = 0; i < m_players.size(); ++i) {
+        std::cout << "Joueur " << i + 1 << " : " << m_players[i]->getName() << std::endl;
     }
 
     //creation du plateau de jeu
-    auto plateau = Plateau(nbJoueurs);
-    plateau.built();
-
-    //creation du jeu
-    auto jeux = Jeux(plateau,players,0);
-    return(jeux);
+    m_plateau = new Plateau(nbJoueurs);
+    m_plateau->built();
 }
 
 void Jeux::playGame(){

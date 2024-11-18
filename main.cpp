@@ -13,6 +13,9 @@ int main()
 
     Player p("samy");
     KingdomCard::GenerateKingdomFromFile("royaume.txt");
+    Plateau plateau(2);
+    plateau.built();
+    plateau.affichage();
 
     /*
     for(auto &i:KingdomCard::DataCards)
@@ -24,11 +27,6 @@ int main()
     }
     std::cout<<std::endl<<std::endl;*/
 
-    //initialise le jeu
-    Jeux jeux = Jeux::initGame();
-
-    //lance le jeu
-    jeux.playGame();
 
 
 

@@ -67,6 +67,22 @@ void Player::pioche(int x)
 
 }
 
+void Player::playCard(Card* card,Jeux &jeux)
+{
+    for (int i=0;i<m_hand.size();i++)
+    {
+        if (m_hand[i]->getNom() == card->getNom())
+        {
+            m_hand[i]->action(jeux);
+            m_played.push_back(card);
+            delete m_hand[i];
+            m_hand.erase(m_hand.begin() + i);
+            break;
+        }
+    }
+}
+
+
 /**
  * Defausse toutes les cartes de la main et de played
  */
