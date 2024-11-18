@@ -48,12 +48,6 @@ void Jeux::initGame() {
     std::mt19937 g(rd());   // Générateur Mersenne Twister
     std::shuffle(m_players.begin(),m_players.end(), g);
 
-    // Affiche l'ordre aléatoire des joueurs
-    std::cout << std::endl << "L'ordre des joueurs est le suivant : " << std::endl;
-    for (size_t i = 0; i < m_players.size(); ++i) {
-        std::cout << "Joueur " << i + 1 << " : " << m_players[i]->getName() << std::endl;
-    }
-
     //creation du plateau de jeu
     m_plateau = new Plateau(nbJoueurs);
     m_plateau->built();
