@@ -57,9 +57,9 @@ void Jeux::initGame() {
 
 void Jeux::playGame(){
     std::cout << std::endl << "Le jeu peut commencer ! Bonne chance a tous !" << std::endl;
-    //à faire : distribuer les cartes de départ et commencer la partie
     for (auto* player : m_players)
     {
+        //à faire : distribuer les cartes de départ et commencer la partie (mettre à jour la réserve de cartes)
         //mélange du deck de départ
         player->shuffle();
         //pioche de 5 cartes
