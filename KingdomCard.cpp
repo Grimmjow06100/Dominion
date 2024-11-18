@@ -150,3 +150,18 @@ bool KingdomCard::isReaction() const
 {
     return m_reaction;
 }
+
+int KingdomCard::getCoins() const
+{
+    return m_coins;
+}
+
+int KingdomCard::getBuys() const
+{
+    return m_buys;
+}
+
+std::string KingdomCard::getDescription() const
+{
+    return m_description;
+}

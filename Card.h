@@ -20,6 +20,7 @@ public:
     virtual void affichage();
     virtual void action(Jeux &j);
     [[nodiscard ]] int getCost() const;
+    [[nodiscard]] std::string getNom() const;
 };
 
 std::string normalize(const std::string& s);

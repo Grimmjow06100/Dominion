@@ -41,6 +41,9 @@ public :
     [[nodiscard]] bool isReaction()const;
     [[nodiscard]] int getCards()const;
     [[nodiscard]] int getActions()const;
+    [[nodiscard]] int getCoins()const;
+    [[nodiscard]] int getBuys()const;
+    [[nodiscard]] std::string getDescription()const;
 };
 
 
