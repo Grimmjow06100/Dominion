@@ -90,6 +90,11 @@ void Jeux::DistributeCards()
         player->shuffle();
         //pioche de 5 cartes
         player->pioche(5);
+        for(auto i:player->getHand())
+        {
+            i->affichage();
+        }
+
 
 
     }
