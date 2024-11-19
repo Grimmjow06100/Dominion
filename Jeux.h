@@ -17,6 +17,7 @@ private:
     Plateau* m_plateau;
     std::vector<Player*>m_players;
     size_t actifIndex=0;
+    void DistributeCards();
 public:
     Jeux();
     ~Jeux();

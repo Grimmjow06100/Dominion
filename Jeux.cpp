@@ -57,6 +57,22 @@ void Jeux::initGame() {
 
 void Jeux::playGame(){
     std::cout << std::endl << "Le jeu peut commencer ! Bonne chance a tous !" << std::endl;
+    DistributeCards();
+    /*while(//condition de fin de partie)
+    {
+        Player* actif = m_players[actifIndex];
+        actionPhase(actif);
+        buyPhase(actif);
+        endTurn(actif);
+    }
+    //ne pas oublier de compter les points et de déclarer le vainqueur
+    //ne pas oublier l'affichage du plateau de jeu si besoin en fonction de l'évolution du jeu
+    */
+
+}
+
+void Jeux::DistributeCards()
+{
     std::vector<Card*> deck;
     for(auto i=0;i<10;i++)
     {
@@ -84,18 +100,8 @@ void Jeux::playGame(){
     //mise à jour de la réserve de cartes
     m_plateau->updateReserve("DOMAINE",3*static_cast<int>(m_players.size()));
     m_plateau->updateReserve("CUIVRE",7*static_cast<int>(m_players.size()));
-    /*while(//condition de fin de partie)
-    {
-        Player* actif = m_players[actifIndex];
-        actionPhase(actif);
-        buyPhase(actif);
-        endTurn(actif);
-    }
-    //ne pas oublier de compter les points et de déclarer le vainqueur
-    //ne pas oublier l'affichage du plateau de jeu si besoin en fonction de l'évolution du jeu
-    */
-
 }
+
 
 void Jeux::playerBoard(Player* player)
 {
