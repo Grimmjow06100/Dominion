@@ -58,16 +58,14 @@ void Jeux::initGame() {
 void Jeux::playGame(){
     std::cout << std::endl << "Le jeu peut commencer ! Bonne chance a tous !" << std::endl;
     DistributeCards();
-    /*while(//condition de fin de partie)
+   /*while(!m_plateau->isEmpty())
     {
-        Player* actif = m_players[actifIndex];
-        actionPhase(actif);
-        buyPhase(actif);
-        endTurn(actif);
+
     }
+    */
     //ne pas oublier de compter les points et de déclarer le vainqueur
     //ne pas oublier l'affichage du plateau de jeu si besoin en fonction de l'évolution du jeu
-    */
+
 
 }
 
