@@ -63,8 +63,6 @@ void Jeux::playGame(){
 
     }
     */
-    //ne pas oublier de compter les points et de déclarer le vainqueur
-    //ne pas oublier l'affichage du plateau de jeu si besoin en fonction de l'évolution du jeu
 
 
 }
