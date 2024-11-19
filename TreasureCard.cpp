@@ -44,6 +44,7 @@ void TreasureCard::affichage()
 {
 
     std::cout<<m_nom<<" "<<m_cost<<std::endl;
+    std::cout<<"+ "<<m_treasure<<" pièces"<<std::endl;
     std::cout<<"---------------------------------"<<std::endl;
 }
 

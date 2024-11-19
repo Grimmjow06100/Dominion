@@ -40,6 +40,7 @@ VictoryCard::VictoryCard(VictoryCard const &card) : Card(card.m_nom,card.m_cost)
 void VictoryCard::affichage()
 {
     std::cout<<m_nom<<" "<<m_cost<<std::endl;
+    std::cout<<"+ "<<m_victory<<" points de victoire"<<std::endl;
     std::cout<<"---------------------------------"<<std::endl;
 }
 
