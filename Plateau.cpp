@@ -89,6 +89,10 @@ void Plateau::affichage()const
     std::cout<<"//////////////////////////////////////////////FIN RESERVE//////////////////////////////////////////////"<<std::endl;
 }
 
+void Plateau::updateReserve(const std::string& cardName,int nbr)
+{
+    m_reserveMap.at(cardName).setTaille(m_reserveMap.at(cardName).getTaille()-nbr);
+}
 std::unordered_map<std::string,Reserve>& Plateau::getReserveMap()
 {
     return m_reserveMap;

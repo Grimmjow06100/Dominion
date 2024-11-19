@@ -25,7 +25,7 @@ public :
     ~Reserve();
     [[nodiscard]]bool isEmpty()const ;
     [[nodiscard]]Card* getCard()const;
-    [[nodiscard]]int getTaille()const;
+    [[nodiscard]]int getTaille()const ;
     void setTaille(int taille);
     void affichage() const;
 };

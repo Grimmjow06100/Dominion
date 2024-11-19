@@ -64,6 +64,13 @@ void Player::pioche(int x)
 
 }
 
+void Player::reset()
+{
+    m_actions = 1;
+    m_buys = 1;
+    m_coins = 0;
+}
+
 void Player::playCard(Card* card,Jeux &jeux)
 {
     for (size_t i=0;i<m_hand.size();i++)
@@ -73,7 +80,7 @@ void Player::playCard(Card* card,Jeux &jeux)
             m_hand[i]->action(jeux);
             m_played.push_back(card);
             delete m_hand[i];
-            m_hand.erase(m_hand.begin() + i);
+            m_hand.erase(m_hand.begin() + static_cast<ptrdiff_t>(i));
             break;
         }
     }

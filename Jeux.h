@@ -16,7 +16,7 @@ class Jeux {
 private:
     Plateau* m_plateau;
     std::vector<Player*>m_players;
-    int actifIndex=0;
+    size_t actifIndex=0;
 public:
     Jeux();
     ~Jeux();
@@ -29,7 +29,7 @@ public:
     //getters
     [[nodiscard]]std::vector<Player*>getPlayers()const;
     [[nodiscard]]Player& getActif()const;
-    [[nodiscard]]int getActifIndex()const;
+    [[nodiscard]]size_t getActifIndex()const;
 
 
 };

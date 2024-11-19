@@ -4,7 +4,7 @@
 
 #ifndef PLATEAU_H
 #define PLATEAU_H
-#include <vector>
+
 #include "Reserve.h"
 #include <unordered_map>
 
@@ -23,8 +23,7 @@ public :
     void built();
     void affichage()const;
     bool isEmpty()const;
-
-    std::vector<Reserve>& getReserve();
+    void updateReserve(const std::string& cardName,int nbr);
     std::unordered_map<std::string,Reserve>& getReserveMap();
 
 

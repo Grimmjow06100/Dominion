@@ -67,6 +67,8 @@ void Reserve::affichage() const {
 
 }
 
+
+
 bool Reserve::isEmpty() const {
     return (m_taille==0);
 }
@@ -75,7 +77,7 @@ Card* Reserve::getCard() const {
     return m_card;
 }
 
-int Reserve::getTaille() const {
+int Reserve::getTaille()const{
     return m_taille;
 }
 

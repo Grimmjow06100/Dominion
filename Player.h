@@ -32,6 +32,7 @@ public:
     void defausse();
     void playCard(Card* card,Jeux &jeux);
     void shuffle();
+    void reset();
 
     //getters
     [[nodiscard]]std::vector<Card*> getDeck() const;

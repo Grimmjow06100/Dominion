@@ -57,14 +57,33 @@ void Jeux::initGame() {
 
 void Jeux::playGame(){
     std::cout << std::endl << "Le jeu peut commencer ! Bonne chance a tous !" << std::endl;
+    std::vector<Card*> deck;
+    for(auto i=0;i<10;i++)
+    {
+        if(i<7)
+        {
+            deck.push_back(new TreasureCard("CUIVRE"));
+
+        }
+        else
+        {
+            deck.push_back(new VictoryCard("DOMAINE"));
+        }
+    }
     for (auto* player : m_players)
     {
-        //à faire : distribuer les cartes de départ et commencer la partie (mettre à jour la réserve de cartes)
+        //attribution du deck de départ
+        player->setDeck(deck);
         //mélange du deck de départ
         player->shuffle();
         //pioche de 5 cartes
         player->pioche(5);
+
+
     }
+    //mise à jour de la réserve de cartes
+    m_plateau->updateReserve("DOMAINE",3*static_cast<int>(m_players.size()));
+    m_plateau->updateReserve("CUIVRE",7*static_cast<int>(m_players.size()));
     /*while(//condition de fin de partie)
     {
         Player* actif = m_players[actifIndex];
@@ -110,8 +129,9 @@ void Jeux::endTurn(Player* player)
      effectue les actions de fin de tour (défausse de la main et des cartes jouées, pioche de 5 cartes)
      et on passe au joueur suivant
      */
-    actifIndex = (actifIndex + 1) % m_players.size();
-    //ne pas oublier de réinitialiser les actions, achats et pièces du joueur actif
+    size_t range=m_players.size();
+    actifIndex = (actifIndex + 1) % range;
+    player->reset();
 
 }
 
@@ -126,7 +146,7 @@ Player& Jeux::getActif() const
     return *m_players.at(actifIndex);
 }
 
-int Jeux::getActifIndex() const
+size_t Jeux::getActifIndex() const
 {
     return actifIndex;
 }
