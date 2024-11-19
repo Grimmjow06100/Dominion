@@ -41,21 +41,19 @@ Plateau::Plateau( int nbrJoueur):m_cuivre(60),m_argent(40),m_or(30)
 }
 void Plateau::built()
 {
-    std::cout<<"test"<<std::endl;
-    m_reserve.emplace_back(VictoryCard("PROVINCE"),m_victory);
-    m_reserve.emplace_back(TreasureCard("CUIVRE"),m_cuivre);
-    m_reserve.emplace_back(TreasureCard("ARGENT"),m_argent);
-    m_reserve.emplace_back(TreasureCard("OR"),m_or);
-    m_reserve.emplace_back(VictoryCard("DOMAINE"),m_victory);
-    m_reserve.emplace_back(VictoryCard("DUCHE"),m_victory);
-    m_reserve.emplace_back(VictoryCard("MALEDICTION"),m_curse);
+    m_reserveMap["CUIVRE"]=Reserve(TreasureCard("CUIVRE"),m_cuivre);
+    m_reserveMap["ARGENT"]=Reserve(TreasureCard("ARGENT"),m_argent);
+    m_reserveMap["OR"]=Reserve(TreasureCard("OR"),m_or);
+    m_reserveMap["DOMAINE"]=Reserve(VictoryCard("DOMAINE"),m_victory);
+    m_reserveMap["DUCHE"]=Reserve(VictoryCard("DUCHE"),m_victory);
+    m_reserveMap["PROVINCE"]=Reserve(VictoryCard("PROVINCE"),m_victory);
+    m_reserveMap["MALEDICTION"]=Reserve(VictoryCard("MALEDICTION"),m_curse);
     for(auto &i : base)
     {
         auto it = KingdomCard::KingdomCardMap.find(normalize(i));
         if (it != KingdomCard::KingdomCardMap.end())
         {
-            Reserve r(it->second, normalize(i) == "JARDIN" ? 12 : 10);
-            m_reserve.push_back(r);  // Ajout direct de l'objet
+            m_reserveMap[it->second.getNom()]=Reserve(it->second, normalize(i) == "JARDIN" ? m_victory:m_kingdom);
         }
 
     }
@@ -63,19 +61,15 @@ void Plateau::built()
 
 }
 
-bool Plateau::isProvinceEmpty() const
-{
-    if(m_reserve.at(0).isEmpty())
-        return true;
-    return false;
-}
-
-bool Plateau::threePileEmpty() const
+bool Plateau::isEmpty() const
 {
     int count=0;
-    for(auto it =m_reserve.begin()+1;it!=m_reserve.end();it++)
+    if(m_reserveMap.at("PROVINCE").isEmpty())
+        return true;
+    for(auto &it : m_reserveMap)
     {
-        if(it->isEmpty())
+
+        if(it.second.isEmpty())
             count++;
         if(count==3)
             return true;
@@ -88,14 +82,14 @@ bool Plateau::threePileEmpty() const
 void Plateau::affichage()const
 {
     std::cout<<"//////////////////////////////////////////////RESERVE//////////////////////////////////////////////"<<std::endl;
-    for(auto &i:m_reserve)
+    for(auto &it:m_reserveMap)
     {
-        i.affichage();
+        it.second.affichage();
     }
     std::cout<<"//////////////////////////////////////////////FIN RESERVE//////////////////////////////////////////////"<<std::endl;
 }
 
-std::vector<Reserve>& Plateau::getReserve()
+std::unordered_map<std::string,Reserve>& Plateau::getReserveMap()
 {
-    return m_reserve;
+    return m_reserveMap;
 }

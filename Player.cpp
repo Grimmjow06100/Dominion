@@ -66,7 +66,7 @@ void Player::pioche(int x)
 
 void Player::playCard(Card* card,Jeux &jeux)
 {
-    for (int i=0;i<m_hand.size();i++)
+    for (size_t i=0;i<m_hand.size();i++)
     {
         if (m_hand[i]->getNom() == card->getNom())
         {

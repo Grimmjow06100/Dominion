@@ -31,3 +31,8 @@ std::string normalize(const std::string& s) {
     return res;
 }
 
+std::string Card::getNom() const
+{
+    return m_nom;
+}
+

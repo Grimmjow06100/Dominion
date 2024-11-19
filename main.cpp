@@ -1,10 +1,7 @@
 
 #include <fstream>
-#include <iostream>
 
-#include "Jeux.h"
 #include "Player.h"
-#include "CardStream.h"
 #include "Plateau.h"
 
 
@@ -16,6 +13,8 @@ int main()
     Plateau plateau(2);
     plateau.built();
     plateau.affichage();
+    std::unordered_map<std::string,Reserve> reserveMap=plateau.getReserveMap();
+    reserveMap["DOMAINE"].affichage();
 
     /*
     for(auto &i:KingdomCard::DataCards)

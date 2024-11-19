@@ -61,11 +61,6 @@ void KingdomCard::affichage()
     std::cout<<"---------------------------------"<<std::endl;
 }
 
-std::string KingdomCard::getNom() const
-{
-    return m_nom;
-}
-
 void KingdomCard::action(Jeux &j)
 {
 

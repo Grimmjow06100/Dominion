@@ -9,6 +9,7 @@
 #include "vector"
 
 class Reserve;
+class Player;
 
 
 class Jeux {

@@ -6,11 +6,12 @@
 #define PLATEAU_H
 #include <vector>
 #include "Reserve.h"
+#include <unordered_map>
 
 
 class Plateau {
 private:
-    std::vector<Reserve> m_reserve;
+    std::unordered_map<std::string,Reserve>m_reserveMap;
     int m_cuivre;
     int m_argent;
     int m_or;
@@ -21,10 +22,10 @@ public :
     explicit Plateau (int nbrJoueur);
     void built();
     void affichage()const;
-    bool isProvinceEmpty()const;
-    bool threePileEmpty()const;
+    bool isEmpty()const;
 
     std::vector<Reserve>& getReserve();
+    std::unordered_map<std::string,Reserve>& getReserveMap();
 
 
 

@@ -36,7 +36,7 @@ public :
     void affichage() override;
     void action(Jeux &j) override;
 
-    [[nodiscard]] std::string getNom()const;
+
     [[nodiscard]] bool isAttack()const;
     [[nodiscard]] bool isReaction()const;
     [[nodiscard]] int getCards()const;

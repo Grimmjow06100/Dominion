@@ -13,6 +13,26 @@ Reserve::Reserve(TreasureCard const&card,int taille ):m_card(new TreasureCard(ca
 {}
 Reserve::Reserve(VictoryCard const&card ,int taille ):m_card(new VictoryCard(card)),m_taille(taille)
 {}
+Reserve& Reserve::operator=(Reserve const& other) {
+    if (this != &other) {
+        // On supprime l'ancienne carte
+        delete m_card;
+
+        // On doit savoir quel type de carte c'est pour dupliquer l'objet correctement
+        if (dynamic_cast<KingdomCard*>(other.m_card)) {
+            m_card = new KingdomCard(*dynamic_cast<KingdomCard*>(other.m_card));
+        } else if (dynamic_cast<TreasureCard*>(other.m_card)) {
+            m_card = new TreasureCard(*dynamic_cast<TreasureCard*>(other.m_card));
+        } else if (dynamic_cast<VictoryCard*>(other.m_card)) {
+            m_card = new VictoryCard(*dynamic_cast<VictoryCard*>(other.m_card));
+        }
+
+        // Copie de la taille
+        m_taille = other.m_taille;
+    }
+
+    return *this;
+}
 Reserve::~Reserve()
 {
     delete m_card;
