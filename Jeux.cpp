@@ -131,15 +131,15 @@ void Jeux::afficheMain(Player* player) {
 
             if (dynamic_cast<KingdomCard*>(card)) {
                 type = "Royaume";
-                extraInfo = "FONCTION";
+                extraInfo = "FONCTION ";
                 colorCode = "\033[34m";  // Bleu pour Royaume
             } else if (auto* treasureCard = dynamic_cast<TreasureCard*>(card)) {
                 type = "Tresor";
-                extraInfo = "+" + std::to_string(treasureCard->getTreasure());
+                extraInfo = "Value : " + std::to_string(treasureCard->getTreasure());
                 colorCode = "\033[33m";  // Jaune pour Trésor
             } else if (auto* victoryCard = dynamic_cast<VictoryCard*>(card)) {
                 type = "Victoire";
-                extraInfo = "+" + std::to_string(victoryCard->getVictory());
+                extraInfo = "Value : " + std::to_string(victoryCard->getVictory());
                 colorCode = "\033[32m";  // Vert pour Victoire
             } else {
                 type = "Inconnu";
