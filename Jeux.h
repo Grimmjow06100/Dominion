@@ -18,6 +18,9 @@ private:
     std::vector<Player*>m_players;
     size_t actifIndex=0;
     void DistributeCards();
+
+    void afficheMain(Player* player);
+
 public:
     Jeux();
     ~Jeux();

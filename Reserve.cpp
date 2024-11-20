@@ -62,6 +62,8 @@ Reserve::Reserve(const Reserve& other) {
 }
 
 
+
+
 void Reserve::affichage() const {
     m_card->affichage();
 

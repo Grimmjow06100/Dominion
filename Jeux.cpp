@@ -20,7 +20,7 @@ Jeux::~Jeux()
 }
 
 void Jeux::initGame() {
-    std::cout << "Bienvenue dans le jeu Dominion !" << std::endl;
+    std::cout <<std::endl<<std::endl<< "Bienvenue dans le jeu Dominion !" << std::endl;
 
     int nbJoueurs = 0;
 
@@ -51,18 +51,23 @@ void Jeux::initGame() {
     //creation du plateau de jeu
     m_plateau = new Plateau(nbJoueurs);
     m_plateau->built();
-
-
 }
 
 void Jeux::playGame(){
     std::cout << std::endl << "Le jeu peut commencer ! Bonne chance a tous !" << std::endl;
     DistributeCards();
-   /*while(!m_plateau->isEmpty())
+    m_plateau->affichePlateau();
+    for(int i=0;i<10;i++) {
+        actifIndex = (actifIndex + 1)%(m_players.size());//maj du joueur qui joue
+    }
+    /*
+    while(!m_plateau->isEmpty())
     {
 
-    }
-    */
+
+       actifIndex = (actifIndex + 1)%(m_players.size());
+    }*/
+
 
 
 }
@@ -90,12 +95,6 @@ void Jeux::DistributeCards()
         player->shuffle();
         //pioche de 5 cartes
         player->pioche(5);
-        for(auto i:player->getHand())
-        {
-            i->affichage();
-        }
-
-
 
     }
     //mise à jour de la réserve de cartes
@@ -103,9 +102,14 @@ void Jeux::DistributeCards()
     m_plateau->updateReserve("CUIVRE",7*static_cast<int>(m_players.size()));
 }
 
+void Jeux::afficheMain(Player* player) {
+    std::cout<<player->getActions();//juste pour compiler
+}
 
 void Jeux::playerBoard(Player* player)
 {
+
+    std::cout<<player->getActions();//juste pour compiler
     /*affiche la main du joueur actif , les cartes qu'il a joué,son nombre d'actions restantes,d'achats
     ,de pièces etc...Toute les informations necessaires pour le joueur actif*/
 
@@ -113,6 +117,7 @@ void Jeux::playerBoard(Player* player)
 
 void Jeux::actionPhase(Player* player)
 {
+    std::cout<<player->getActions();//juste pour compiler
     /*Phase d'action du joueur actif, il peut jouer autant de cartes actions qu'il le souhaite
     tant qu'il lui reste des actions*/
 
@@ -122,6 +127,7 @@ void Jeux::actionPhase(Player* player)
 
 void Jeux::buyPhase(Player* player)
 {
+    std::cout<<player->getActions();//juste pour compiler
     /*Phase d'achat du joueur actif, il peut acheter autant de cartes qu'il le souhaite
     tant qu'il lui reste des achats*/
 

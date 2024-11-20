@@ -1,9 +1,9 @@
 
 #include <fstream>
 #include <iostream>
-
 #include "Player.h"
 #include "Plateau.h"
+#include <string>
 
 
 int main()
@@ -14,9 +14,6 @@ int main()
     Jeux j;
     j.initGame();
     j.playGame();
-
-
-
 
     return 0;
 }

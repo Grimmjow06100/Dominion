@@ -19,10 +19,13 @@ private:
     int m_kingdom;
     int m_curse;
 public :
+    void affichePlateau();
+
     explicit Plateau (int nbrJoueur);
     void built();
     void affichage()const;
     bool isEmpty()const;
+
     void updateReserve(const std::string& cardName,int nbr);
     std::unordered_map<std::string,Reserve>& getReserveMap();
 
