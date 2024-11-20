@@ -5,6 +5,7 @@
 #include "Jeux.h"
 #include <algorithm>
 #include <random>
+#include <cstdlib> // pour std::system
 
 Jeux::Jeux()
     : m_plateau(nullptr){}
@@ -19,8 +20,12 @@ Jeux::~Jeux()
     m_players.clear();
 }
 
+void clearTerminal() {
+    std::system("cls");
+}
+
 void Jeux::initGame() {
-    std::cout <<std::endl<<std::endl<< "Bienvenue dans le jeu Dominion !" << std::endl;
+    std::cout << "Bienvenue dans le jeu Dominion !" << std::endl;
 
     int nbJoueurs = 0;
 
@@ -54,9 +59,11 @@ void Jeux::initGame() {
 }
 
 void Jeux::playGame(){
+    clearTerminal();
     std::cout << std::endl << "Le jeu peut commencer ! Bonne chance a tous !" << std::endl;
     DistributeCards();
     m_plateau->affichePlateau();
+    this->playerBoard();
     for(int i=0;i<10;i++) {
         actifIndex = (actifIndex + 1)%(m_players.size());//maj du joueur qui joue
     }
@@ -106,10 +113,10 @@ void Jeux::afficheMain(Player* player) {
     std::cout<<player->getActions();//juste pour compiler
 }
 
-void Jeux::playerBoard(Player* player)
+void Jeux::playerBoard()
 {
-
-    std::cout<<player->getActions();//juste pour compiler
+    clearTerminal();
+    m_plateau->affichePlateau();
     /*affiche la main du joueur actif , les cartes qu'il a joué,son nombre d'actions restantes,d'achats
     ,de pièces etc...Toute les informations necessaires pour le joueur actif*/
 

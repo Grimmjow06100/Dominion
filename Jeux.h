@@ -26,7 +26,7 @@ public:
     ~Jeux();
     void initGame();
     void playGame();
-    void playerBoard(Player* player);
+    void playerBoard();
     void actionPhase(Player* player);
     void buyPhase(Player* player);
     void endTurn(Player* player);
