@@ -18,15 +18,14 @@ private:
     std::vector<Player*>m_players;
     size_t actifIndex=0;
     void DistributeCards();
-
-    void afficheMain(Player* player);
+    static void afficheMain(Player* player);
 
 public:
     Jeux();
     ~Jeux();
     void initGame();
     void playGame();
-    void playerBoard();
+    void playerBoard(Player *player);
     void actionPhase(Player* player);
     void buyPhase(Player* player);
     void endTurn(Player* player);

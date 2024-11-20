@@ -114,7 +114,6 @@ void Plateau::affichePlateau() {
         std::cout << std::endl << std::endl;  // Espace entre les rangées de cartes
     }
 
-    std::cout << "__________________________________ FIN RESERVE _________________________________________" << std::endl;
 }
 
 Plateau::Plateau( int nbrJoueur):m_cuivre(60),m_argent(40),m_or(30)
