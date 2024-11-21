@@ -20,6 +20,8 @@ private:
     void DistributeCards();
     static void afficheMain(Player* player);
 
+    void playerData(Player *player);
+
 public:
     Jeux();
     ~Jeux();

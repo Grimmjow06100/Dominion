@@ -17,7 +17,7 @@
 
 std::vector<std::string> base ={"atelier","bucheron","village","festin","laboratoire","douves","jardins","chapelle","bandit","sorciere"};
 
-void triCartes(std::vector<std::tuple<std::string, int, std::string, std::string, std::string>>& cartes) {
+void triCartes(std::vector<std::tuple<std::string, int, std::string, std::string, int>>& cartes) {
     // Fonction pour attribuer une priorité basée sur le type
     auto getPriority = [](const std::string& type) {
         if (type == "Victoire") return 0;
@@ -36,19 +36,20 @@ void Plateau::affichePlateau() {
     constexpr int maxCartesParLigne = 5;  // Maximum de cartes par ligne
     const auto& reserves = this->getReserveMap();  // Nombre total de cartes
 
-    std::cout << "______________________________________ RESERVE _________________________________________" << std::endl;
-    std::vector<std::tuple<std::string, int, std::string, std::string, std::string>> cartes;
+    std::cout << "______________________________________ PLATEAU _________________________________________" << std::endl;
+    std::vector<std::tuple<std::string, int, std::string, std::string, int>> cartes;
 
     for (const auto& [nomCarte, reserve] : reserves) {
         if (reserve.getCard()) {  // Vérifiez que la carte n'est pas nulle
             std::string type;
             std::string extraInfo;
             std::string colorCode;
+            int nombre = reserve.getTaille();  // Taille de la réserve
             Card* card = reserve.getCard();
 
             if (dynamic_cast<KingdomCard*>(card)) {
                 type = "Royaume";
-                extraInfo = "FONCTION ";
+                extraInfo = "ACTION  ";
                 colorCode = "\033[34m";  // Bleu pour Royaume
             } else if (auto* treasureCard = dynamic_cast<TreasureCard*>(card)) {
                 type = "Tresor";
@@ -64,7 +65,7 @@ void Plateau::affichePlateau() {
                 colorCode = "\033[0m";  // Réinitialiser pour inconnu
             }
 
-            cartes.emplace_back(colorCode + card->getNom() + "\033[0m", card->getCost(), type, extraInfo, colorCode);
+            cartes.emplace_back(colorCode + card->getNom() + "\033[0m", card->getCost(), type, extraInfo, nombre);
         }
     }
 
@@ -73,47 +74,55 @@ void Plateau::affichePlateau() {
     const size_t totalCartes = cartes.size();
 
     for (size_t i = 0; i < totalCartes; i += maxCartesParLigne) {
+        size_t cartesRestantes = std::min(static_cast<size_t>(maxCartesParLigne), totalCartes - i);
+
         // Bordures supérieures des cartes
-        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
+        for (size_t j = 0; j < cartesRestantes; ++j) {
             std::cout << "\033[31m+--------------+\033[0m  ";
         }
         std::cout << std::endl;
 
         // Ligne contenant le nom des cartes
-        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
+        for (size_t j = 0; j < cartesRestantes; ++j) {
             std::cout << "\033[31m|\033[0m " << std::setw(22) << std::left
-                      << std::get<0>(cartes[j]) << "\033[31m|\033[0m  ";
+                      << std::get<0>(cartes[i + j]) << "\033[31m|\033[0m  ";
         }
         std::cout << std::endl;
 
         // Ligne contenant le type des cartes
-        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
+        for (size_t j = 0; j < cartesRestantes; ++j) {
             std::cout << "\033[31m|\033[0m Type:" << std::setw(8) << std::left
-                      << std::get<2>(cartes[j]) << "\033[31m|\033[0m  ";
+                      << std::get<2>(cartes[i + j]) << "\033[31m|\033[0m  ";
         }
         std::cout << std::endl;
 
         // Ligne contenant le coût des cartes
-        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
+        for (size_t j = 0; j < cartesRestantes; ++j) {
             std::cout << "\033[31m|\033[0m Cout: " << std::setw(7) << std::left
-                      << std::get<1>(cartes[j]) << "\033[31m|\033[0m  ";
+                      << std::get<1>(cartes[i + j]) << "\033[31m|\033[0m  ";
         }
         std::cout << std::endl;
 
         // Ligne contenant les informations supplémentaires
-        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
+        for (size_t j = 0; j < cartesRestantes; ++j) {
             std::cout << "\033[31m|\033[0m " << std::setw(13) << std::left
-                      << std::get<3>(cartes[j]) << "\033[31m|\033[0m  ";
+                      << std::get<3>(cartes[i + j]) << "\033[31m|\033[0m  ";
+        }
+        std::cout << std::endl;
+
+        // Ligne contenant le nombre de cartes
+        for (size_t j = 0; j < cartesRestantes; ++j) {
+            std::cout << "\033[31m|\033[0m Nombre: " << std::setw(5) << std::left
+                      << std::get<4>(cartes[i + j]) << "\033[31m|\033[0m  ";
         }
         std::cout << std::endl;
 
         // Bordures inférieures des cartes
-        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
+        for (size_t j = 0; j < cartesRestantes; ++j) {
             std::cout << "\033[31m+--------------+\033[0m  ";
         }
         std::cout << std::endl << std::endl;  // Espace entre les rangées de cartes
     }
-
 }
 
 Plateau::Plateau( int nbrJoueur):m_cuivre(60),m_argent(40),m_or(30)
