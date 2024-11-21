@@ -17,6 +17,10 @@
 
 std::vector<std::string> base ={"atelier","bucheron","village","festin","laboratoire","douves","jardins","chapelle","bandit","sorciere"};
 
+/**
+ * Trie le vecteur de cartes en fonction de son type
+ * @param cartes
+ */
 void triCartes(std::vector<std::tuple<std::string, int, std::string, std::string, int>>& cartes) {
     // Fonction pour attribuer une priorité basée sur le type
     auto getPriority = [](const std::string& type) {
@@ -32,6 +36,9 @@ void triCartes(std::vector<std::tuple<std::string, int, std::string, std::string
     });
 }
 
+/**
+ * Affiche le plateau de jeu
+ */
 void Plateau::affichePlateau() {
     constexpr int maxCartesParLigne = 5;  // Maximum de cartes par ligne
     const auto& reserves = this->getReserveMap();  // Nombre total de cartes
@@ -125,6 +132,10 @@ void Plateau::affichePlateau() {
     }
 }
 
+/**
+ * Constructeur du plateau
+ * @param nbrJoueur
+ */
 Plateau::Plateau( int nbrJoueur):m_cuivre(60),m_argent(40),m_or(30)
 {
     if(nbrJoueur==2)
@@ -152,6 +163,10 @@ Plateau::Plateau( int nbrJoueur):m_cuivre(60),m_argent(40),m_or(30)
         m_curse=0;
     }
 }
+
+/**
+ * Remplit le plateau
+ */
 void Plateau::built()
 {
     m_reserveMap["CUIVRE"]=Reserve(TreasureCard("CUIVRE"),m_cuivre);
@@ -175,6 +190,10 @@ void Plateau::built()
 
 }
 
+/**
+ * Verifie si la condition de fin de jeu est remplie
+ * @return
+ */
 bool Plateau::isEmpty() const
 {
     int count=0;

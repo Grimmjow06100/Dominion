@@ -20,14 +20,14 @@ private:
     void DistributeCards();
     static void afficheMain(Player* player);
 
-    void playerData(Player *player);
+    static void playerData(Player *player);
 
 public:
     Jeux();
     ~Jeux();
     void initGame();
     void playGame();
-    void playerBoard(Player *player);
+    void playerBoard(Player *player) const;
     void actionPhase(Player* player);
     void buyPhase(Player* player);
     void endTurn(Player* player);

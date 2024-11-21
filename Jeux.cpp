@@ -8,9 +8,15 @@
 #include <cstdlib> // pour std::system
 #include <iomanip>
 
+/**
+ * Constructeur vide
+ */
 Jeux::Jeux()
     : m_plateau(nullptr){}
 
+/**
+ * Destructeur vide
+ */
 Jeux::~Jeux()
 {
     delete m_plateau;
@@ -21,10 +27,16 @@ Jeux::~Jeux()
     m_players.clear();
 }
 
+/**
+ * Reinitialise le terminal
+ */
 void clearTerminal() {
     std::system("cls");
 }
 
+/**
+ * Initialise une partie avec les infos
+ */
 void Jeux::initGame() {
     std::cout << "Bienvenue dans le jeu Dominion !" << std::endl;
 
@@ -59,6 +71,9 @@ void Jeux::initGame() {
     m_plateau->built();
 }
 
+/**
+ * Lance une partie de Dominion
+ */
 void Jeux::playGame(){
     clearTerminal();
     std::cout << std::endl << "Le jeu peut commencer ! Bonne chance a tous !" << std::endl;
@@ -79,6 +94,9 @@ void Jeux::playGame(){
 
 }
 
+/**
+ * Distribue les cartes de departs aux joueurs
+ */
 void Jeux::DistributeCards()
 {
     std::vector<Card*> deck;
@@ -109,6 +127,10 @@ void Jeux::DistributeCards()
     m_plateau->updateReserve("CUIVRE",7*static_cast<int>(m_players.size()));
 }
 
+/**
+ * Affiche la main d'un joueur
+ * @param player
+ */
 void Jeux::afficheMain(Player* player) {
     if (!player) {
         std::cerr << "Erreur : joueur invalide." << std::endl;
@@ -198,6 +220,10 @@ void Jeux::afficheMain(Player* player) {
     }
 }
 
+/**
+ * Affiche un vecteur de cartes (par exemple la defausse ou le deck)
+ * @param cards
+ */
 void afficheCards(std::vector<Card*> cards) {
     constexpr int maxCartesParLigne = 5;
     std::vector<std::tuple<std::string, int, std::string, std::string>> cartes;
@@ -276,13 +302,20 @@ void afficheCards(std::vector<Card*> cards) {
     }
 }
 
+/**
+ * Affiche les donnees d'un joueur
+ * @param player
+ */
 void Jeux::playerData(Player* player) {
     std::cout << "Nombre de points : " << player->getPoints() << " | pieces : "<< player->getCoins()
     << " | actions : " << player->getActions() << " | achats : " << player->getBuys() << std::endl << std::endl;;
 }
 
-void Jeux::playerBoard(Player* player)
-{
+/**
+ * Affiche l'ecran de jeu du joueur (plateau,main,infos...)
+ * @param player
+ */
+void Jeux::playerBoard(Player* player) const {
     clearTerminal();
     m_plateau->affichePlateau();
     Jeux::afficheMain(player);
@@ -290,6 +323,7 @@ void Jeux::playerBoard(Player* player)
     //afficher aides et classement
 
 }
+
 
 void Jeux::actionPhase(Player* player)
 {
@@ -312,6 +346,10 @@ void Jeux::buyPhase(Player* player)
 
 }
 
+/**
+ * Gere la fin d'un tour
+ * @param player
+ */
 void Jeux::endTurn(Player* player)
 {
     /*Fin du tour du joueur actif
