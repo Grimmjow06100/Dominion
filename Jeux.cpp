@@ -7,7 +7,6 @@
 #include "Plateau.h"
 #include "TreasureCard.h"
 #include "VictoryCard.h"
-#include "KingdomCard.h"
 #include <algorithm>
 #include <random>
 #include <cstdlib> // pour std::system
