@@ -91,8 +91,8 @@ build CMakeFiles/Dominion.dir/Player.cpp.obj: CXX_COMPILER__Dominion_unscanned_D
   OBJECT_DIR = CMakeFiles\Dominion.dir
   OBJECT_FILE_DIR = CMakeFiles\Dominion.dir
 
-build CMakeFiles/Dominion.dir/CardStream.cpp.obj: CXX_COMPILER__Dominion_unscanned_Debug C$:/Users/Asus/Desktop/Polytech/Info/Dev$ logiciel/Dominion/CardStream.cpp || cmake_object_order_depends_target_Dominion
-  DEP_FILE = CMakeFiles\Dominion.dir\CardStream.cpp.obj.d
+build CMakeFiles/Dominion.dir/GameCommand.cpp.obj: CXX_COMPILER__Dominion_unscanned_Debug C$:/Users/Asus/Desktop/Polytech/Info/Dev$ logiciel/Dominion/GameCommand.cpp || cmake_object_order_depends_target_Dominion
+  DEP_FILE = CMakeFiles\Dominion.dir\GameCommand.cpp.obj.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\Dominion.dir
   OBJECT_FILE_DIR = CMakeFiles\Dominion.dir
@@ -117,7 +117,7 @@ build CMakeFiles/Dominion.dir/Plateau.cpp.obj: CXX_COMPILER__Dominion_unscanned_
 #############################################
 # Link the executable Dominion.exe
 
-build Dominion.exe: CXX_EXECUTABLE_LINKER__Dominion_Debug CMakeFiles/Dominion.dir/main.cpp.obj CMakeFiles/Dominion.dir/TreasureCard.cpp.obj CMakeFiles/Dominion.dir/VictoryCard.cpp.obj CMakeFiles/Dominion.dir/KingdomCard.cpp.obj CMakeFiles/Dominion.dir/Card.cpp.obj CMakeFiles/Dominion.dir/Reserve.cpp.obj CMakeFiles/Dominion.dir/Player.cpp.obj CMakeFiles/Dominion.dir/CardStream.cpp.obj CMakeFiles/Dominion.dir/Jeux.cpp.obj CMakeFiles/Dominion.dir/Plateau.cpp.obj
+build Dominion.exe: CXX_EXECUTABLE_LINKER__Dominion_Debug CMakeFiles/Dominion.dir/main.cpp.obj CMakeFiles/Dominion.dir/TreasureCard.cpp.obj CMakeFiles/Dominion.dir/VictoryCard.cpp.obj CMakeFiles/Dominion.dir/KingdomCard.cpp.obj CMakeFiles/Dominion.dir/Card.cpp.obj CMakeFiles/Dominion.dir/Reserve.cpp.obj CMakeFiles/Dominion.dir/Player.cpp.obj CMakeFiles/Dominion.dir/GameCommand.cpp.obj CMakeFiles/Dominion.dir/Jeux.cpp.obj CMakeFiles/Dominion.dir/Plateau.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Dominion.dir

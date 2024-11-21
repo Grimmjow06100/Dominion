@@ -15,7 +15,7 @@ public:
     explicit TreasureCard(std::string const& nom);
     TreasureCard(TreasureCard const& card);
     [[nodiscard]]int getTreasure() const ;
-    void affichage() override;
+    void affichage() const override;
     void action(Jeux &j) override;
 };
 

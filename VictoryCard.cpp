@@ -37,7 +37,7 @@ VictoryCard::VictoryCard(std::string const&nom) : Card(normalize(nom),0), m_vict
 VictoryCard::VictoryCard(VictoryCard const &card) : Card(card.m_nom,card.m_cost), m_victory(card.m_victory)
 {}
 
-void VictoryCard::affichage()
+void VictoryCard::affichage() const
 {
     std::cout<<m_nom<<" "<<m_cost<<std::endl;
     std::cout<<"+ "<<m_victory<<" points de victoire"<<std::endl;
@@ -50,5 +50,5 @@ int VictoryCard::getVictory() const {
 
 void VictoryCard::action(Jeux &j) {
     Player &p=j.getActif();
-    p.setPoints(p.getPoints()+m_victory);
+    p.AddPoint(m_victory);
 }

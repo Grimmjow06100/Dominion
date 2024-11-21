@@ -4,14 +4,14 @@
 
 #ifndef PLATEAU_H
 #define PLATEAU_H
-
+#include <map>
+#include <string>
 #include "Reserve.h"
-#include <unordered_map>
 
 
 class Plateau {
 private:
-    std::unordered_map<std::string,Reserve>m_reserveMap;
+    std::map<std::string,Reserve>m_reserve;
     int m_cuivre;
     int m_argent;
     int m_or;
@@ -20,14 +20,14 @@ private:
     int m_curse;
 public :
     void affichePlateau();
-
     explicit Plateau (int nbrJoueur);
     void built();
     void affichage()const;
-    bool isEmpty()const;
+    [[nodiscard]]bool isEmpty()const;
+    void updateReserveByName(const std::string& cardName,int nbr);
+    std::map<std::string,Reserve>& getReserve();
 
-    void updateReserve(const std::string& cardName,int nbr);
-    std::unordered_map<std::string,Reserve>& getReserveMap();
+
 
 
 

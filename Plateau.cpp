@@ -6,7 +6,6 @@
 #include "KingdomCard.h"
 #include <iostream>
 #include "VictoryCard.h"
-#include "CardStream.h"
 #include "TreasureCard.h"
 #include <iomanip>
 
@@ -15,7 +14,8 @@
 #include <unordered_map>
 #include <string>
 
-std::vector<std::string> base ={"atelier","bucheron","village","festin","laboratoire","douves","jardins","chapelle","bandit","sorciere"};
+
+std::vector<std::string>BaseBoard ={"atelier","bucheron","village","festivale","laboratoire","douves","jardins","chapelle","bandit","sorciere"};
 
 /**
  * Trie le vecteur de cartes en fonction de son type
@@ -169,19 +169,19 @@ Plateau::Plateau( int nbrJoueur):m_cuivre(60),m_argent(40),m_or(30)
  */
 void Plateau::built()
 {
-    m_reserveMap["CUIVRE"]=Reserve(TreasureCard("CUIVRE"),m_cuivre);
-    m_reserveMap["ARGENT"]=Reserve(TreasureCard("ARGENT"),m_argent);
-    m_reserveMap["OR"]=Reserve(TreasureCard("OR"),m_or);
-    m_reserveMap["DOMAINE"]=Reserve(VictoryCard("DOMAINE"),m_victory);
-    m_reserveMap["DUCHE"]=Reserve(VictoryCard("DUCHE"),m_victory);
-    m_reserveMap["PROVINCE"]=Reserve(VictoryCard("PROVINCE"),m_victory);
-    m_reserveMap["MALEDICTION"]=Reserve(VictoryCard("MALEDICTION"),m_curse);
-    for(auto &i : base)
+    m_reserve["CUIVRE"]=Reserve(TreasureCard("CUIVRE"),m_cuivre);
+    m_reserve["ARGENT"]=Reserve(TreasureCard("ARGENT"),m_argent);
+    m_reserve["OR"]=Reserve(TreasureCard("OR"),m_or);
+    m_reserve["DOMAINE"]=Reserve(VictoryCard("DOMAINE"),m_victory);
+    m_reserve["DUCHE"]=Reserve(VictoryCard("DUCHE"),m_victory);
+    m_reserve["PROVINCE"]=Reserve(VictoryCard("PROVINCE"),m_victory);
+    m_reserve["MALEDICTION"]=Reserve(VictoryCard("MALEDICTION"),m_curse);
+    for(auto &i : BaseBoard)
     {
         auto it = KingdomCard::KingdomCardMap.find(normalize(i));
         if (it != KingdomCard::KingdomCardMap.end())
         {
-            m_reserveMap[it->second.getNom()]=Reserve(it->second, normalize(i) == "JARDIN" ? m_victory:m_kingdom);
+            m_reserve[normalize(it->second.getNom())]=Reserve(it->second, normalize(i) == "JARDIN" ? m_victory:m_kingdom);
         }
 
     }
@@ -197,9 +197,9 @@ void Plateau::built()
 bool Plateau::isEmpty() const
 {
     int count=0;
-    if(m_reserveMap.at("PROVINCE").isEmpty())
+    if(m_reserve.at("PROVINCE").isEmpty())
         return true;
-    for(auto &it : m_reserveMap)
+    for(auto &it : m_reserve)
     {
 
         if(it.second.isEmpty())
@@ -213,18 +213,21 @@ bool Plateau::isEmpty() const
 void Plateau::affichage()const
 {
     std::cout<<"//////////////////////////////////////////////RESERVE//////////////////////////////////////////////"<<std::endl;
-    for(auto &it:m_reserveMap)
+    for(auto &it:m_reserve)
     {
         it.second.affichage();
     }
     std::cout<<"//////////////////////////////////////////////FIN RESERVE//////////////////////////////////////////////"<<std::endl;
 }
 
-void Plateau::updateReserve(const std::string& cardName,int nbr)
+void Plateau::updateReserveByName(const std::string& cardName,int nbr)
 {
-    m_reserveMap.at(cardName).setTaille(m_reserveMap.at(cardName).getTaille()-nbr);
+    if(m_reserve.find(normalize(cardName))!=m_reserve.end())
+        m_reserve.at(cardName).DimTaille(nbr);
+    else
+        std::cout<<"mise à jour de la réserve impossible"<<std::endl;
 }
-std::unordered_map<std::string,Reserve>& Plateau::getReserveMap()
+std::map<std::string,Reserve>& Plateau::getReserve()
 {
-    return m_reserveMap;
+    return m_reserve;
 }

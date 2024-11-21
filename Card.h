@@ -5,8 +5,10 @@
 #ifndef CARD_H
 #define CARD_H
 #include <string>
+#include <vector>
 
 class Jeux;
+
 
 class Card{
 protected:
@@ -17,8 +19,8 @@ protected:
 public:
     Card(std::string nom,int cost);
     virtual ~Card()=default;
-    virtual void affichage();
-    virtual void action(Jeux &j);
+    virtual void affichage()const=0;
+    virtual void action(Jeux &j)=0;
     [[nodiscard ]] int getCost() const;
     [[nodiscard]] std::string getNom() const;
 };

@@ -4,10 +4,14 @@
 
 #include "KingdomCard.h"
 #include "Jeux.h"
+#include "Reserve.h"
+#include "Player.h"
+#include "Plateau.h"
+#include "GameCommand.h"
 #include <iostream>
 #include <fstream>
-#include "CardStream.h"
 
+#include "TreasureCard.h"
 
 
 std::vector<KingdomCard> KingdomCard::DataCards;
@@ -18,7 +22,7 @@ KingdomCard::KingdomCard(std::string nom, int cost, bool attack, bool reaction, 
     :Card(std::move(nom),cost),m_attack(attack),m_reaction(reaction),m_description(std::move(description)),m_cards(cards),m_actions(actions),m_coins(coins),m_buys(buys)
 {}
 KingdomCard::KingdomCard()
-    : Card("",0), m_attack(false), m_reaction(false), m_description(""),m_cards(0),m_actions(0),m_coins(0),m_buys(0)
+    : Card("",0), m_attack(false), m_reaction(false),m_cards(0),m_actions(0),m_coins(0),m_buys(0)
 {}
 KingdomCard::KingdomCard(KingdomCard const&card)
     :Card(card.m_nom,card.m_cost),m_attack(card.m_attack),m_reaction(card.m_reaction),m_description(card.m_description),m_cards(card.m_cards),m_actions(card.m_actions),m_coins(card.m_coins),m_buys(card.m_buys)
@@ -38,9 +42,7 @@ KingdomCard& KingdomCard::operator=(KingdomCard const& other) {
     }
     return *this;
 }
-
-
-void KingdomCard::affichage()
+void KingdomCard::affichage () const
 {
     std::cout<<normalize(m_nom)<<" "<<m_cost<<std::endl;
     std::cout<<m_description<<std::endl;
@@ -64,14 +66,45 @@ void KingdomCard::affichage()
 void KingdomCard::action(Jeux &j)
 {
 
+    std::cout<<"Vous avez joue la carte "<<m_nom<<std::endl;
     Player& player=j.getActif();
-    player.setActions(player.getActions()+m_actions);
+    player.AddAction(m_actions);
+    player.AddCoin(m_coins);
+    player.AddBuy(m_buys);
     player.pioche(m_cards);
-    player.setCoins(player.getCoins()+m_coins);
-    player.setBuys(player.getBuys()+m_buys);
+    if(m_nom=="ATELIER")
+    {
+        Atelier(j);
+    }
+    else if(m_nom=="CAVE")
+    {
+
+        Cave(j);
+    }
+    else if(m_nom=="JARDINS")
+    {
+        Jardins(player);
+    }
+    else if(m_nom=="BANDIT")
+    {
+        Bandit(j);
+    }
+    else if(m_nom=="SORCIERE")
+    {
+        Sorciere(j);
+    }
+    else if(m_nom=="CHAPELLE")
+    {
+        Chapelle(j);
+    }
+    else
+    {
+        std::cout<<"Action non definie pour cette carte"<<std::endl;
+    }
 
 
 }
+
 
 void KingdomCard::GenerateKingdomFromFile(const std::string& nomFichier) {
     std::ifstream fichier(nomFichier);
@@ -99,7 +132,7 @@ void KingdomCard::GenerateKingdomFromFile(const std::string& nomFichier) {
             // Créer une nouvelle carte quand une ligne vide est rencontrée
             if (!nom.empty() && !description.empty() ) {
                 DataCards.emplace_back(normalize(nom),cout,attack,reaction,description,cards,actions,coins,buys);
-                KingdomCardMap[normalize(nom)] = KingdomCard(nom, cout, attack, reaction, description,cards,actions,coins,buys);
+                KingdomCardMap[normalize(nom)] = KingdomCard(normalize(nom), cout, attack, reaction, description,cards,actions,coins,buys);
             }
             ligneCompteur = 0;
         } else {
@@ -122,10 +155,210 @@ void KingdomCard::GenerateKingdomFromFile(const std::string& nomFichier) {
     // Ajouter la dernière carte si elle n'est pas vide
     if (!nom.empty() && !description.empty()) {
         DataCards.emplace_back(normalize(nom),cout,attack,reaction,description,cards,actions,coins,buys);
-        KingdomCardMap[normalize(nom)] = KingdomCard(nom, cout, attack, reaction, description,cards,actions,coins,buys);
+        KingdomCardMap[normalize(nom)] = KingdomCard(normalize(nom), cout, attack, reaction, description,cards,actions,coins,buys);
     }
     fichier.close();
 }
+
+void KingdomCard::Atelier(Jeux const&j)
+{
+    Plateau &p=j.getPlateau();
+    Player &player=j.getActif();
+    std::cout<<"Liste des cartes disponibles :"<<std::endl;
+    for(auto const&i:p.getReserve())
+    {
+        if(i.second.getCard()->getCost()<=4)
+        {
+            i.second.affichage();
+        }
+    }
+    std::string nom;
+    std::cout<<"Entrez le nom de la carte que vous voulez recuperer "<<std::endl;
+    std::string card;
+    bool valid=false;
+    do
+    {
+        GameCommand::getInput(j,card);
+        std::cout<<card<<std::endl;
+        if(!card.empty())
+        {
+            valid=player.gainCard(card,p,0,4);
+        }
+        else
+            std::cout<<"La carte n'existe pas ou est trop chere ";
+    }while(card.empty() || !valid);
+
+}
+
+void KingdomCard::Chapelle(Jeux& j)
+{
+    Player &p=j.getActif();
+    std::cout<<"Combien de carte voulez-vous trasher ? (0-5)"<<std::endl;
+    int rep(-1);
+    int size=static_cast<int>(j.getActif().getHand().size());
+    do
+    {
+        GameCommand::getInput(j,rep);
+        if(rep>size)
+        {
+            std::cout<<"Vous ne pouvez pas trasher plus de cartes que vous n'en avez "<<std::endl;
+        }
+        else if(rep<0||rep>5)
+        {
+            std::cout<<"le nombre saisi doit se situer entre 0 et 5 "<<std::endl;
+        }
+        else
+            break;
+
+    }while(rep>size||rep<0);
+    if(rep==0)
+        return;
+    j.getActif().afficheHand();
+    std::cout<<"Choisissez la/les carte(s) que vous voulez trasher "<<std::endl;
+    for(int i=0;i<rep;i++)
+    {
+        std::cout<<"Carte "<<i+1<<" ";
+        std::string card;
+        bool success=false;
+        do{
+            GameCommand::getInput(j,card);
+            if(!card.empty())
+            {
+                success=p.trashCardFromHand(card);
+            }
+        }while(!success);
+    }
+}
+
+void KingdomCard::Sorciere(Jeux &j)
+{
+    Player &p=j.getActif();
+    p.gainCard("MALEDICTION",j.getPlateau());
+    for(auto &joueur:j.getPlayers())
+    {
+        if(joueur->getName()!=p.getName())
+        {
+            // Réaction à l'attaque
+            int index;
+            if (joueur->ReactTo(index))
+            {
+                std::cout << "Le joueur " << joueur->getName()
+                          << " annule votre attaque avec la carte "
+                          << joueur->getHand().at(index)->getNom() << std::endl;
+                continue;
+            }
+            joueur->gainCard("MALEDICTION",j.getPlateau());
+            std::cout<<"Le joueur "<<joueur->getName()<<" a gagne une malediction "<<std::endl;
+        }
+    }
+}
+
+void KingdomCard::Cave(Jeux & j)
+{
+    Player &p=j.getActif();
+    std::cout<<"Combien de carte voulez-vous defausser ? (0-5) "<<std::endl;
+    int rep(-1);
+    int size=static_cast<int>(p.getHand().size());
+    while(rep>5||rep>size||rep<0)
+    {
+        GameCommand::getInput(j,rep);
+        if(rep>size)
+        {
+            std::cout<<"Vous ne pouvez pas defausser plus de cartes que vous n'en avez "<<std::endl;
+        }
+        else if(rep<0||rep>5)
+        {
+            std::cout<<"le nombre saisi doit se situer entre 0 et 5"<<std::endl;
+        }
+        else
+            break;
+    }
+    if(rep==0)
+        return;
+    p.afficheHand();
+    std::cout<<"choisissez la/les carte(s) que vous voulez defausser "<<std::endl;
+    for(int i=0;i<rep;i++)
+    {
+        std::cout<<"Carte "<<i+1<<" ";
+        std::string card;
+        do
+        {
+            GameCommand::getInput(j,card);
+            if(!card.empty())
+            {
+                p.defausseFromHand(card);
+            }
+            else
+                std::cout<<"cette carte n'est pas dans votre main ";
+        }while(card.empty());
+    }
+    p.pioche(rep);
+}
+
+void KingdomCard::Jardins(Player& p)
+{
+    int point=static_cast<int>(p.getDeck().size())/10;
+    p.AddPoint(point);
+}
+void KingdomCard::Bandit(Jeux& j)
+{
+    // 1. Le joueur actif gagne une carte Or
+    Player& actif = j.getActif();
+    actif.gainCard("OR", j.getPlateau());
+
+    // 2. Pour chaque autre joueur
+    for (auto& joueur : j.getPlayers())
+    {
+        if (joueur->getName() != actif.getName()) // Ignorer le joueur actif
+        {
+            // Réaction à l'attaque
+            int index;
+            if (joueur->ReactTo(index))
+            {
+                std::cout << "Le joueur " << joueur->getName()
+                          << " annule votre attaque avec la carte "
+                          << joueur->getHand().at(index)->getNom() << std::endl;
+                continue;
+            }
+            // Révéler les deux premières cartes du deck
+            std::vector<Card*> revealedCards;
+            for (int i = 0; i < 2 && !joueur->getDeck().empty(); ++i)
+            {
+                revealedCards.push_back(joueur->drawCard());
+            }
+
+            std::cout << "Le joueur " << joueur->getName() << " revele : ";
+            for (auto* card : revealedCards)
+                std::cout << card->getNom() << " ";
+            std::cout << std::endl;
+
+            // Chercher une carte Trésor non-Cuivre à trasher
+            bool trashed = false;
+            for (auto it = revealedCards.begin(); it != revealedCards.end(); ++it)
+            {
+                auto* treasureCard = dynamic_cast<TreasureCard*>(*it);
+                if (treasureCard && treasureCard->getNom() != "CUIVRE")
+                {
+                    std::cout << "Le joueur " << joueur->getName()
+                              << " trashe la carte : " << treasureCard->getNom() << std::endl;
+                    joueur->trashCard(*it);
+                    revealedCards.erase(it);
+                    trashed = true;
+                    break;
+                }
+            }
+
+            if (!trashed)
+            {
+                std::cout << "Le joueur " << joueur->getName()
+                          << " n'a pas de carte Tresor non-Cuivre a trasher " << std::endl;
+            }
+            // Défausser les cartes restantes
+            joueur->defausseArray(revealedCards);
+        }
+    }
+}
+
 
 int KingdomCard::getActions() const
 {

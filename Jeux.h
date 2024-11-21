@@ -4,11 +4,11 @@
 
 #ifndef JEUX_H
 #define JEUX_H
-#include "Plateau.h"
-#include "Player.h"
 #include "vector"
 
-class Reserve;
+
+
+class Plateau;
 class Player;
 
 
@@ -29,6 +29,7 @@ public:
     Jeux();
     ~Jeux();
     void initGame();
+    void initGame(std::string nom1,std::string nom2);
     void playGame();
     void playerBoard(Player *player) const;
     void actionPhase(Player* player);
@@ -38,6 +39,7 @@ public:
     [[nodiscard]]std::vector<Player*>getPlayers()const;
     [[nodiscard]]Player& getActif()const;
     [[nodiscard]]size_t getActifIndex()const;
+    [[nodiscard]]Plateau& getPlateau()const;
 
 
 };

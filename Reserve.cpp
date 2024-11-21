@@ -3,7 +3,9 @@
 //
 
 #include "Reserve.h"
-
+#include "KingdomCard.h"
+#include "TreasureCard.h"
+#include "VictoryCard.h"
 
 Reserve::Reserve():m_card(nullptr),m_taille(0)
 {}
@@ -59,6 +61,11 @@ Reserve::Reserve(const Reserve& other) {
 
     // Copie de la taille
     m_taille = other.m_taille;
+}
+
+void Reserve::DimTaille(int nbr)
+{
+    m_taille-=nbr;
 }
 
 

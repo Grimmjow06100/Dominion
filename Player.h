@@ -6,10 +6,12 @@
 #define PLAYER_H
 #include <string>
 #include <vector>
-#include "Jeux.h"
+
+
+
 class Card;
-
-
+class Jeux;
+class Plateau;
 
 
 
@@ -19,26 +21,44 @@ private:
     std::vector<Card*> m_hand;
     std::vector<Card*> m_defausse;
     std::vector<Card*> m_played;
-    int m_points;
-    int m_coins;
+    std::string m_name;
     int m_actions;
     int m_buys;
-    std::string m_name;
+    int m_coins;
+    int m_points;
+
+
+
 
 public:
     explicit Player(std::string name);
     ~Player();
     void pioche(int x);
-    void defausse();
-    void playCard(Card* card,Jeux &jeux);
+    void defausseAll();
+    bool defausseFromHand(std::string const &cardName);
+    bool defausseArray(std::vector<Card*>& cards);
+    bool playCard(std::string const&cardName,Jeux &jeux);
+    bool gainCard(std::string const&cardName,Plateau &p,int minCost=0,int maxCost=10);
+    void afficheHand()const;
     void shuffle();
     void reset();
+    void AddPoint(int points);
+    void AddTreasure(int treasure);
+    void AddAction(int action);
+    void AddBuy(int buy);
+    void AddCoin(int coin);
+    bool ReactTo(int&index);
+    bool sellCard(const std::string&cardName);
+    bool buyCard(std::string const&cardName,Plateau &p);
+    Card* drawCard();
+    static void trashCard(Card* card);
+    bool trashCardFromHand(std::string const&cardName);
 
     //getters
-    [[nodiscard]]std::vector<Card*> getDeck() const;
-    [[nodiscard]]std::vector<Card*> getHand() const;
-    [[nodiscard]]std::vector<Card*> getDefausse() const;
-    [[nodiscard]]std::vector<Card*> getPlayed() const;
+    [[nodiscard]]std::vector<Card*>& getDeck();
+    [[nodiscard]]std::vector<Card*>& getHand();
+    [[nodiscard]]std::vector<Card*>& getDefausse() ;
+    [[nodiscard]]std::vector<Card*>& getPlayed();
     [[nodiscard]]int getPoints() const;
     [[nodiscard]]int getCoins() const;
     [[nodiscard]]int getActions() const;
@@ -51,7 +71,6 @@ public:
     void setHand(std::vector<Card*> hand);
     void setDefausse(std::vector<Card*> discard);
     void setPlayed(std::vector<Card*> played);
-    void setPoints(int points);
     void setCoins(int coins);
     void setActions(int actions);
     void setBuys(int buys);

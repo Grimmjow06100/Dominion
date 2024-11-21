@@ -267,3 +267,13 @@ false
 0
 0
 +1 carte, +1 action, regarde ta pile de defausse, tu peux mettre une carte dans ton deck.
+
+Bucheron
+3
+false
+false
+0
+0
+2
+1
++1 achat, +2 pieces.

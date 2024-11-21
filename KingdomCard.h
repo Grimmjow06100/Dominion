@@ -6,10 +6,10 @@
 #define KINGDOMCARD_H
 #include <string>
 #include <vector>
-#include "Card.h"
 #include <map>
-
-
+#include "Card.h"
+class Player;
+class Jeux;
 
 
 class KingdomCard : public Card{
@@ -21,6 +21,12 @@ private:
     int m_actions;
     int m_coins;
     int m_buys;
+    static void Atelier(Jeux const&j);
+    static void Cave(Jeux &j);
+    static void Jardins(Player& p);
+    static void Bandit(Jeux &j);
+    static void Sorciere(Jeux &j);
+    static void Chapelle(Jeux &j);
 public :
     static std::vector<KingdomCard> DataCards;
     static std::map<std::string,KingdomCard> KingdomCardMap;
@@ -33,7 +39,7 @@ public :
     ~KingdomCard() override = default;
     KingdomCard& operator=(KingdomCard const& other) ;
 
-    void affichage() override;
+    void affichage() const override;
     void action(Jeux &j) override;
 
 

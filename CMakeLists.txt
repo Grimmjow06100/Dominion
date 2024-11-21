@@ -16,8 +16,8 @@ add_executable(Dominion main.cpp
         Reserve.h
         Player.cpp
         Player.h
-        Cardstream.cpp
-        Cardstream.h
+        GameCommand.cpp
+        GameCommand.h
         Jeux.cpp
         Jeux.h
         Plateau.cpp

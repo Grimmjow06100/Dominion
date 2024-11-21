@@ -3,6 +3,10 @@
 //
 #include<iostream>
 #include "Jeux.h"
+#include "Player.h"
+#include "Plateau.h"
+#include "TreasureCard.h"
+#include "VictoryCard.h"
 #include <algorithm>
 #include <random>
 #include <cstdlib> // pour std::system
@@ -64,12 +68,25 @@ void Jeux::initGame() {
     // Mélange aléatoire de l'ordre des joueurs
     std::random_device rd;  // Génère une graine aléatoire
     std::mt19937 g(rd());   // Générateur Mersenne Twister
-    std::shuffle(m_players.begin(), m_players.end(), g);
+    std::shuffle(m_players.begin(),m_players.end(), g);
 
     //creation du plateau de jeu
     m_plateau = new Plateau(nbJoueurs);
     m_plateau->built();
+
+
 }
+//pour les test
+void Jeux::initGame(std::string nom1, std::string nom2)
+{
+    m_players.push_back(new Player(std::move(nom1)));
+    m_players.push_back(new Player(std::move(nom2)));
+    m_plateau = new Plateau(2);
+    m_plateau->built();
+    DistributeCards();
+
+}
+
 
 /**
  * Lance une partie de Dominion
@@ -79,17 +96,12 @@ void Jeux::playGame(){
     std::cout << std::endl << "Le jeu peut commencer ! Bonne chance a tous !" << std::endl;
     DistributeCards();
     this->playerBoard(m_players[actifIndex]);
-    for(int i=0;i<10;i++) {
-        actifIndex = (actifIndex + 1)%(m_players.size());//maj du joueur qui joue
-    }
     /*
     while(!m_plateau->isEmpty())
     {
 
-
-       actifIndex = (actifIndex + 1)%(m_players.size());
-    }*/
-
+    }
+    */
 
 
 }
@@ -121,33 +133,14 @@ void Jeux::DistributeCards()
         //pioche de 5 cartes
         player->pioche(5);
 
+
+
     }
     //mise à jour de la réserve de cartes
-    m_plateau->updateReserve("DOMAINE",3*static_cast<int>(m_players.size()));
-    m_plateau->updateReserve("CUIVRE",7*static_cast<int>(m_players.size()));
+    m_plateau->updateReserveByName("DOMAINE",3*static_cast<int>(m_players.size()));
+    m_plateau->updateReserveByName("CUIVRE",7*static_cast<int>(m_players.size()));
 }
 
-/**
- * Affiche le classement des joueurs
- */
-void Jeux::afficheClassement() const {
-    std::vector<Player*> sortedPlayers = m_players; // Copie des joueurs pour ne pas modifier l'ordre original
-
-    // Trie les joueurs par points décroissants
-    std::sort(sortedPlayers.begin(), sortedPlayers.end(), [](Player* a, Player* b) {
-        return a->getPoints() > b->getPoints(); // Trie par points décroissants
-    });
-
-    std::cout << "______________________________________CLASSEMENT______________________________________" <<
-        std::endl << std::endl;
-
-    int rank = 1; // Classement initial
-    for (auto player : sortedPlayers) {
-        std::cout << std::setw(34) << rank << " - " << player->getName() << " (" << player->getPoints() << " points)" << std::endl;
-        ++rank;
-    }
-    std::cout << std::endl;
-}
 /**
  * Affiche la main d'un joueur
  * @param player
@@ -338,7 +331,6 @@ void Jeux::playerData(Player* player) {
  */
 void Jeux::playerBoard(Player* player) const {
     clearTerminal();
-    afficheClassement();
     m_plateau->affichePlateau();
     Jeux::afficheMain(player);
     Jeux::playerData(player);
@@ -349,7 +341,6 @@ void Jeux::playerBoard(Player* player) const {
 
 void Jeux::actionPhase(Player* player)
 {
-    std::cout<<player->getActions();//juste pour compiler
     /*Phase d'action du joueur actif, il peut jouer autant de cartes actions qu'il le souhaite
     tant qu'il lui reste des actions*/
 
@@ -359,7 +350,6 @@ void Jeux::actionPhase(Player* player)
 
 void Jeux::buyPhase(Player* player)
 {
-    std::cout<<player->getActions();//juste pour compiler
     /*Phase d'achat du joueur actif, il peut acheter autant de cartes qu'il le souhaite
     tant qu'il lui reste des achats*/
 
@@ -382,6 +372,11 @@ void Jeux::endTurn(Player* player)
     actifIndex = (actifIndex + 1) % range;
     player->reset();
 
+}
+
+Plateau& Jeux::getPlateau() const
+{
+    return *m_plateau;
 }
 
 

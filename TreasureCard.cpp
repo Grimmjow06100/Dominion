@@ -3,9 +3,7 @@
 //
 
 #include "TreasureCard.h"
-
 #include <iostream>
-
 #include "Player.h"
 #include "Jeux.h"
 
@@ -40,7 +38,7 @@ int TreasureCard::getTreasure() const
 }
 
 
-void TreasureCard::affichage()
+void TreasureCard::affichage() const
 {
 
     std::cout<<m_nom<<" "<<m_cost<<std::endl;
@@ -53,6 +51,6 @@ void TreasureCard::affichage()
 void TreasureCard::action(Jeux &j)
 {
     Player &p=j.getActif();
-    p.setCoins(p.getCoins()+m_treasure);
+    p.AddTreasure(m_treasure);
 
 }
