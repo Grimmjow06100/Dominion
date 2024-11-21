@@ -64,7 +64,7 @@ void Jeux::initGame() {
     // Mélange aléatoire de l'ordre des joueurs
     std::random_device rd;  // Génère une graine aléatoire
     std::mt19937 g(rd());   // Générateur Mersenne Twister
-    std::shuffle(m_players.begin(),m_players.end(), g);
+    std::ranges::shuffle(m_players, g);
 
     //creation du plateau de jeu
     m_plateau = new Plateau(nbJoueurs);
@@ -224,7 +224,7 @@ void Jeux::afficheMain(Player* player) {
  * Affiche un vecteur de cartes (par exemple la defausse ou le deck)
  * @param cards
  */
-void afficheCards(std::vector<Card*> cards) {
+void afficheCards(const std::vector<Card*>& cards) {
     constexpr int maxCartesParLigne = 5;
     std::vector<std::tuple<std::string, int, std::string, std::string>> cartes;
 
