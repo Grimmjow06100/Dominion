@@ -287,8 +287,7 @@ void Jeux::playerBoard(Player* player)
     m_plateau->affichePlateau();
     Jeux::afficheMain(player);
     Jeux::playerData(player);
-    /*affiche la main du joueur actif , les cartes qu'il a joué,son nombre d'actions restantes,d'achats
-    ,de pièces etc...Toute les informations necessaires pour le joueur actif*/
+    //afficher aides et classement
 
 }
 
