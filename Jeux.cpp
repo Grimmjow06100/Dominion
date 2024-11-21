@@ -64,7 +64,7 @@ void Jeux::initGame() {
     // Mélange aléatoire de l'ordre des joueurs
     std::random_device rd;  // Génère une graine aléatoire
     std::mt19937 g(rd());   // Générateur Mersenne Twister
-    std::ranges::shuffle(m_players, g);
+    std::shuffle(m_players.begin(), m_players.end(), g);
 
     //creation du plateau de jeu
     m_plateau = new Plateau(nbJoueurs);
@@ -127,6 +127,27 @@ void Jeux::DistributeCards()
     m_plateau->updateReserve("CUIVRE",7*static_cast<int>(m_players.size()));
 }
 
+/**
+ * Affiche le classement des joueurs
+ */
+void Jeux::afficheClassement() const {
+    std::vector<Player*> sortedPlayers = m_players; // Copie des joueurs pour ne pas modifier l'ordre original
+
+    // Trie les joueurs par points décroissants
+    std::sort(sortedPlayers.begin(), sortedPlayers.end(), [](Player* a, Player* b) {
+        return a->getPoints() > b->getPoints(); // Trie par points décroissants
+    });
+
+    std::cout << "______________________________________CLASSEMENT______________________________________" <<
+        std::endl << std::endl;
+
+    int rank = 1; // Classement initial
+    for (auto player : sortedPlayers) {
+        std::cout << std::setw(34) << rank << " - " << player->getName() << " (" << player->getPoints() << " points)" << std::endl;
+        ++rank;
+    }
+    std::cout << std::endl;
+}
 /**
  * Affiche la main d'un joueur
  * @param player
@@ -317,6 +338,7 @@ void Jeux::playerData(Player* player) {
  */
 void Jeux::playerBoard(Player* player) const {
     clearTerminal();
+    afficheClassement();
     m_plateau->affichePlateau();
     Jeux::afficheMain(player);
     Jeux::playerData(player);

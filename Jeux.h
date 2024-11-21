@@ -18,6 +18,9 @@ private:
     std::vector<Player*>m_players;
     size_t actifIndex=0;
     void DistributeCards();
+
+    void afficheClassement() const;
+
     static void afficheMain(Player* player);
 
     static void playerData(Player *player);

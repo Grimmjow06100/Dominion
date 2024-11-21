@@ -14,7 +14,7 @@ Player::Player(std::string name):m_name(std::move(name)){
     m_actions = 1;
     m_buys = 1;
     m_coins = 0;
-    m_points = 0;
+    m_points = 3;
 }
 
 Player::~Player()
