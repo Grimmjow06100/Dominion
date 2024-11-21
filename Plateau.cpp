@@ -39,9 +39,9 @@ void triCartes(std::vector<std::tuple<std::string, int, std::string, std::string
 /**
  * Affiche le plateau de jeu
  */
-void Plateau::affichePlateau() {
+void Plateau::affichage() {
     constexpr int maxCartesParLigne = 5;  // Maximum de cartes par ligne
-    const auto& reserves = this->getReserveMap();  // Nombre total de cartes
+    const auto& reserves = this->getReserve();  // Nombre total de cartes
 
     std::cout << "______________________________________ PLATEAU _________________________________________" << std::endl;
     std::vector<std::tuple<std::string, int, std::string, std::string, int>> cartes;
@@ -208,16 +208,6 @@ bool Plateau::isEmpty() const
             return true;
     }
     return false;
-}
-
-void Plateau::affichage()const
-{
-    std::cout<<"//////////////////////////////////////////////RESERVE//////////////////////////////////////////////"<<std::endl;
-    for(auto &it:m_reserve)
-    {
-        it.second.affichage();
-    }
-    std::cout<<"//////////////////////////////////////////////FIN RESERVE//////////////////////////////////////////////"<<std::endl;
 }
 
 void Plateau::updateReserveByName(const std::string& cardName,int nbr)

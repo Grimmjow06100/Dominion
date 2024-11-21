@@ -19,10 +19,9 @@ private:
     int m_kingdom;
     int m_curse;
 public :
-    void affichePlateau();
+    void affichage();
     explicit Plateau (int nbrJoueur);
     void built();
-    void affichage()const;
     [[nodiscard]]bool isEmpty()const;
     void updateReserveByName(const std::string& cardName,int nbr);
     std::map<std::string,Reserve>& getReserve();

@@ -3,6 +3,8 @@
 //
 
 #include "TreasureCard.h"
+
+#include <iomanip>
 #include <iostream>
 #include "Player.h"
 #include "Jeux.h"
@@ -41,9 +43,19 @@ int TreasureCard::getTreasure() const
 void TreasureCard::affichage() const
 {
 
-    std::cout<<m_nom<<" "<<m_cost<<std::endl;
-    std::cout<<"+ "<<m_treasure<<" pieces"<<std::endl;
-    std::cout<<"---------------------------------"<<std::endl;
+    std::cout << "\033[31m+--------------+\033[0m\n";
+    std::cout << "\033[31m|\033[0m " << std::setw(13) << std::left << m_nom << "\033[31m|\033[0m\n";
+    std::cout << "\033[31m|\033[0m Type: " << std::setw(7) << m_treasure << "\033[31m|\033[0m\n";
+    std::cout << "\033[31m|\033[0m Cout: " << std::setw(7) << m_cost << "\033[31m|\033[0m\n";
+    std::cout << "\033[31m+--------------+\033[0m\n";
+}
+
+void TreasureCard::details()const
+{
+    std::cout<<"Nom : "<<m_nom<<std::endl;
+    std::cout<<"Type : TRESOR "<<std::endl;
+    std::cout<<"Cout : "<<m_cost<<std::endl;
+    std::cout<<"Description : +"<<m_treasure<<" pieces"<<std::endl;
 }
 
 

@@ -7,6 +7,7 @@
 #include "Plateau.h"
 #include "TreasureCard.h"
 #include "VictoryCard.h"
+#include "KingdomCard.h"
 #include <algorithm>
 #include <random>
 #include <cstdlib> // pour std::system
@@ -95,7 +96,7 @@ void Jeux::playGame(){
     clearTerminal();
     std::cout << std::endl << "Le jeu peut commencer ! Bonne chance a tous !" << std::endl;
     DistributeCards();
-    this->playerBoard(m_players[actifIndex]);
+    playerBoard(m_players[actifIndex]);
     /*
     while(!m_plateau->isEmpty())
     {
@@ -140,202 +141,15 @@ void Jeux::DistributeCards()
     m_plateau->updateReserveByName("DOMAINE",3*static_cast<int>(m_players.size()));
     m_plateau->updateReserveByName("CUIVRE",7*static_cast<int>(m_players.size()));
 }
-
-/**
- * Affiche la main d'un joueur
- * @param player
- */
-void Jeux::afficheMain(Player* player) {
-    if (!player) {
-        std::cerr << "Erreur : joueur invalide." << std::endl;
-        return;
-    }
-
-    constexpr int maxCartesParLigne = 5;  // Maximum de cartes par ligne
-    const auto& main = player->getHand(); // Récupérer la main du joueur
-
-    std::cout << "______________________________________ MAIN DU JOUEUR " << player->getName() <<
-        "_________________________________" << std::endl;
-
-    // Stockage temporaire des cartes avec leurs informations
-    std::vector<std::tuple<std::string, int, std::string, std::string>> cartes;
-
-    for (const auto& card : main) {
-        if (card) { // Vérifiez que la carte n'est pas nulle
-            std::string type;
-            std::string extraInfo;
-            std::string colorCode;
-
-            if (dynamic_cast<KingdomCard*>(card)) {
-                type = "Royaume";
-                extraInfo = "FONCTION ";
-                colorCode = "\033[34m";  // Bleu pour Royaume
-            } else if (auto* treasureCard = dynamic_cast<TreasureCard*>(card)) {
-                type = "Tresor";
-                extraInfo = "Value : " + std::to_string(treasureCard->getTreasure());
-                colorCode = "\033[33m";  // Jaune pour Trésor
-            } else if (auto* victoryCard = dynamic_cast<VictoryCard*>(card)) {
-                type = "Victoire";
-                extraInfo = "Value : " + std::to_string(victoryCard->getVictory());
-                colorCode = "\033[32m";  // Vert pour Victoire
-            } else {
-                type = "Inconnu";
-                extraInfo = "N/A";
-                colorCode = "\033[0m";  // Réinitialiser pour inconnu
-            }
-
-            cartes.emplace_back(colorCode + card->getNom() + "\033[0m", card->getCost(), type, extraInfo);
-        }
-    }
-
-    // Affichage des cartes
-    const size_t totalCartes = cartes.size();
-
-    for (size_t i = 0; i < totalCartes; i += maxCartesParLigne) {
-        // Bordures supérieures des cartes
-        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
-            std::cout << "\033[31m+--------------+\033[0m  ";
-        }
-        std::cout << std::endl;
-
-        // Ligne contenant le nom des cartes
-        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
-            std::cout << "\033[31m|\033[0m " << std::setw(22) << std::left
-                      << std::get<0>(cartes[j]) << "\033[31m|\033[0m  ";
-        }
-        std::cout << std::endl;
-
-        // Ligne contenant le type des cartes
-        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
-            std::cout << "\033[31m|\033[0m Type:" << std::setw(8) << std::left
-                      << std::get<2>(cartes[j]) << "\033[31m|\033[0m  ";
-        }
-        std::cout << std::endl;
-
-        // Ligne contenant le coût des cartes
-        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
-            std::cout << "\033[31m|\033[0m Cout: " << std::setw(7) << std::left
-                      << std::get<1>(cartes[j]) << "\033[31m|\033[0m  ";
-        }
-        std::cout << std::endl;
-
-        // Ligne contenant les informations supplémentaires
-        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
-            std::cout << "\033[31m|\033[0m " << std::setw(13) << std::left
-                      << std::get<3>(cartes[j]) << "\033[31m|\033[0m  ";
-        }
-        std::cout << std::endl;
-
-        // Bordures inférieures des cartes
-        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
-            std::cout << "\033[31m+--------------+\033[0m  ";
-        }
-        std::cout << std::endl << std::endl;  // Espace entre les rangées de cartes
-    }
-}
-
-/**
- * Affiche un vecteur de cartes (par exemple la defausse ou le deck)
- * @param cards
- */
-void afficheCards(const std::vector<Card*>& cards) {
-    constexpr int maxCartesParLigne = 5;
-    std::vector<std::tuple<std::string, int, std::string, std::string>> cartes;
-
-    for (const auto& card : cards) {
-        if (card) { // Vérifiez que la carte n'est pas nulle
-            std::string type;
-            std::string extraInfo;
-            std::string colorCode;
-
-            if (dynamic_cast<KingdomCard*>(card)) {
-                type = "Royaume";
-                extraInfo = "FONCTION ";
-                colorCode = "\033[34m";  // Bleu pour Royaume
-            } else if (auto* treasureCard = dynamic_cast<TreasureCard*>(card)) {
-                type = "Tresor";
-                extraInfo = "Value : " + std::to_string(treasureCard->getTreasure());
-                colorCode = "\033[33m";  // Jaune pour Trésor
-            } else if (auto* victoryCard = dynamic_cast<VictoryCard*>(card)) {
-                type = "Victoire";
-                extraInfo = "Value : " + std::to_string(victoryCard->getVictory());
-                colorCode = "\033[32m";  // Vert pour Victoire
-            } else {
-                type = "Inconnu";
-                extraInfo = "N/A";
-                colorCode = "\033[0m";  // Réinitialiser pour inconnu
-            }
-
-            cartes.emplace_back(colorCode + card->getNom() + "\033[0m", card->getCost(), type, extraInfo);
-        }
-    }
-
-    // Affichage des cartes
-    const size_t totalCartes = cartes.size();
-
-    for (size_t i = 0; i < totalCartes; i += maxCartesParLigne) {
-        // Bordures supérieures des cartes
-        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
-            std::cout << "\033[31m+--------------+\033[0m  ";
-        }
-        std::cout << std::endl;
-
-        // Ligne contenant le nom des cartes
-        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
-            std::cout << "\033[31m|\033[0m " << std::setw(22) << std::left
-                      << std::get<0>(cartes[j]) << "\033[31m|\033[0m  ";
-        }
-        std::cout << std::endl;
-
-        // Ligne contenant le type des cartes
-        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
-            std::cout << "\033[31m|\033[0m Type:" << std::setw(8) << std::left
-                      << std::get<2>(cartes[j]) << "\033[31m|\033[0m  ";
-        }
-        std::cout << std::endl;
-
-        // Ligne contenant le coût des cartes
-        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
-            std::cout << "\033[31m|\033[0m Cout: " << std::setw(7) << std::left
-                      << std::get<1>(cartes[j]) << "\033[31m|\033[0m  ";
-        }
-        std::cout << std::endl;
-
-        // Ligne contenant les informations supplémentaires
-        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
-            std::cout << "\033[31m|\033[0m " << std::setw(13) << std::left
-                      << std::get<3>(cartes[j]) << "\033[31m|\033[0m  ";
-        }
-        std::cout << std::endl;
-
-        // Bordures inférieures des cartes
-        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
-            std::cout << "\033[31m+--------------+\033[0m  ";
-        }
-        std::cout << std::endl << std::endl;  // Espace entre les rangées de cartes
-    }
-}
-
-/**
- * Affiche les donnees d'un joueur
- * @param player
- */
-void Jeux::playerData(Player* player) {
-    std::cout << "Nombre de points : " << player->getPoints() << " | pieces : "<< player->getCoins()
-    << " | actions : " << player->getActions() << " | achats : " << player->getBuys() << std::endl << std::endl;;
-}
-
 /**
  * Affiche l'ecran de jeu du joueur (plateau,main,infos...)
  * @param player
  */
 void Jeux::playerBoard(Player* player) const {
     clearTerminal();
-    m_plateau->affichePlateau();
-    Jeux::afficheMain(player);
-    Jeux::playerData(player);
-    //afficher aides et classement
-
+    m_plateau->affichage();
+    player->afficheHand();
+    player->info();
 }
 
 

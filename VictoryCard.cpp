@@ -3,6 +3,8 @@
 //
 
 #include "VictoryCard.h"
+
+#include <iomanip>
 #include <iostream>
 #include "Jeux.h"
 #include "Player.h"
@@ -39,9 +41,27 @@ VictoryCard::VictoryCard(VictoryCard const &card) : Card(card.m_nom,card.m_cost)
 
 void VictoryCard::affichage() const
 {
-    std::cout<<m_nom<<" "<<m_cost<<std::endl;
-    std::cout<<"+ "<<m_victory<<" points de victoire"<<std::endl;
-    std::cout<<"---------------------------------"<<std::endl;
+    std::cout << "\033[31m+--------------+\033[0m\n";
+    std::cout << "\033[31m|\033[0m " << std::setw(13) << std::left << m_nom << "\033[31m|\033[0m\n";
+    std::cout << "\033[31m|\033[0m Type: " << std::setw(7) << m_victory << "\033[31m|\033[0m\n";
+    std::cout << "\033[31m|\033[0m Cout: " << std::setw(7) << m_cost << "\033[31m|\033[0m\n";
+    std::cout << "\033[31m+--------------+\033[0m\n";
+}
+
+void VictoryCard::details()const
+{
+    std::string type;
+    if(m_victory>0)
+        type="VICTOIRE";
+    else
+        type="MALEDICTION";
+    std::cout<<"Nom : "<<m_nom<<std::endl;
+    std::cout<<"Type : "<<type<<std::endl;
+    std::cout<<"Cout : "<<m_cost<<std::endl;
+    if(m_victory>0)
+        std::cout<<"Description : +"<<m_victory<<" point de victoire"<<std::endl;
+    else
+        std::cout<<"Description : -"<<m_victory<<" point de victoire"<<std::endl;
 }
 
 int VictoryCard::getVictory() const {

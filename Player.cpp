@@ -1,5 +1,6 @@
 #include "Player.h"
 #include <algorithm>
+#include <iomanip>
 #include <iostream>
 #include <random>
 #include "TreasureCard.h"
@@ -54,9 +55,86 @@ void Player::reset() {
 }
 
 void Player::afficheHand() const {
-    std::cout << "Votre main :" << std::endl;
-    for (const auto& card : m_hand) {
-        card->affichage();
+    constexpr int maxCartesParLigne = 5;  // Maximum de cartes par ligne
+    const auto& main = m_hand; // Récupérer la main du joueur
+
+    std::cout << "______________________________________ MAIN DU JOUEUR " << m_name<<
+        "_________________________________" << std::endl;
+
+    // Stockage temporaire des cartes avec leurs informations
+    std::vector<std::tuple<std::string, int, std::string, std::string>> cartes;
+
+    for (const auto& card : main) {
+        if (card) { // Vérifiez que la carte n'est pas nulle
+            std::string type;
+            std::string extraInfo;
+            std::string colorCode;
+
+            if (dynamic_cast<KingdomCard*>(card)) {
+                type = "Royaume";
+                extraInfo = "FONCTION ";
+                colorCode = "\033[34m";  // Bleu pour Royaume
+            } else if (auto* treasureCard = dynamic_cast<TreasureCard*>(card)) {
+                type = "Tresor";
+                extraInfo = "Value : " + std::to_string(treasureCard->getTreasure());
+                colorCode = "\033[33m";  // Jaune pour Trésor
+            } else if (auto* victoryCard = dynamic_cast<VictoryCard*>(card)) {
+                type = "Victoire";
+                extraInfo = "Value : " + std::to_string(victoryCard->getVictory());
+                colorCode = "\033[32m";  // Vert pour Victoire
+            } else {
+                type = "Inconnu";
+                extraInfo = "N/A";
+                colorCode = "\033[0m";  // Réinitialiser pour inconnu
+            }
+
+            cartes.emplace_back(colorCode + card->getNom() + "\033[0m", card->getCost(), type, extraInfo);
+        }
+    }
+
+    // Affichage des cartes
+    const size_t totalCartes = cartes.size();
+
+    for (size_t i = 0; i < totalCartes; i += maxCartesParLigne) {
+        // Bordures supérieures des cartes
+        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
+            std::cout << "\033[31m+--------------+\033[0m  ";
+        }
+        std::cout << std::endl;
+
+        // Ligne contenant le nom des cartes
+        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
+            std::cout << "\033[31m|\033[0m " << std::setw(22) << std::left
+                      << std::get<0>(cartes[j]) << "\033[31m|\033[0m  ";
+        }
+        std::cout << std::endl;
+
+        // Ligne contenant le type des cartes
+        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
+            std::cout << "\033[31m|\033[0m Type:" << std::setw(8) << std::left
+                      << std::get<2>(cartes[j]) << "\033[31m|\033[0m  ";
+        }
+        std::cout << std::endl;
+
+        // Ligne contenant le coût des cartes
+        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
+            std::cout << "\033[31m|\033[0m Cout: " << std::setw(7) << std::left
+                      << std::get<1>(cartes[j]) << "\033[31m|\033[0m  ";
+        }
+        std::cout << std::endl;
+
+        // Ligne contenant les informations supplémentaires
+        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
+            std::cout << "\033[31m|\033[0m " << std::setw(13) << std::left
+                      << std::get<3>(cartes[j]) << "\033[31m|\033[0m  ";
+        }
+        std::cout << std::endl;
+
+        // Bordures inférieures des cartes
+        for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
+            std::cout << "\033[31m+--------------+\033[0m  ";
+        }
+        std::cout << std::endl << std::endl;  // Espace entre les rangées de cartes
     }
 }
 
@@ -92,6 +170,11 @@ bool Player::defausseFromHand(const std::string& cardName) {
         return true;
     }
     return false;
+}
+
+void Player::info() {
+    std::cout << "Nombre de points : " << m_points << " | pieces : "<< m_coins
+    << " | actions : " << m_actions << " | achats : " << m_buys << std::endl << std::endl;
 }
 
 bool Player::defausseArray(std::vector<Card*>& cards) {
@@ -167,13 +250,13 @@ bool Player::buyCard(std::string const& cardName, Plateau& p)
         if(it->second.getTaille()>0)
         {
 
-            if(it->second.getCard()->getCost()<=(*this).getCoins())
+            if(it->second.getCard()->getCost()<=this->getCoins())
             {
                 if(auto* k=dynamic_cast<KingdomCard*>(it->second.getCard()))
                 {
-                    (*this).getDefausse().push_back(new KingdomCard(*k));
-                    (*this).AddBuy(-1);
-                    (*this).AddCoin(-k->getCost());
+                    m_defausse.push_back(new KingdomCard(*k));
+                    AddBuy(-1);
+                    AddCoin(-k->getCost());
                     p.updateReserveByName(k->getNom(),1);
                     std::cout<<"Vous avez acheté la carte "<<k->getNom()<<std::endl;
                     return true;

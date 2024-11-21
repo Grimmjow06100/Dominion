@@ -41,6 +41,7 @@ public :
 
     void affichage() const override;
     void action(Jeux &j) override;
+    void details()const override;
 
 
     [[nodiscard]] bool isAttack()const;

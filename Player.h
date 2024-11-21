@@ -35,6 +35,7 @@ public:
     ~Player();
     void pioche(int x);
     void defausseAll();
+    void info();
     bool defausseFromHand(std::string const &cardName);
     bool defausseArray(std::vector<Card*>& cards);
     bool playCard(std::string const&cardName,Jeux &jeux);
