@@ -16,8 +16,13 @@ class Jeux {
 private:
     Plateau* m_plateau;
     std::vector<Player*>m_players;
-    size_t actifIndex=0;
+    size_t actifIndex;
     void DistributeCards();
+    void setPlayer(Player* player);
+    void playerBoard(Player *player) const;
+    void actionPhase(Player* player);
+    void buyPhase(Player* player);
+    void endTurn(Player* player);
 
 public:
     Jeux();
@@ -25,13 +30,10 @@ public:
     void initGame();
     void initGame(std::string nom1,std::string nom2);
     void playGame();
-    void playerBoard(Player *player) const;
-    void actionPhase(Player* player);
-    void buyPhase(Player* player);
-    void endTurn(Player* player);
+
     //getters
     [[nodiscard]]std::vector<Player*>getPlayers()const;
-    [[nodiscard]]Player& getActif()const;
+    [[nodiscard]]Player& getActifPlayer()const;
     [[nodiscard]]size_t getActifIndex()const;
     [[nodiscard]]Plateau& getPlateau()const;
 

@@ -39,17 +39,17 @@ void afficheCards(const std::vector<Card*>& cards) {
             std::string extraInfo;
             std::string colorCode;
 
-            if (dynamic_cast<KingdomCard*>(card)) {
-                type = "Royaume";
-                extraInfo = "FONCTION ";
+            if (auto* k=dynamic_cast<KingdomCard*>(card)) {
+                type = "ROYAUME";
+                extraInfo = KingdomCard::actionType(*k);
                 colorCode = "\033[34m";  // Bleu pour Royaume
             } else if (auto* treasureCard = dynamic_cast<TreasureCard*>(card)) {
-                type = "Tresor";
-                extraInfo = "Value : " + std::to_string(treasureCard->getTreasure());
+                type = "TRESOR";
+                extraInfo = "Piece : " + std::to_string(treasureCard->getTreasure());
                 colorCode = "\033[33m";  // Jaune pour Trésor
             } else if (auto* victoryCard = dynamic_cast<VictoryCard*>(card)) {
-                type = "Victoire";
-                extraInfo = "Value : " + std::to_string(victoryCard->getVictory());
+                type = "VICTOIRE";
+                extraInfo = "PV : " + std::to_string(victoryCard->getVictory());
                 colorCode = "\033[32m";  // Vert pour Victoire
             } else {
                 type = "Inconnu";
@@ -67,41 +67,41 @@ void afficheCards(const std::vector<Card*>& cards) {
     for (size_t i = 0; i < totalCartes; i += maxCartesParLigne) {
         // Bordures supérieures des cartes
         for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
-            std::cout << "\033[31m+--------------+\033[0m  ";
+            std::cout << "\033[31m+----------------+\033[0m  ";
         }
         std::cout << std::endl;
 
         // Ligne contenant le nom des cartes
         for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
-            std::cout << "\033[31m|\033[0m " << std::setw(22) << std::left
+            std::cout << "\033[31m|\033[0m " << std::setw(24) << std::left
                       << std::get<0>(cartes[j]) << "\033[31m|\033[0m  ";
         }
         std::cout << std::endl;
 
         // Ligne contenant le type des cartes
         for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
-            std::cout << "\033[31m|\033[0m Type:" << std::setw(8) << std::left
+            std::cout << "\033[31m|\033[0m Type:" << std::setw(10) << std::left
                       << std::get<2>(cartes[j]) << "\033[31m|\033[0m  ";
         }
         std::cout << std::endl;
 
         // Ligne contenant le coût des cartes
         for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
-            std::cout << "\033[31m|\033[0m Cout: " << std::setw(7) << std::left
+            std::cout << "\033[31m|\033[0m Cout: " << std::setw(9) << std::left
                       << std::get<1>(cartes[j]) << "\033[31m|\033[0m  ";
         }
         std::cout << std::endl;
 
         // Ligne contenant les informations supplémentaires
         for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
-            std::cout << "\033[31m|\033[0m " << std::setw(13) << std::left
+            std::cout << "\033[31m|\033[0m " << std::setw(15) << std::left
                       << std::get<3>(cartes[j]) << "\033[31m|\033[0m  ";
         }
         std::cout << std::endl;
 
         // Bordures inférieures des cartes
         for (size_t j = i; j < i + maxCartesParLigne && j < totalCartes; ++j) {
-            std::cout << "\033[31m+--------------+\033[0m  ";
+            std::cout << "\033[31m+----------------+\033[0m  ";
         }
         std::cout << std::endl << std::endl;  // Espace entre les rangées de cartes
     }

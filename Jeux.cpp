@@ -12,11 +12,13 @@
 #include <cstdlib> // pour std::system
 #include <iomanip>
 
+#include "GameCommand.h"
+
 /**
  * Constructeur vide
  */
 Jeux::Jeux()
-    : m_plateau(nullptr){}
+    : m_plateau(nullptr),actifIndex(0){}
 
 /**
  * Destructeur vide
@@ -68,7 +70,7 @@ void Jeux::initGame() {
     // Mélange aléatoire de l'ordre des joueurs
     std::random_device rd;  // Génère une graine aléatoire
     std::mt19937 g(rd());   // Générateur Mersenne Twister
-    std::shuffle(m_players.begin(),m_players.end(), g);
+    std::ranges::shuffle(m_players.begin(),m_players.end(), g);
 
     //creation du plateau de jeu
     m_plateau = new Plateau(nbJoueurs);
@@ -79,8 +81,8 @@ void Jeux::initGame() {
 //pour les test
 void Jeux::initGame(std::string nom1, std::string nom2)
 {
-    m_players.push_back(new Player(std::move(nom1)));
-    m_players.push_back(new Player(std::move(nom2)));
+    m_players.push_back(new Player(nom1));
+    m_players.push_back(new Player(nom2));
     m_plateau = new Plateau(2);
     m_plateau->built();
     DistributeCards();
@@ -95,13 +97,18 @@ void Jeux::playGame(){
     clearTerminal();
     std::cout << std::endl << "Le jeu peut commencer ! Bonne chance a tous !" << std::endl;
     DistributeCards();
-    playerBoard(m_players[actifIndex]);
-    /*
     while(!m_plateau->isEmpty())
     {
-
+        for(auto* player : m_players)
+        {
+            setPlayer(player);
+            playerBoard(player);
+            actionPhase(player);
+            buyPhase(player);
+            endTurn(player);
+        }
     }
-    */
+
 
 
 }
@@ -154,20 +161,43 @@ void Jeux::playerBoard(Player* player) const {
 
 void Jeux::actionPhase(Player* player)
 {
-    /*Phase d'action du joueur actif, il peut jouer autant de cartes actions qu'il le souhaite
-    tant qu'il lui reste des actions*/
-
-    //ne pas oublier d'afficher le playerBoard si nécessaire
+    //Phase d'action du joueur actif
+    std::cout<<std::endl<<"Phase d'action pour le joueur "<<player->getName()<<std::endl;
+    bool* exit=new bool(false);
+    std::string card;
+    std::string message="Pour selectionner une carte a jouer : pick [nomCarte] \n"
+                        "Terminer votre tour : end";
+    while(player->canPlayAction()&&!*exit)
+    {
+        GameCommand<std::string>::getInput(*this,card,exit,false,message);
+        if(!card.empty())
+        {
+            player->playCard(card,*this);
+        }
+    }
+    std::cout<<"Fin de la phase d'action"<<std::endl;
+    delete exit;
 
 }
 
 void Jeux::buyPhase(Player* player)
 {
-    /*Phase d'achat du joueur actif, il peut acheter autant de cartes qu'il le souhaite
-    tant qu'il lui reste des achats*/
-
-    //ne pas oublier d'afficher le playerBoard si nécessaire
-    //ne pas oublier de modifier la réserve de cartes du plateau
+    //Phase d'achat du joueur actif
+    std::cout<<std::endl<<"Phase d'achat pour le joueur "<<player->getName()<<std::endl;
+    bool* exit=new bool(false);
+    std::string card;
+    std::string message="Pour selectionner une carte a acheter : pick [nomCarte] \n Vendre une carte tresor : sell [nomCarte] \n"
+                        "Terminer votre tour : end";
+    while(player->canBuy()&&!*exit)
+    {
+        GameCommand<std::string>::getInput(*this,card,exit,true,message);
+        if(!card.empty())
+        {
+            player->buyCard(card,*this);
+        }
+    }
+    std::cout<<"Fin de la phase d'achat"<<std::endl;
+    delete exit;
 
 }
 
@@ -177,14 +207,20 @@ void Jeux::buyPhase(Player* player)
  */
 void Jeux::endTurn(Player* player)
 {
-    /*Fin du tour du joueur actif
-     effectue les actions de fin de tour (défausse de la main et des cartes jouées, pioche de 5 cartes)
-     et on passe au joueur suivant
-     */
     size_t range=m_players.size();
     actifIndex = (actifIndex + 1) % range;
-    player->reset();
+    std::cout<<std::endl<<"Fin du tour pour le joueur "<<player->getName()<<std::endl;
+    std::cout<<"Passage au joueur "<<m_players.at(actifIndex)->getName()<<std::endl;
+    player->defausseAll();
+    player->pioche(5);
 
+}
+
+void Jeux::setPlayer(Player* player)
+{
+    player->setActions(1);
+    player->setBuys(1);
+    player->setCoins(0);
 }
 
 Plateau& Jeux::getPlateau() const
@@ -198,7 +234,7 @@ std::vector<Player*>Jeux::getPlayers()const
     return m_players;
 }
 
-Player& Jeux::getActif() const
+Player& Jeux::getActifPlayer() const
 {
     return *m_players.at(actifIndex);
 }

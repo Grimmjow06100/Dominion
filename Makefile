@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-Wall -Wextra
+CXXFLAGS=-Wall -Wextra -std=c++20 -Werror
 
 
 %.o: %.cpp

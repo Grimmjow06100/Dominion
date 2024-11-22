@@ -42,7 +42,6 @@ public:
     bool gainCard(std::string const&cardName,Plateau &p,int minCost=0,int maxCost=10);
     void afficheHand()const;
     void shuffle();
-    void reset();
     void AddPoint(int points);
     void AddTreasure(int treasure);
     void AddAction(int action);
@@ -50,10 +49,13 @@ public:
     void AddCoin(int coin);
     bool ReactTo(int&index);
     bool sellCard(const std::string&cardName);
-    bool buyCard(std::string const&cardName,Plateau &p);
+    void sellAllTreasure();
+    bool buyCard(std::string const&cardName,Jeux &j);
     Card* drawCard();
     static void trashCard(Card* card);
     bool trashCardFromHand(std::string const&cardName);
+    bool canPlayAction();
+    bool canBuy();
 
     //getters
     [[nodiscard]]std::vector<Card*>& getDeck();

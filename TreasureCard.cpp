@@ -62,7 +62,7 @@ void TreasureCard::details()const
 
 void TreasureCard::action(Jeux &j)
 {
-    Player &p=j.getActif();
+    Player &p=j.getActifPlayer();
     p.AddTreasure(m_treasure);
 
 }

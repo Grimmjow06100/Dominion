@@ -69,6 +69,6 @@ int VictoryCard::getVictory() const {
 }
 
 void VictoryCard::action(Jeux &j) {
-    Player &p=j.getActif();
+    Player &p=j.getActifPlayer();
     p.AddPoint(m_victory);
 }

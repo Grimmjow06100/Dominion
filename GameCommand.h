@@ -25,10 +25,10 @@ class GameCommand {
      static void help(const std::string& nomCarte,Jeux const&j);
      static std::string normalizeCommand(const std::string& input);
 public:
-     static void getInput(Jeux const&j,T& input,bool buyPhase=false,std::string const&message="");
+     static void getInput(Jeux const&j,T& input,bool* exit=nullptr,bool buyPhase=false,std::string const&message="");
 };
 template <typename T>
-void GameCommand<T>::getInput(const Jeux& j, T& input, bool buyPhase,std::string const&message)
+void GameCommand<T>::getInput(const Jeux& j, T& input,bool* exit, bool buyPhase,std::string const&message)
 {
     std::string commande;
     while (true)
@@ -38,9 +38,9 @@ void GameCommand<T>::getInput(const Jeux& j, T& input, bool buyPhase,std::string
 
         // Normalisation de la commande
         commande = normalizeCommand(commande);
-        if constexpr (std::is_same<T,std::string>::value)
+        if constexpr (std::is_same_v<T,std::string>)
         {
-            if (commande.find("pick ") == 0 ) {
+            if (commande.find("PICK ") == 0 ) {
                 std::string nom = normalize(commande.substr(5));
                 auto it = j.getPlateau().getReserve().find(nom);
                 if (it != j.getPlateau().getReserve().end()) {
@@ -50,17 +50,21 @@ void GameCommand<T>::getInput(const Jeux& j, T& input, bool buyPhase,std::string
                 std::cout << "La carte '" << nom << "' n'est pas reconnue ou n'est pas disponible dans le jeux." << std::endl;
 
             }
-            else if (commande.find("help ") == 0) {
+            else if (commande.find("HELP ") == 0) {
                 std::string nomCarte = commande.substr(5);
                 help(nomCarte,j);
             }
-            else if(commande.find("sell ")==0)
+            else if(commande.find("SELL ")==0)
             {
                 if(buyPhase)
                 {
                     std::string nom = commande.substr(5);
-                    Player& p=j.getActif();
-                    if(p.sellCard(nom))
+                    Player& p=j.getActifPlayer();
+                    if(nom=="ALL")
+                    {
+                        p.sellAllTreasure();
+                    }
+                    else if(p.sellCard(nom))
                     {
                         std::cout<<"La carte a ete vendu"<<std::endl;
                     }
@@ -70,53 +74,63 @@ void GameCommand<T>::getInput(const Jeux& j, T& input, bool buyPhase,std::string
                 else
                     std::cout<<"Vous ne pouvez pas vendre de carte en dehors de la phase d'achat"<<std::endl;
             }
-            else if(commande == "info")
+            else if(commande == "INFO")
             {
-                j.getActif().info();
+                j.getActifPlayer().info();
             }
             else if(commande == "?")
             {
                 std::cout<<message<<std::endl;
             }
-            else if (commande == "board") {
+            else if (commande == "BOARD") {
                 j.getPlateau().affichage();
-            } else if (commande == "deck") {
-                j.getActif().afficheHand();
-            } else if (commande == "exit") {
-                break;
+            } else if (commande == "DECK") {
+                j.getActifPlayer().afficheHand();
+            } else if (commande == "END") {
+                if(exit!=nullptr)
+                {
+                    *exit=true;
+                    break;
+                }
+                std::cout<<"vous ne pouvez pas terminer le tour maintenant"<<std::endl;
             }
             else {
-                std::cout<<"La commande n'est pas reconnue. Essayez 'help [nomCarte]', 'pick [nomCarte]', 'board', 'deck', ?, ou 'exit'."<<std::endl;
+                std::cout<<"La commande n'est pas reconnue. Essayez 'help [nomCarte]', 'pick [nomCarte]', 'board', 'deck', ?, ou 'end'."<<std::endl;
             }
         }
-        else if constexpr (std::is_same<T,int>::value)
+        else if constexpr (std::is_same_v<T,int>)
         {
-            if (commande.find("pick ") == 0) {
+            if (commande.find("PICK ") == 0) {
                 std::cout << "un nombre est attendu" << std::endl;
             }
-            else if (commande.find("help ") == 0) {
+            else if (commande.find("HELP ") == 0) {
                 std::string nomCarte = commande.substr(5);
                 help(nomCarte,j);
             }
-            else if(commande.find("sell ")==0)
+            else if(commande.find("SELL ")==0)
             {
                 std::cout<<"un nombre est attendu ";
             }
 
-            else if(commande == "info")
+            else if(commande == "INFO")
             {
-                j.getActif().info();
+                j.getActifPlayer().info();
             }
             else if(commande == "?")
             {
                 std::cout<<message<<std::endl;
             }
-            else if (commande == "board") {
+            else if (commande == "BOARD") {
                 j.getPlateau().affichage();
-            } else if (commande == "deck") {
-                j.getActif().afficheHand();
-            } else if (commande == "exit") {
-                break;
+            } else if (commande == "DECK") {
+                j.getActifPlayer().afficheHand();
+            } else if (commande == "END") {
+                if(exit!=nullptr)
+                {
+                    *exit=true;
+                    break;
+                }
+                std::cout<<"vous ne pouvez pas terminer le tour maintenant"<<std::endl;
             }
             else {
                 try {
@@ -163,7 +177,7 @@ std::string GameCommand<T>::normalizeCommand(const std::string& input) {
     result.erase(result.find_last_not_of(" \t\n\r") + 1); // Trim fin
 
     // Étape 2 : Convertir en minuscules
-    std::transform(result.begin(), result.end(), result.begin(), ::tolower);
+    std::transform(result.begin(), result.end(), result.begin(), ::toupper);
 
     // Étape 3 : Réduire les espaces multiples à un seul espace
     std::istringstream iss(result);

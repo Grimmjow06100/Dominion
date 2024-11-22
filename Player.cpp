@@ -8,11 +8,14 @@
 #include "KingdomCard.h"
 #include "Plateau.h"
 #include "Reserve.h"
+#include "Jeux.h"
 
 /**
  * Constructeur de Player
  */
-Player::Player(std::string name) : m_name(std::move(name)), m_actions(1), m_buys(1), m_coins(0), m_points(0) {}
+Player::Player(std::string name) : m_name(normalize(name)), m_actions(0), m_buys(0), m_coins(0), m_points(3)
+{
+}
 
 Player::~Player() {
     for (auto* card : m_deck) {
@@ -48,12 +51,6 @@ void Player::pioche(int x) {
     }
 }
 
-void Player::reset() {
-    m_actions = 1;
-    m_buys = 1;
-    m_coins = 0;
-}
-
 void Player::afficheHand() const {
     constexpr int maxCartesParLigne = 5;  // Maximum de cartes par ligne
     const auto& main = m_hand; // Récupérer la main du joueur
@@ -80,7 +77,7 @@ void Player::afficheHand() const {
                 colorCode = "\033[33m";  // Jaune pour Trésor
             } else if (auto* victoryCard = dynamic_cast<VictoryCard*>(card)) {
                 type = "VICTOIRE";
-                extraInfo = "Point : " + std::to_string(victoryCard->getVictory());
+                extraInfo = "PV : " + std::to_string(victoryCard->getVictory());
                 colorCode = "\033[32m";  // Vert pour Victoire
             } else {
                 type = "Inconnu";
@@ -139,7 +136,7 @@ void Player::afficheHand() const {
 }
 
 bool Player::playCard(const std::string& cardName, Jeux& jeux) {
-    auto it = std::find_if(m_hand.begin(), m_hand.end(), [&cardName](const Card* card) {
+    auto it = std::ranges::find_if(m_hand.begin(), m_hand.end(), [&cardName](const Card* card) {
         return card->getNom() == cardName;
     });
     if (it != m_hand.end()) {
@@ -160,7 +157,7 @@ void Player::defausseAll() {
 }
 
 bool Player::defausseFromHand(const std::string& cardName) {
-    auto it = std::find_if(m_hand.begin(), m_hand.end(), [&cardName](const Card* card) {
+    auto it = std::ranges::find_if(m_hand.begin(), m_hand.end(), [&cardName](const Card* card) {
         return card->getNom() == cardName;
     });
     if (it != m_hand.end()) {
@@ -173,8 +170,8 @@ bool Player::defausseFromHand(const std::string& cardName) {
 }
 
 void Player::info() {
-    std::cout << "Nombre de points : " << m_points << " | pieces : "<< m_coins
-    << " | actions : " << m_actions << " | achats : " << m_buys << std::endl << std::endl;
+    std::cout<<m_name <<" "<<m_points << " PV | " <<m_actions<<" Actions | "<<m_buys<<" Achats | " <<m_coins
+    <<" Pieces |"<<std::endl << std::endl;  // Affiche les informations du joueur
 }
 
 bool Player::defausseArray(std::vector<Card*>& cards) {
@@ -240,9 +237,10 @@ void Player::trashCard(Card* card) {
     delete card;
 }
 
-bool Player::buyCard(std::string const& cardName, Plateau& p)
+bool Player::buyCard(std::string const& cardName, Jeux& j)
 {
 
+    Plateau &p=j.getPlateau();
     std::map<std::string, Reserve>& reserve = p.getReserve();
     auto it = reserve.find(normalize(cardName));
     if(it!=reserve.end())
@@ -278,6 +276,7 @@ bool Player::buyCard(std::string const& cardName, Plateau& p)
                     AddCoin(-v->getCost());
                     p.updateReserveByName(v->getNom(),1);
                     std::cout<<"Vous avez acheté la carte "<<v->getNom()<<std::endl;
+                    m_defausse.back()->action(j);
                     return true;
                 }
 
@@ -293,7 +292,7 @@ bool Player::buyCard(std::string const& cardName, Plateau& p)
 
 
 bool Player::trashCardFromHand(const std::string& cardName) {
-    auto it = std::find_if(m_hand.begin(), m_hand.end(), [&cardName](const Card* card) {
+    auto it = std::ranges::find_if(m_hand.begin(), m_hand.end(), [&cardName](const Card* card) {
         return card->getNom() == cardName;
     });
     if (it != m_hand.end()) {
@@ -305,10 +304,26 @@ bool Player::trashCardFromHand(const std::string& cardName) {
     return false;
 }
 
+bool Player::canPlayAction() {
+
+    return std::ranges::any_of(m_hand.begin(),m_hand.end(),[this](Card *card)
+    {
+        return dynamic_cast<KingdomCard*>(card)&&m_actions>0;
+    });
+}
+
+bool Player::canBuy()
+{
+    return std::ranges::any_of(m_hand.begin(),m_hand.end(),[this](Card *card)
+    {
+        return dynamic_cast<TreasureCard*>(card)&&m_buys>0;
+    });
+}
+
 void Player::shuffle() {
     std::random_device rd;
     std::default_random_engine engine(rd());
-    std::shuffle(m_deck.begin(), m_deck.end(), engine);
+    std::ranges::shuffle(m_deck.begin(), m_deck.end(), engine);
 }
 
 void Player::AddPoint(int points) {
@@ -329,8 +344,7 @@ void Player::AddCoin(int coin) {
 }
 
 bool Player::sellCard(const std::string& cardName) {
-
-    auto it =std::find_if(m_hand.begin(),m_hand.end(),[&cardName](const Card* c)
+    auto it =std::ranges::find_if(m_hand.begin(),m_hand.end(),[&cardName](const Card* c)
     {
         return c->getNom()==cardName;
     });
@@ -339,12 +353,27 @@ bool Player::sellCard(const std::string& cardName) {
         if(auto* treasure=dynamic_cast<TreasureCard*>(*it))
         {
             m_coins+=treasure->getTreasure();
-            m_defausse.push_back(*it);
+            m_played.push_back(*it);
             m_hand.erase(it);
             return true;
         }
     }
     return false;
+}
+
+void Player::sellAllTreasure()
+{
+    for(auto it=m_hand.begin();it!=m_hand.end();++it)
+    {
+        if(auto* t=dynamic_cast<TreasureCard*>(*it))
+        {
+            m_coins+=t->getTreasure();
+            m_played.push_back(*it);
+            m_hand.erase(it);
+            break;
+        }
+    }
+    std::cout<<"Tous les tresors ont ete vendus"<<std::endl;
 }
 
 bool Player::ReactTo(int& index) {

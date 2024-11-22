@@ -85,7 +85,7 @@ void KingdomCard::action(Jeux &j)
 {
 
     std::cout<<"Vous avez joue la carte "<<m_nom<<std::endl;
-    Player& player=j.getActif();
+    Player& player=j.getActifPlayer();
     player.AddAction(m_actions);
     player.AddCoin(m_coins);
     player.AddBuy(m_buys);
@@ -181,7 +181,7 @@ void KingdomCard::GenerateKingdomFromFile(const std::string& nomFichier) {
 void KingdomCard::Atelier(Jeux const&j)
 {
     Plateau &p=j.getPlateau();
-    Player &player=j.getActif();
+    Player &player=j.getActifPlayer();
     std::cout<<"Liste des cartes disponibles :"<<std::endl;
     for(auto const&i:p.getReserve())
     {
@@ -197,7 +197,7 @@ void KingdomCard::Atelier(Jeux const&j)
     bool valid=false;
     do
     {
-        GameCommand<std::string>::getInput(j,card,false,message);
+        GameCommand<std::string>::getInput(j,card,nullptr,false,message);
         std::cout<<card<<std::endl;
         if(!card.empty())
         {
@@ -211,14 +211,14 @@ void KingdomCard::Atelier(Jeux const&j)
 
 void KingdomCard::Chapelle(Jeux& j)
 {
-    Player &p=j.getActif();
+    Player &p=j.getActifPlayer();
     std::string message="Combien de carte voulez-vous trasher ? (0-5) ";
     std::cout<<message<<std::endl;
     int rep(-1);
-    int size=static_cast<int>(j.getActif().getHand().size());
+    int size=static_cast<int>(j.getActifPlayer().getHand().size());
     do
     {
-        GameCommand<int>::getInput(j,rep,false,message);
+        GameCommand<int>::getInput(j,rep,nullptr,false,message);
         if(rep>size)
         {
             std::cout<<"Vous ne pouvez pas trasher plus de cartes que vous n'en avez "<<std::endl;
@@ -233,7 +233,7 @@ void KingdomCard::Chapelle(Jeux& j)
     }while(rep>size||rep<0);
     if(rep==0)
         return;
-    j.getActif().afficheHand();
+    j.getActifPlayer().afficheHand();
     message="Choisissez la/les carte(s) que vous voulez trasher (commande : pick [nomCarte]) ";
     std::cout<<message<<std::endl;
     for(int i=0;i<rep;i++)
@@ -241,7 +241,7 @@ void KingdomCard::Chapelle(Jeux& j)
         std::cout<<"Carte "<<i+1<<" ";
         std::string card;
         do{
-            GameCommand<std::string>::getInput(j,card,false,message);
+            GameCommand<std::string>::getInput(j,card,nullptr,false,message);
             if(!card.empty())
             {
                 if(p.trashCardFromHand(card))
@@ -254,7 +254,7 @@ void KingdomCard::Chapelle(Jeux& j)
 
 void KingdomCard::Sorciere(Jeux &j)
 {
-    Player &p=j.getActif();
+    Player &p=j.getActifPlayer();
     p.gainCard("MALEDICTION",j.getPlateau());
     for(auto &joueur:j.getPlayers())
     {
@@ -277,14 +277,14 @@ void KingdomCard::Sorciere(Jeux &j)
 
 void KingdomCard::Cave(Jeux & j)
 {
-    Player &p=j.getActif();
+    Player &p=j.getActifPlayer();
     std::string message="Combien de carte voulez-vous trasher ? (0-5) ";
     std::cout<<message<<std::endl;
     int rep(-1);
     int size=static_cast<int>(p.getHand().size());
     while(rep>5||rep>size||rep<0)
     {
-        GameCommand<int>::getInput(j,rep,false,message);
+        GameCommand<int>::getInput(j,rep,nullptr,false,message);
         if(rep>size)
         {
             std::cout<<"Vous ne pouvez pas defausser plus de cartes que vous n'en avez "<<std::endl;
@@ -307,7 +307,7 @@ void KingdomCard::Cave(Jeux & j)
         std::string card;
         do
         {
-            GameCommand<std::string>::getInput(j,card,false,message);
+            GameCommand<std::string>::getInput(j,card,nullptr,false,message);
             if(!card.empty())
             {
                 if(p.defausseFromHand(card))
@@ -330,7 +330,7 @@ void KingdomCard::Jardins(Player& p)
 void KingdomCard::Bandit(Jeux& j)
 {
     // 1. Le joueur actif gagne une carte Or
-    Player& actif = j.getActif();
+    Player& actif = j.getActifPlayer();
     actif.gainCard("OR", j.getPlateau());
 
     // 2. Pour chaque autre joueur

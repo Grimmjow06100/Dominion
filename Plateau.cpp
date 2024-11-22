@@ -64,7 +64,7 @@ void Plateau::affichage() {
                 colorCode = "\033[33m";  // Jaune pour Trésor
             } else if (auto* victoryCard = dynamic_cast<VictoryCard*>(card)) {
                 type = "VICTOIRE";
-                extraInfo = "Point : " + std::to_string(victoryCard->getVictory());
+                extraInfo = "PV : " + std::to_string(victoryCard->getVictory());
                 colorCode = "\033[32m";  // Vert pour Victoire
             } else {
                 type = "Inconnu";
