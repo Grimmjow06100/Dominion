@@ -24,9 +24,9 @@ std::vector<std::string>BaseBoard ={"atelier","bucheron","village","festivale","
 void triCartes(std::vector<std::tuple<std::string, int, std::string, std::string, int>>& cartes) {
     // Fonction pour attribuer une priorité basée sur le type
     auto getPriority = [](const std::string& type) {
-        if (type == "Victoire") return 0;
-        if (type == "Tresor") return 1;
-        if (type == "Royaume") return 2;
+        if (type == "VICTOIRE") return 0;
+        if (type == "TRESOR") return 1;
+        if (type == "ROYAUME") return 2;
         return 3;  // Type inconnu ou par défaut
     };
 
@@ -54,17 +54,17 @@ void Plateau::affichage() {
             int nombre = reserve.getTaille();  // Taille de la réserve
             Card* card = reserve.getCard();
 
-            if (dynamic_cast<KingdomCard*>(card)) {
-                type = "Royaume";
-                extraInfo = "ACTION  ";
+            if (auto* k=dynamic_cast<KingdomCard*>(card)) {
+                type = "ROYAUME";
+                extraInfo = KingdomCard::actionType(*k);
                 colorCode = "\033[34m";  // Bleu pour Royaume
             } else if (auto* treasureCard = dynamic_cast<TreasureCard*>(card)) {
-                type = "Tresor";
-                extraInfo = "Value : " + std::to_string(treasureCard->getTreasure());
+                type = "TRESOR";
+                extraInfo = "Piece : " + std::to_string(treasureCard->getTreasure());
                 colorCode = "\033[33m";  // Jaune pour Trésor
             } else if (auto* victoryCard = dynamic_cast<VictoryCard*>(card)) {
-                type = "Victoire";
-                extraInfo = "Value : " + std::to_string(victoryCard->getVictory());
+                type = "VICTOIRE";
+                extraInfo = "Point : " + std::to_string(victoryCard->getVictory());
                 colorCode = "\033[32m";  // Vert pour Victoire
             } else {
                 type = "Inconnu";
@@ -85,48 +85,48 @@ void Plateau::affichage() {
 
         // Bordures supérieures des cartes
         for (size_t j = 0; j < cartesRestantes; ++j) {
-            std::cout << "\033[31m+--------------+\033[0m  ";
+            std::cout << "\033[31m+----------------+\033[0m  ";
         }
         std::cout << std::endl;
 
         // Ligne contenant le nom des cartes
         for (size_t j = 0; j < cartesRestantes; ++j) {
-            std::cout << "\033[31m|\033[0m " << std::setw(22) << std::left
+            std::cout << "\033[31m|\033[0m " << std::setw(24) << std::left
                       << std::get<0>(cartes[i + j]) << "\033[31m|\033[0m  ";
         }
         std::cout << std::endl;
 
         // Ligne contenant le type des cartes
         for (size_t j = 0; j < cartesRestantes; ++j) {
-            std::cout << "\033[31m|\033[0m Type:" << std::setw(8) << std::left
+            std::cout << "\033[31m|\033[0m Type:" << std::setw(10) << std::left
                       << std::get<2>(cartes[i + j]) << "\033[31m|\033[0m  ";
         }
         std::cout << std::endl;
 
         // Ligne contenant le coût des cartes
         for (size_t j = 0; j < cartesRestantes; ++j) {
-            std::cout << "\033[31m|\033[0m Cout: " << std::setw(7) << std::left
+            std::cout << "\033[31m|\033[0m Cout: " << std::setw(9) << std::left
                       << std::get<1>(cartes[i + j]) << "\033[31m|\033[0m  ";
         }
         std::cout << std::endl;
 
         // Ligne contenant les informations supplémentaires
         for (size_t j = 0; j < cartesRestantes; ++j) {
-            std::cout << "\033[31m|\033[0m " << std::setw(13) << std::left
+            std::cout << "\033[31m|\033[0m " << std::setw(15) << std::left
                       << std::get<3>(cartes[i + j]) << "\033[31m|\033[0m  ";
         }
         std::cout << std::endl;
 
         // Ligne contenant le nombre de cartes
         for (size_t j = 0; j < cartesRestantes; ++j) {
-            std::cout << "\033[31m|\033[0m Nombre: " << std::setw(5) << std::left
+            std::cout << "\033[31m|\033[0m Nombre: " << std::setw(7) << std::left
                       << std::get<4>(cartes[i + j]) << "\033[31m|\033[0m  ";
         }
         std::cout << std::endl;
 
         // Bordures inférieures des cartes
         for (size_t j = 0; j < cartesRestantes; ++j) {
-            std::cout << "\033[31m+--------------+\033[0m  ";
+            std::cout << "\033[31m+----------------+\033[0m  ";
         }
         std::cout << std::endl << std::endl;  // Espace entre les rangées de cartes
     }

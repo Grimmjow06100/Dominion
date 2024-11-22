@@ -45,21 +45,7 @@ KingdomCard& KingdomCard::operator=(KingdomCard const& other) {
 }
 
 void KingdomCard::affichage() const{
-    std::string type;
-    if(m_attack)
-    {
-        type="ACTION-ATTAQUE";
-    }
-    else if(m_reaction)
-    {
-        type="ACTION-REACTION";
-    }
-    else if(normalize(m_nom)== "JARDINS")
-    {
-        type="VICTOIRE";
-    }
-    else
-        type="ACTION";
+    std::string type=actionType(*this);
     std::cout << "\033[31m+--------------+\033[0m\n";
     std::cout << "\033[31m|\033[0m " << std::setw(13) << std::left << m_nom << "\033[31m|\033[0m\n";
     std::cout << "\033[31m|\033[0m Type: " << std::setw(7) << type << "\033[31m|\033[0m\n";
@@ -69,25 +55,30 @@ void KingdomCard::affichage() const{
 
 void KingdomCard::details()const
 {
-    std::string type;
-    if(m_attack)
-    {
-        type="ACTION-ATTAQUE";
-    }
-    else if(m_reaction)
-    {
-        type="ACTION-REACTION";
-    }
-    else if(normalize(m_nom)== "JARDINS")
-    {
-        type="VICOTIRE";
-    }
-    else
-        type="ACTION";
+    std::string type=actionType(*this);
     std::cout<<"Nom : "<<m_nom<<std::endl;
     std::cout<<"Type : "<<type<<std::endl;
     std::cout<<"Cout : "<<m_cost<<std::endl;
     std::cout<<"Description : "<<m_description<<std::endl;
+}
+
+std::string KingdomCard::actionType(KingdomCard const&k)
+{
+
+    if(k.isAttack())
+    {
+        return "ACTION-ATTAQUE";
+    }
+    if(k.isReaction())
+    {
+        return "ACTION-REACTION";
+    }
+    if(k.getNom()== "JARDINS")
+    {
+        return "VICTOIRE";
+    }
+    return "ACTION";
+
 }
 
 void KingdomCard::action(Jeux &j)

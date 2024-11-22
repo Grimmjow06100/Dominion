@@ -31,6 +31,7 @@ public :
     static std::vector<KingdomCard> DataCards;
     static std::map<std::string,KingdomCard> KingdomCardMap;
     static void GenerateKingdomFromFile(const std::string& nomFichier);
+    static std::string actionType(KingdomCard const&k);
 
 
     KingdomCard(std::string nom,int cost,bool attack,bool reaction,std::string description,int cards,int actions,int coins,int buys);
