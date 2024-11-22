@@ -13,7 +13,7 @@
 /**
  * Constructeur de Player
  */
-Player::Player(std::string name) : m_name(normalize(name)), m_actions(0), m_buys(0), m_coins(0), m_points(3)
+Player::Player(std::string const& name) : m_name(normalize(name)), m_actions(0), m_buys(0), m_coins(0), m_points(3)
 {
 }
 
@@ -169,7 +169,7 @@ bool Player::defausseFromHand(const std::string& cardName) {
     return false;
 }
 
-void Player::info() {
+void Player::info() const {
     std::cout<<m_name <<" "<<m_points << " PV | " <<m_actions<<" Actions | "<<m_buys<<" Achats | " <<m_coins
     <<" Pieces |"<<std::endl << std::endl;  // Affiche les informations du joueur
 }
@@ -233,7 +233,7 @@ Card* Player::drawCard() {
     return card;
 }
 
-void Player::trashCard(Card* card) {
+void Player::trashCard(const Card* card) {
     delete card;
 }
 
@@ -256,7 +256,7 @@ bool Player::buyCard(std::string const& cardName, Jeux& j)
                     AddBuy(-1);
                     AddCoin(-k->getCost());
                     p.updateReserveByName(k->getNom(),1);
-                    std::cout<<"Vous avez acheté la carte "<<k->getNom()<<std::endl;
+                    std::cout<<"Vous avez achete la carte "<<k->getNom()<<std::endl;
                     return true;
 
                 }
@@ -266,7 +266,7 @@ bool Player::buyCard(std::string const& cardName, Jeux& j)
                     AddBuy(-1);
                     AddCoin(-t->getCost());
                     p.updateReserveByName(t->getNom(),1);
-                    std::cout<<"Vous avez acheté la carte "<<t->getNom()<<std::endl;
+                    std::cout<<"Vous avez achete la carte "<<t->getNom()<<std::endl;
                     return true;
                 }
                 if(auto* v=dynamic_cast<VictoryCard*>(it->second.getCard()))
@@ -275,13 +275,13 @@ bool Player::buyCard(std::string const& cardName, Jeux& j)
                     AddBuy(-1);
                     AddCoin(-v->getCost());
                     p.updateReserveByName(v->getNom(),1);
-                    std::cout<<"Vous avez acheté la carte "<<v->getNom()<<std::endl;
+                    std::cout<<"Vous avez achete la carte "<<v->getNom()<<std::endl;
                     m_defausse.back()->action(j);
                     return true;
                 }
 
             }
-            std::cout<<"Vous n'avez pas assez de pièces pour acheter cette carte"<<std::endl;
+            std::cout<<"Vous n'avez pas assez de pieces pour acheter cette carte"<<std::endl;
             return false;
         }
         std::cout<<"La carte n'est plus disponible"<<std::endl;
@@ -314,10 +314,7 @@ bool Player::canPlayAction() {
 
 bool Player::canBuy()
 {
-    return std::ranges::any_of(m_hand.begin(),m_hand.end(),[this](Card *card)
-    {
-        return dynamic_cast<TreasureCard*>(card)&&m_buys>0;
-    });
+    return m_buys>0;
 }
 
 void Player::shuffle() {
@@ -363,20 +360,21 @@ bool Player::sellCard(const std::string& cardName) {
 
 void Player::sellAllTreasure()
 {
-    for(auto it=m_hand.begin();it!=m_hand.end();++it)
-    {
-        if(auto* t=dynamic_cast<TreasureCard*>(*it))
-        {
-            m_coins+=t->getTreasure();
+    auto it = m_hand.begin();
+    while (it != m_hand.end()) {
+        if (auto* t = dynamic_cast<TreasureCard*>(*it)) {
+            m_coins += t->getTreasure();
             m_played.push_back(*it);
-            m_hand.erase(it);
-            break;
+            it = m_hand.erase(it); // Utiliser l'itérateur retourné par erase
+        } else {
+            ++it;
         }
     }
-    std::cout<<"Tous les tresors ont ete vendus"<<std::endl;
+
+    std::cout << "Tous les tresors ont ete vendus" << std::endl;
 }
 
-bool Player::ReactTo(int& index) {
+bool Player::ReactTo(int& index) const{
     for (size_t i = 0; i < m_hand.size(); ++i) {
         if (auto* kingdom = dynamic_cast<KingdomCard*>(m_hand[i])) {
             if (kingdom->isReaction()) {

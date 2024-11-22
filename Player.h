@@ -26,16 +26,12 @@ private:
     int m_buys;
     int m_coins;
     int m_points;
-
-
-
-
 public:
-    explicit Player(std::string name);
+    explicit Player(std::string const&name);
     ~Player();
     void pioche(int x);
     void defausseAll();
-    void info();
+    void info()const ;
     bool defausseFromHand(std::string const &cardName);
     bool defausseArray(std::vector<Card*>& cards);
     bool playCard(std::string const&cardName,Jeux &jeux);
@@ -47,12 +43,12 @@ public:
     void AddAction(int action);
     void AddBuy(int buy);
     void AddCoin(int coin);
-    bool ReactTo(int&index);
+    bool ReactTo(int&index)const;
     bool sellCard(const std::string&cardName);
     void sellAllTreasure();
     bool buyCard(std::string const&cardName,Jeux &j);
     Card* drawCard();
-    static void trashCard(Card* card);
+    static void trashCard(const Card* card);
     bool trashCardFromHand(std::string const&cardName);
     bool canPlayAction();
     bool canBuy();

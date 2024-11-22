@@ -22,11 +22,11 @@ private:
     int m_coins;
     int m_buys;
     static void Atelier(Jeux const&j);
-    static void Cave(Jeux &j);
+    static void Cave(Jeux const&j);
     static void Jardins(Player& p);
-    static void Bandit(Jeux &j);
-    static void Sorciere(Jeux &j);
-    static void Chapelle(Jeux &j);
+    static void Bandit(Jeux const&j);
+    static void Sorciere(Jeux const&j);
+    static void Chapelle(Jeux const&j);
 public :
     static std::vector<KingdomCard> DataCards;
     static std::map<std::string,KingdomCard> KingdomCardMap;

@@ -18,8 +18,8 @@ private:
     std::vector<Player*>m_players;
     size_t actifIndex;
     void DistributeCards();
-    void setPlayer(Player* player);
-    void playerBoard(Player *player) const;
+    static void setPlayer(Player* player);
+    void playerBoard(const Player* player) const;
     void actionPhase(Player* player);
     void buyPhase(Player* player);
     void endTurn(Player* player);
@@ -28,7 +28,7 @@ public:
     Jeux();
     ~Jeux();
     void initGame();
-    void initGame(std::string nom1,std::string nom2);
+    void initGame(std::string const&nom1,std::string const&nom2);
     void playGame();
 
     //getters

@@ -79,13 +79,12 @@ void Jeux::initGame() {
 
 }
 //pour les test
-void Jeux::initGame(std::string nom1, std::string nom2)
+void Jeux::initGame(std::string const&nom1, std::string const&nom2)
 {
     m_players.push_back(new Player(nom1));
     m_players.push_back(new Player(nom2));
     m_plateau = new Plateau(2);
     m_plateau->built();
-    DistributeCards();
 
 }
 
@@ -94,7 +93,7 @@ void Jeux::initGame(std::string nom1, std::string nom2)
  * Lance une partie de Dominion
  */
 void Jeux::playGame(){
-    clearTerminal();
+    //clearTerminal();
     std::cout << std::endl << "Le jeu peut commencer ! Bonne chance a tous !" << std::endl;
     DistributeCards();
     while(!m_plateau->isEmpty())
@@ -151,8 +150,8 @@ void Jeux::DistributeCards()
  * Affiche l'ecran de jeu du joueur (plateau,main,infos...)
  * @param player
  */
-void Jeux::playerBoard(Player* player) const {
-    clearTerminal();
+void Jeux::playerBoard(const Player* player) const {
+    //clearTerminal();
     m_plateau->affichage();
     player->afficheHand();
     player->info();

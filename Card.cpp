@@ -20,7 +20,7 @@ int Card::getCost() const
 // Normalisation de la chaine de caractères (majuscule)
 std::string normalize(const std::string& s) {
     std::string res = s;
-    std::transform(res.begin(), res.end(), res.begin(), ::toupper);
+    std::ranges::transform(res.begin(), res.end(), res.begin(), ::toupper);
     return res;
 }
 

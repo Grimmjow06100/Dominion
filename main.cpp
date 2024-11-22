@@ -16,18 +16,21 @@ BOARD	Affiche l'état actuel du plateau de jeu (contenu de la réserve, cartes d
 DECK	Affiche la main du joueur actif (les cartes en main).
 END	Termine le tour en cours, si la phase et les règles le permettent. Sinon, affiche un message d'erreur.
 COMMAND NON RECONNUE	Si une commande non valide est saisie, un message d'erreur s'affiche avec des suggestions de commandes valides.
- *
+ * exemple : pick domaine
+ * exemple :sell cuivre
+ * exemple :help sorciere
  *
  **/
 
 int main()
 {
     std::system("cls");
+    std::string const name="samy";
+    std::string const name2="yohan";
     Player p("samy");
     KingdomCard::GenerateKingdomFromFile("royaume.txt");
     Jeux j;
-    j.initGame("samy","yohan");
-
+    j.initGame(name,name2);
     j.playGame();
 
 
