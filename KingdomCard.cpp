@@ -250,8 +250,9 @@ void KingdomCard::Sorciere(Jeux const&j)
                           << joueur->getHand().at(index)->getNom() << std::endl;
                 continue;
             }
-            joueur->gainCard("MALEDICTION",j.getPlateau());
             std::cout<<"Le joueur "<<joueur->getName()<<" a gagne une malediction "<<std::endl;
+            joueur->gainCard("MALEDICTION",j.getPlateau());
+
         }
     }
 }

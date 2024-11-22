@@ -29,7 +29,7 @@ std::string Card::getNom() const
     return m_nom;
 }
 
-void afficheCards(const std::vector<Card*>& cards) {
+void Card::afficheCards(const std::vector<Card*>& cards) {
     constexpr int maxCartesParLigne = 5;
     std::vector<std::tuple<std::string, int, std::string, std::string>> cartes;
 

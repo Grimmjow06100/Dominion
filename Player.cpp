@@ -202,20 +202,17 @@ bool Player::gainCard(const std::string& cardName, Plateau& p,int minCost,int ma
             if (auto* kingdom = dynamic_cast<KingdomCard*>(card)) {
                 m_defausse.push_back(new KingdomCard(*kingdom));
                 p.updateReserveByName(str, 1);
-                std::cout << "la carte "<<card->getNom()<<" a ete place dans la defausse "<<std::endl;
                 return true;
             }
             if (auto* treasure = dynamic_cast<TreasureCard*>(card)) {
                 m_defausse.push_back(new TreasureCard(*treasure));
                 p.updateReserveByName(str, 1);
-                std::cout << "la carte "<<card->getNom()<<" a ete place dans la defausse"<<std::endl;
                 return true;
             }
             if (auto* victory = dynamic_cast<VictoryCard*>(card)) {
                 m_defausse.push_back(new VictoryCard(*victory));
                 AddPoint(victory->getVictory());
                 p.updateReserveByName(str, 1);
-                std::cout << "la carte "<<card->getNom()<<" a ete place dans la defausse"<<std::endl;
                 return true;
             }
         }
