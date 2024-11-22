@@ -14,7 +14,7 @@ public:
     VictoryCard(VictoryCard const& card);
     [[nodiscard]]int getVictory() const ;
     void affichage() const override;
-    void action(Jeux &j) override;
+
     void details() const override;
 };
 

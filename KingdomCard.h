@@ -41,7 +41,7 @@ public :
     KingdomCard& operator=(KingdomCard const& other) ;
 
     void affichage() const override;
-    void action(Jeux &j) override;
+    void action(Jeux &j);
     void details()const override;
 
 

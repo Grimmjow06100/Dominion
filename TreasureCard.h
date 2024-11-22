@@ -16,7 +16,6 @@ public:
     TreasureCard(TreasureCard const& card);
     [[nodiscard]]int getTreasure() const ;
     void affichage() const override;
-    void action(Jeux &j) override;
     void details() const override;
 };
 

@@ -34,7 +34,7 @@ public:
     void info()const ;
     bool defausseFromHand(std::string const &cardName);
     bool defausseArray(std::vector<Card*>& cards);
-    bool playCard(std::string const&cardName,Jeux &jeux);
+    bool playAction(std::string const&cardName,Jeux &jeux);
     bool gainCard(std::string const&cardName,Plateau &p,int minCost=0,int maxCost=10);
     void afficheHand()const;
     void shuffle();
@@ -46,7 +46,7 @@ public:
     bool ReactTo(int&index)const;
     bool sellCard(const std::string&cardName);
     void sellAllTreasure();
-    bool buyCard(std::string const&cardName,Jeux &j);
+    bool buyCard(std::string const&cardName,Jeux const&j);
     Card* drawCard();
     static void trashCard(const Card* card);
     bool trashCardFromHand(std::string const&cardName);

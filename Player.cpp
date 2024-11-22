@@ -135,17 +135,23 @@ void Player::afficheHand() const {
     }
 }
 
-bool Player::playCard(const std::string& cardName, Jeux& jeux) {
+bool Player::playAction(const std::string& cardName, Jeux& jeux) {
     auto it = std::ranges::find_if(m_hand.begin(), m_hand.end(), [&cardName](const Card* card) {
         return card->getNom() == cardName;
     });
     if (it != m_hand.end()) {
-        (*it)->action(jeux);
-        m_played.push_back(*it);
-        m_hand.erase(it);
-        return true;
+        if(dynamic_cast<KingdomCard*>(*it) &&(*it)->getNom()!= "JARDINS")
+        {
+            auto *k=dynamic_cast<KingdomCard*>(*it);
+            k->action(jeux);
+            m_played.push_back(*it);
+            m_hand.erase(it);
+            AddAction(-1);
+            return true;
+        }
+        std::cout<<"Vous ne pouvez pas jouer cette carte"<<std::endl;
     }
-    std::cout << "La carte n'existe pas" << std::endl;
+    std::cout << "Cette carte n'est pas dans votre main" << std::endl;
     return false;
 }
 
@@ -166,6 +172,7 @@ bool Player::defausseFromHand(const std::string& cardName) {
         std::cout << "La carte a ete place dans la defausse" << std::endl;
         return true;
     }
+    std::cout<<"cette carte n'est pas dans votre main ";
     return false;
 }
 
@@ -206,6 +213,7 @@ bool Player::gainCard(const std::string& cardName, Plateau& p,int minCost,int ma
             }
             if (auto* victory = dynamic_cast<VictoryCard*>(card)) {
                 m_defausse.push_back(new VictoryCard(*victory));
+                AddPoint(victory->getVictory());
                 p.updateReserveByName(str, 1);
                 std::cout << "la carte "<<card->getNom()<<" a ete place dans la defausse"<<std::endl;
                 return true;
@@ -237,7 +245,7 @@ void Player::trashCard(const Card* card) {
     delete card;
 }
 
-bool Player::buyCard(std::string const& cardName, Jeux& j)
+bool Player::buyCard(std::string const& cardName, Jeux const& j)
 {
 
     Plateau &p=j.getPlateau();
@@ -276,7 +284,7 @@ bool Player::buyCard(std::string const& cardName, Jeux& j)
                     AddCoin(-v->getCost());
                     p.updateReserveByName(v->getNom(),1);
                     std::cout<<"Vous avez achete la carte "<<v->getNom()<<std::endl;
-                    m_defausse.back()->action(j);
+                    AddPoint(v->getVictory());
                     return true;
                 }
 
@@ -300,7 +308,7 @@ bool Player::trashCardFromHand(const std::string& cardName) {
         m_hand.erase(it);
         return true;
     }
-    std::cout<<"La carte n'est pas dans votre main"<<std::endl;
+    std::cout<<"cette carte n'est pas dans votre main "<<std::endl;
     return false;
 }
 

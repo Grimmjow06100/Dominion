@@ -165,13 +165,13 @@ void Jeux::actionPhase(Player* player)
     bool* exit=new bool(false);
     std::string card;
     std::string message="Pour selectionner une carte a jouer : pick [nomCarte] \n"
-                        "Terminer votre tour : end";
+                        "Pour Terminer votre tour : end";
     while(player->canPlayAction()&&!*exit)
     {
         GameCommand<std::string>::getInput(*this,card,exit,false,message);
         if(!card.empty())
         {
-            player->playCard(card,*this);
+            player->playAction(card,*this);
         }
     }
     std::cout<<"Fin de la phase d'action"<<std::endl;
@@ -186,7 +186,7 @@ void Jeux::buyPhase(Player* player)
     bool* exit=new bool(false);
     std::string card;
     std::string message="Pour selectionner une carte a acheter : pick [nomCarte] \n Vendre une carte tresor : sell [nomCarte] \n"
-                        "Terminer votre tour : end";
+                        "Pour Terminer votre tour : end";
     while(player->canBuy()&&!*exit)
     {
         GameCommand<std::string>::getInput(*this,card,exit,true,message);

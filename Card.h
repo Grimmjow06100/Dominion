@@ -22,7 +22,6 @@ public:
     virtual ~Card()=default;
     virtual void affichage()const=0;
     virtual void details()const=0;
-    virtual void action(Jeux &j)=0;
     [[nodiscard ]] int getCost() const;
     [[nodiscard]] std::string getNom() const;
 };

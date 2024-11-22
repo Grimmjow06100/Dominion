@@ -87,9 +87,13 @@ void KingdomCard::action(Jeux &j)
     std::cout<<"Vous avez joue la carte "<<m_nom<<std::endl;
     Player& player=j.getActifPlayer();
     player.AddAction(m_actions);
+    std::cout<<"Vous avez gagne "<<m_actions<<" actions"<<std::endl;
     player.AddCoin(m_coins);
+    std::cout<<"Vous avez gagne "<<m_coins<<" pieces"<<std::endl;
     player.AddBuy(m_buys);
+    std::cout<<"Vous avez gagne "<<m_buys<<" achats"<<std::endl;
     player.pioche(m_cards);
+    std::cout<<"Vous avez pioche "<<m_cards<<" cartes"<<std::endl;
     if(m_nom=="ATELIER")
     {
         Atelier(j);
@@ -114,10 +118,6 @@ void KingdomCard::action(Jeux &j)
     else if(m_nom=="CHAPELLE")
     {
         Chapelle(j);
-    }
-    else
-    {
-        std::cout<<"Action non definie pour cette carte"<<std::endl;
     }
 
 
@@ -221,7 +221,7 @@ void KingdomCard::Chapelle(Jeux const& j)
     bool* exit=new bool(false);
     std::string card;
     while (count<size && !*exit){
-
+        card.clear();
         std::cout<<"Carte "<<count+1<<" ";
         GameCommand<std::string>::getInput(j,card,exit,false,message);
         if(!card.empty())
@@ -229,9 +229,7 @@ void KingdomCard::Chapelle(Jeux const& j)
             if(p.trashCardFromHand(card))
             {
                 count++;
-                continue;
             }
-            std::cout<<"cette carte n'est pas dans votre main "<<std::endl;
         }
     }
 }
@@ -239,7 +237,6 @@ void KingdomCard::Chapelle(Jeux const& j)
 void KingdomCard::Sorciere(Jeux const&j)
 {
     Player &p=j.getActifPlayer();
-    p.gainCard("MALEDICTION",j.getPlateau());
     for(auto &joueur:j.getPlayers())
     {
         if(joueur->getName()!=p.getName())
@@ -270,14 +267,13 @@ void KingdomCard::Cave(Jeux const& j)
     bool* exit=new bool(false);
     std::string card;
     while(count<size && !*exit){
+        card.clear();
         GameCommand<std::string>::getInput(j,card,exit,false,message);
         if(!card.empty()){
             if(p.defausseFromHand(card))
             {
                 count++;
-                continue;
             }
-            std::cout<<"cette carte n'est pas dans votre main ";
         }
     }
     p.pioche(count);

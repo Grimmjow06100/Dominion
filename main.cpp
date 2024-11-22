@@ -14,7 +14,7 @@ INFO	Affiche des informations détaillées sur l'état du joueur actif (main, tr
 ?	Affiche un message personnalisé (dépendant de la phase ou de l'étape en cours du jeu).
 BOARD	Affiche l'état actuel du plateau de jeu (contenu de la réserve, cartes disponibles, etc.).
 DECK	Affiche la main du joueur actif (les cartes en main).
-END	Termine le tour en cours, si la phase et les règles le permettent. Sinon, affiche un message d'erreur.
+END	Termine le tour en cours (ou finir une action ), si la phase et les règles le permettent. Sinon, affiche un message d'erreur.
 COMMAND NON RECONNUE	Si une commande non valide est saisie, un message d'erreur s'affiche avec des suggestions de commandes valides.
  * exemple : pick domaine
  * exemple :sell cuivre
@@ -25,12 +25,22 @@ COMMAND NON RECONNUE	Si une commande non valide est saisie, un message d'erreur 
 int main()
 {
     std::system("cls");
-    std::string const name="samy";
-    std::string const name2="yohan";
-    Player p("samy");
     KingdomCard::GenerateKingdomFromFile("royaume.txt");
     Jeux j;
-    j.initGame(name,name2);
+    j.initGame("samy","mohamed");
+    KingdomCard jardins=KingdomCard::KingdomCardMap["JARDINS"];
+    KingdomCard chapelle=KingdomCard::KingdomCardMap["CHAPELLE"];
+    KingdomCard sorciere=KingdomCard::KingdomCardMap["SORCIERE"];
+    KingdomCard bandit=KingdomCard::KingdomCardMap["BANDIT"];
+    KingdomCard village=KingdomCard::KingdomCardMap["VILLAGE"];
+    for(auto &player:j.getPlayers())
+    {
+        player->getHand().push_back(&jardins);
+        player->getHand().push_back(&chapelle);
+        player->getHand().push_back(&sorciere);
+        player->getHand().push_back(&bandit);
+        player->getHand().push_back(&village);
+    }
     j.playGame();
 
 
