@@ -301,6 +301,10 @@ bool Player::trashCardFromHand(const std::string& cardName) {
         return card->getNom() == cardName;
     });
     if (it != m_hand.end()) {
+        if(auto *v=dynamic_cast<VictoryCard*> (*it))
+        {
+            AddPoint(-v->getVictory());
+        }
         delete *it;
         m_hand.erase(it);
         return true;
