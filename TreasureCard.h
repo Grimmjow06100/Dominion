@@ -9,7 +9,6 @@
 
 
 class TreasureCard : public Card{
-private:
     int m_treasure;
 public:
     explicit TreasureCard(std::string const& nom);

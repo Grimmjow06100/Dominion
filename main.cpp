@@ -46,7 +46,7 @@ Conditions : Disponible uniquement pendant la phase d'achat.
 SELL [nomCarte]
 Effet : Vend une carte spécifique pour obtenir des pièces.
 Conditions : Disponible uniquement pendant la phase d'achat.
-Exemple : SELL Gold vend la carte "Gold".
+Exemple : SELL OR vend la carte "OR".
 
 SELL ALL
 Effet : Vend toutes les cartes de trésor du joueur actif pour obtenir des pièces.

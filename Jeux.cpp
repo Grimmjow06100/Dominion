@@ -93,7 +93,7 @@ void Jeux::initGame(std::string const&nom1, std::string const&nom2)
  * Lance une partie de Dominion
  */
 void Jeux::playGame(){
-    //clearTerminal();
+    clearTerminal();
     std::cout << std::endl << "Le jeu peut commencer ! Bonne chance a tous !" << std::endl;
     DistributeCards();
     while(!m_plateau->isEmpty())
@@ -151,7 +151,7 @@ void Jeux::DistributeCards()
  * @param player
  */
 void Jeux::playerBoard(const Player* player) const {
-    //clearTerminal();
+    clearTerminal();
     m_plateau->affichage();
     player->afficheHand();
     player->info();

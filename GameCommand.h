@@ -4,7 +4,6 @@
 
 #ifndef GAMECOMMAND_H
 #define GAMECOMMAND_H
-#include <algorithm>
 #include <string>
 #include <iostream>
 

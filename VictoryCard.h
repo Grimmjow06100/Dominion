@@ -7,7 +7,6 @@
 #include "Card.h"
 
 class VictoryCard : public Card{
-private:
     int m_victory;
 public:
     explicit VictoryCard(std::string const& nom);

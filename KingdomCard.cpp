@@ -82,17 +82,29 @@ std::string KingdomCard::actionType(KingdomCard const&k)
 
 void KingdomCard::action(Jeux &j)
 {
-
     std::cout<<"Vous avez joue la carte "<<m_nom<<std::endl;
     Player& player=j.getActifPlayer();
-    player.AddAction(m_actions);
-    std::cout<<"Vous avez gagne "<<m_actions<<" actions"<<std::endl;
-    player.AddCoin(m_coins);
-    std::cout<<"Vous avez gagne "<<m_coins<<" pieces"<<std::endl;
-    player.AddBuy(m_buys);
-    std::cout<<"Vous avez gagne "<<m_buys<<" achats"<<std::endl;
-    player.pioche(m_cards);
-    std::cout<<"Vous avez pioche "<<m_cards<<" cartes"<<std::endl;
+    if(m_actions)
+    {
+        player.AddAction(m_actions);
+        std::cout<<"Vous avez gagne "<<m_actions<<" actions"<<std::endl;
+    }
+    if(m_coins)
+    {
+        player.AddCoin(m_coins);
+        std::cout<<"Vous avez gagne "<<m_coins<<" pieces"<<std::endl;
+
+    }
+    if(m_buys)
+    {
+        player.AddBuy(m_buys);
+        std::cout<<"Vous avez gagne "<<m_buys<<" achats"<<std::endl;
+    }
+    if(m_cards)
+    {
+        player.pioche(m_cards);
+        std::cout<<"Vous avez pioche "<<m_cards<<" cartes"<<std::endl;
+    }
     if(m_nom=="ATELIER")
     {
         Atelier(j);
@@ -118,8 +130,6 @@ void KingdomCard::action(Jeux &j)
     {
         Chapelle(j);
     }
-
-
 }
 
 
@@ -301,12 +311,10 @@ void KingdomCard::Bandit(Jeux const&j)
             {
                 revealedCards.push_back(joueur->drawCard());
             }
-
-            std::cout << "Le joueur " << joueur->getName() << " revele : ";
-            for (auto* card : revealedCards)
-                std::cout << card->getNom() << " ";
-            std::cout << std::endl;
-
+            std::endl(std::cout);
+            std::cout << "-----------------Revelation des cartes du joueur " << joueur->getName() << "-----------------" << std::endl
+            <<std::endl;
+            afficheCards(revealedCards);
             // Chercher une carte Trésor non-Cuivre à trasher
             bool trashed = false;
             for (auto it = revealedCards.begin(); it != revealedCards.end(); ++it)

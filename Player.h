@@ -16,7 +16,6 @@ class Plateau;
 
 
 class Player {
-private:
     std::vector<Card*> m_deck;
     std::vector<Card*> m_hand;
     std::vector<Card*> m_defausse;

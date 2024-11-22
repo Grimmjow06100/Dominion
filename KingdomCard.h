@@ -13,7 +13,6 @@ class Jeux;
 
 
 class KingdomCard : public Card{
-private:
     bool m_attack;
     bool m_reaction;
     std::string m_description;

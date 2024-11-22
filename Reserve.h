@@ -14,7 +14,6 @@ class KingdomCard;
 
 
 class Reserve {
-private:
     Card* m_card;
     int m_taille;
 public :

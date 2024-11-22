@@ -13,7 +13,6 @@ class Player;
 
 
 class Jeux {
-private:
     Plateau* m_plateau;
     std::vector<Player*>m_players;
     size_t actifIndex;

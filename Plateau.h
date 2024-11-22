@@ -10,7 +10,6 @@
 
 
 class Plateau {
-private:
     std::map<std::string,Reserve>m_reserve;
     int m_cuivre;
     int m_argent;
