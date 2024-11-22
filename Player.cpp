@@ -149,7 +149,11 @@ bool Player::playAction(const std::string& cardName, Jeux& jeux) {
             AddAction(-1);
             return true;
         }
-        std::cout<<"Vous ne pouvez pas jouer cette carte"<<std::endl;
+        if((*it)->getNom()=="JARDINS")
+        {
+            std::cout<<"Vous ne pouvez pas jouer cette carte"<<std::endl;
+            return false;
+        }
     }
     std::cout << "Cette carte n'est pas dans votre main" << std::endl;
     return false;
@@ -361,9 +365,11 @@ bool Player::sellCard(const std::string& cardName) {
             m_coins+=treasure->getTreasure();
             m_played.push_back(*it);
             m_hand.erase(it);
+            std::cout<<"La carte "<< treasure->getNom()<<" a ete vendue"<<std::endl;
             return true;
         }
     }
+    std::cout << "Impossible de vendre cette carte." << std::endl;
     return false;
 }
 

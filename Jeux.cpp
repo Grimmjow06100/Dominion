@@ -163,16 +163,10 @@ void Jeux::actionPhase(Player* player)
     //Phase d'action du joueur actif
     std::cout<<std::endl<<"Phase d'action pour le joueur "<<player->getName()<<std::endl;
     bool* exit=new bool(false);
-    std::string card;
-    std::string message="Pour selectionner une carte a jouer : pick [nomCarte] \n"
-                        "Pour Terminer votre tour : end";
+    std::string consigne ="Jouez une carte action ou passez a la phase d'achat ";
     while(player->canPlayAction()&&!*exit)
     {
-        GameCommand<std::string>::getInput(*this,card,exit,false,message);
-        if(!card.empty())
-        {
-            player->playAction(card,*this);
-        }
+        GameCommand::getInput(*this,ACTION,exit,consigne);
     }
     std::cout<<"Fin de la phase d'action"<<std::endl;
     delete exit;
@@ -184,16 +178,10 @@ void Jeux::buyPhase(Player* player)
     //Phase d'achat du joueur actif
     std::cout<<std::endl<<"Phase d'achat pour le joueur "<<player->getName()<<std::endl;
     bool* exit=new bool(false);
-    std::string card;
-    std::string message="Pour selectionner une carte a acheter : pick [nomCarte] \n Vendre une carte tresor : sell [nomCarte] \n"
-                        "Pour Terminer votre tour : end";
+    std::string consigne="Achetez/Vendez une ou plusieurs cartes ou passez au tour suivant";
     while(player->canBuy()&&!*exit)
     {
-        GameCommand<std::string>::getInput(*this,card,exit,true,message);
-        if(!card.empty())
-        {
-            player->buyCard(card,*this);
-        }
+        GameCommand::getInput(*this,BUY,exit,consigne);
     }
     std::cout<<"Fin de la phase d'achat"<<std::endl;
     delete exit;

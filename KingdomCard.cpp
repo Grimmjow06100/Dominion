@@ -4,7 +4,6 @@
 
 #include "KingdomCard.h"
 #include "Jeux.h"
-#include "Reserve.h"
 #include "Player.h"
 #include "Plateau.h"
 #include "GameCommand.h"
@@ -178,54 +177,46 @@ void KingdomCard::GenerateKingdomFromFile(const std::string& nomFichier) {
     fichier.close();
 }
 
-void KingdomCard::Atelier(Jeux const&j)
+void KingdomCard::Atelier(Jeux &j)
 {
     Plateau& p=j.getPlateau();
     Player& player=j.getActifPlayer();
     std::string nom;
     std::string message="Gagnez une carte coutant jusqu'a 4 pieces (commande : pick [nomCarte])";
     std::cout<<message<<std::endl;
-    std::string card;
+    auto* card=new std::string();
     bool valid(false);
-    do
+    while(card->empty() || !valid)
     {
-        card.clear();
-        GameCommand<std::string>::getInput(j,card,nullptr,false,message);
-        if(!card.empty()&&player.gainCard(card,p,0,4))
+        card->clear();
+        GameCommand::getInput(j,NONE,nullptr,message,card);
+        if(!card->empty())
         {
-            valid=true;
+            if(player.gainCard(*card,p,0,4))
+                valid=true;
         }
-        else
-            std::cout<<"La carte n'existe pas ou est trop chere ";
-    }while(card.empty() || !valid);
-
+    }
 }
 
-void KingdomCard::Chapelle(Jeux const& j)
+void KingdomCard::Chapelle(Jeux & j)
 {
     Player &p=j.getActifPlayer();
-
-    int size=static_cast<int>(j.getActifPlayer().getHand().size());
-    j.getActifPlayer().afficheHand();
-    std::string message="Trashing jusqu'a 4 cartes de votre main (commande : pick [nomCarte])";
+    std::string message="Trashez jusqu'a 4 cartes de votre main (commande : pick [nomCarte])";
     std::cout<<message<<std::endl;
     int count(1);
     bool* exit=new bool(false);
-    std::string card;
+    auto* card=new std::string();
     while (count<=4){
-        card.clear();
+        card->clear();
         std::cout<<"Carte "<<count<<" ";
-        GameCommand<std::string>::getInput(j,card,exit,false,message);
-        if(!card.empty()&&p.trashCardFromHand(card))
+        GameCommand::getInput(j,NONE,exit,message,card);
+        std::cout<<std::endl;
+        if(!card->empty())
         {
-            count++;
+            if(p.trashCardFromHand(*card))
+                count++;
         }
-        if (count==size)
-        {
-            std::cout<<"Vous avez trasher toutes vos cartes"<<std::endl;
-            break;
-        }
-        if(*exit)
+        if(*exit || p.getHand().empty())
             break;
     }
 }
@@ -253,24 +244,26 @@ void KingdomCard::Sorciere(Jeux const&j)
     }
 }
 
-void KingdomCard::Cave(Jeux const& j)
+void KingdomCard::Cave(Jeux & j)
 {
     Player &p=j.getActifPlayer();
-    int size=static_cast<int>(p.getHand().size());
-    p.afficheHand();
-     std::string message="Defaussez autant de cartes que vous voulez (commande : pick [nomCarte])";
+    std::string message="Defaussez autant de cartes que vous voulez (commande : pick [nomCarte])";
     std::cout<<message<<std::endl;
     int count(1);
     bool* exit=new bool(false);
-    std::string card;
-    while(count<=size){
-        card.clear();
+    auto* card=new std::string();
+    while(true){
+        card->clear();
         std::cout<<"Carte "<<count<<" ";
-        GameCommand<std::string>::getInput(j,card,exit,false,message);
-        if(!card.empty()&& p.defausseFromHand(card)){
-            count++;
+        GameCommand::getInput(j,NONE,exit,message,card);
+        if(!card->empty())
+        {
+            if(p.defausseFromHand(*card))
+            {
+                count++;
+            }
         }
-        if(*exit)
+        if(*exit||p.getHand().empty())
             break;
     }
     std::cout<<"Vous piochez "<<count<<" cartes"<<std::endl;
