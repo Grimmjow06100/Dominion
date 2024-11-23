@@ -108,6 +108,7 @@ void Jeux::playGame(){
             endTurn(player);
         }
     }
+    endGame();
 
 
 
@@ -119,15 +120,14 @@ void Jeux::endGame()
     for(auto player:m_players)
     {
         player->defausseAll();
-        for(auto it:player->getDefausse())
+        auto it=std::ranges::find_if(player->getDefausse().begin(),player->getDefausse().end(),[](const Card* c)
         {
-            if(auto* k=dynamic_cast<KingdomCard*>(it))
-            {
-                if(k->getNom()=="JARDINS")
-                {
-                    k->action(*this);
-                }
-            }
+            return c->getNom()=="JARDINS";
+        });
+        if(it!=player->getDefausse().end())
+        {
+            auto k=dynamic_cast<KingdomCard*>(*it);
+            k->action(*this);
         }
     }
     //affichage des scores
