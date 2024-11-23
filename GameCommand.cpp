@@ -13,6 +13,7 @@
 #include <iomanip>
 #include "TreasureCard.h"
 #include "VictoryCard.h"
+#include <algorithm>
 
 
 
@@ -139,8 +140,10 @@ void GameCommand::handleSell(const std::string& nomCarte, const Jeux& j, Phase p
     Player& player = j.getActifPlayer();
     if (nomCarte == "ALL") {
         player.sellAllTreasure();
-    }
+    }else{
     player.sellCard(nomCarte);
+    }
+    j.playerBoard(&player);
 }
 
 

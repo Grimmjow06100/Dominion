@@ -80,30 +80,31 @@ std::string KingdomCard::actionType(KingdomCard const&k)
 
 }
 
-void KingdomCard::action(Jeux &j)
-{
+void KingdomCard::action(Jeux &j) {
     std::cout<<"Vous avez joue la carte "<<m_nom<<std::endl;
     Player& player=j.getActifPlayer();
-    if(m_actions)
-    {
+    if(m_actions or m_coins or m_buys or m_cards) {
         player.AddAction(m_actions);
-        std::cout<<"Vous avez gagne "<<m_actions<<" actions"<<std::endl;
-    }
-    if(m_coins)
-    {
         player.AddCoin(m_coins);
-        std::cout<<"Vous avez gagne "<<m_coins<<" pieces"<<std::endl;
-
-    }
-    if(m_buys)
-    {
         player.AddBuy(m_buys);
-        std::cout<<"Vous avez gagne "<<m_buys<<" achats"<<std::endl;
-    }
-    if(m_cards)
-    {
         player.pioche(m_cards);
-        std::cout<<"Vous avez pioche "<<m_cards<<" cartes"<<std::endl;
+        j.playerBoard(&player);
+        if(m_actions)
+        {
+            std::cout<<"Vous avez gagne "<<m_actions<<" actions"<<std::endl;
+        }
+        if(m_coins)
+        {
+            std::cout<<"Vous avez gagne "<<m_coins<<" pieces"<<std::endl;
+        }
+        if(m_buys)
+        {
+            std::cout<<"Vous avez gagne "<<m_buys<<" achats"<<std::endl;
+        }
+        if(m_cards)
+        {
+            std::cout<<"Vous avez pioche "<<m_cards<<" cartes"<<std::endl;
+        }
     }
     if(m_nom=="ATELIER")
     {

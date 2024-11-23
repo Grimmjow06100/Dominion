@@ -18,7 +18,6 @@ class Jeux {
     size_t actifIndex;
     void DistributeCards();
     static void setPlayer(Player* player);
-    void playerBoard(const Player* player) const;
     void actionPhase(Player* player);
     void buyPhase(Player* player);
     void endTurn(Player* player);
@@ -28,6 +27,7 @@ public:
     Jeux();
     ~Jeux();
     void initGame();
+    void playerBoard(const Player* player) const;
     void initGame(std::string const&nom1,std::string const&nom2);
     void playGame();
 

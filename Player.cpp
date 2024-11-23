@@ -143,10 +143,10 @@ bool Player::playAction(const std::string& cardName, Jeux& jeux) {
         if(dynamic_cast<KingdomCard*>(*it) &&(*it)->getNom()!= "JARDINS")
         {
             auto *k=dynamic_cast<KingdomCard*>(*it);
-            k->action(jeux);
             m_played.push_back(*it);
             m_hand.erase(it);
             AddAction(-1);
+            k->action(jeux);
             return true;
         }
         if((*it)->getNom()=="JARDINS")
