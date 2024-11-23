@@ -31,7 +31,7 @@ void triCartes(std::vector<std::tuple<std::string, int, std::string, std::string
     };
 
     // Trier les cartes en utilisant std::sort
-    std::sort(cartes.begin(), cartes.end(), [&](const auto& a, const auto& b) {
+    std::ranges::sort(cartes.begin(), cartes.end(), [&](const auto& a, const auto& b) {
         return getPriority(std::get<2>(a)) < getPriority(std::get<2>(b));
     });
 }
@@ -196,13 +196,13 @@ void Plateau::built()
  */
 bool Plateau::isEmpty() const
 {
-    int count=0;
+    int count(0);
     if(m_reserve.at("PROVINCE").isEmpty())
         return true;
     for(auto &it : m_reserve)
     {
 
-        if(it.second.isEmpty())
+        if(it.first!="PROVINCE" && it.second.isEmpty())
             count++;
         if(count==3)
             return true;

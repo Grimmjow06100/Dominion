@@ -50,7 +50,8 @@ public:
     static void trashCard(const Card* card);
     bool trashCardFromHand(std::string const&cardName);
     bool canPlayAction();
-    bool canBuy();
+    bool canBuy()const;
+
 
     //getters
     [[nodiscard]]std::vector<Card*>& getDeck();
@@ -62,7 +63,6 @@ public:
     [[nodiscard]]int getActions() const;
     [[nodiscard]]int getBuys() const;
     [[nodiscard]] std::string getName() const;
-
 
     //setters
     void setDeck(std::vector<Card*> deck);

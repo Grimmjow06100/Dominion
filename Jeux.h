@@ -22,6 +22,7 @@ class Jeux {
     void actionPhase(Player* player);
     void buyPhase(Player* player);
     void endTurn(Player* player);
+    void endGame();
 
 public:
     Jeux();

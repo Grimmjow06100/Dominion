@@ -325,7 +325,7 @@ bool Player::canPlayAction() {
     });
 }
 
-bool Player::canBuy()
+bool Player::canBuy()const
 {
     return m_buys>0;
 }

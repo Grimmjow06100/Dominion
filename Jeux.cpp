@@ -7,6 +7,7 @@
 #include "Plateau.h"
 #include "TreasureCard.h"
 #include "VictoryCard.h"
+#include "KingdomCard.h"
 #include <algorithm>
 #include <random>
 #include <cstdlib> // pour std::system
@@ -109,6 +110,28 @@ void Jeux::playGame(){
     }
 
 
+
+}
+
+void Jeux::endGame()
+{
+    //calcul des point bonus pour les cartes JARDINS
+    for(auto player:m_players)
+    {
+        player->defausseAll();
+        for(auto it:player->getDefausse())
+        {
+            if(auto* k=dynamic_cast<KingdomCard*>(it))
+            {
+                if(k->getNom()=="JARDINS")
+                {
+                    k->action(*this);
+                }
+            }
+        }
+    }
+    //affichage des scores
+    std::cout<<"Fin de la partie"<<std::endl;
 
 }
 
