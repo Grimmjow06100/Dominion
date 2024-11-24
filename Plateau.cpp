@@ -15,7 +15,7 @@
 #include <string>
 
 
-std::vector<std::string>BaseBoard ={"atelier","bucheron","village","festivale","laboratoire","douves","jardins","chapelle","bandit","sorciere"};
+std::vector<std::string>BaseBoard ={"atelier","bucheron","village","festival","laboratoire","douves","jardins","chapelle","bandit","sorciere"};
 
 /**
  * Trie le vecteur de cartes en fonction de son type
@@ -173,7 +173,7 @@ void Plateau::built()
     m_reserve["OR"]=Reserve(TreasureCard("OR"),m_or);
     m_reserve["DOMAINE"]=Reserve(VictoryCard("DOMAINE"),m_victory);
     m_reserve["DUCHE"]=Reserve(VictoryCard("DUCHE"),m_victory);
-    m_reserve["PROVINCE"]=Reserve(VictoryCard("PROVINCE"),m_victory);
+    m_reserve["PROVINCE"]=Reserve(VictoryCard("PROVINCE"),1);//m_victory
     m_reserve["MALEDICTION"]=Reserve(VictoryCard("MALEDICTION"),m_curse);
     for(auto &i : BaseBoard)
     {
