@@ -6,6 +6,7 @@
 #include "KingdomCard.h"
 #include "TreasureCard.h"
 #include "VictoryCard.h"
+#include <iostream>
 
 Reserve::Reserve():m_card(nullptr),m_taille(0)
 {}
@@ -15,6 +16,7 @@ Reserve::Reserve(TreasureCard const&card,int taille ):m_card(new TreasureCard(ca
 {}
 Reserve::Reserve(VictoryCard const&card ,int taille ):m_card(new VictoryCard(card)),m_taille(taille)
 {}
+
 Reserve& Reserve::operator=(Reserve const& other) {
     if (this != &other) {
         // On supprime l'ancienne carte

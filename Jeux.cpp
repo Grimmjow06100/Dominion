@@ -85,7 +85,6 @@ void Jeux::initGame(std::string const&nom1, std::string const&nom2)
     m_players.push_back(new Player(nom1));
     m_players.push_back(new Player(nom2));
     m_plateau = new Plateau(2);
-    m_plateau->built();
 
 }
 
@@ -95,7 +94,7 @@ void Jeux::initGame(std::string const&nom1, std::string const&nom2)
  */
 void Jeux::playGame(){
     clearTerminal();
-    std::cout << std::endl << "Le jeu peut commencer ! Bonne chance a tous !" << std::endl;
+    //std::cout << std::endl << "Le jeu peut commencer ! Bonne chance a tous !" << std::endl;
     DistributeCards();
     while(!m_plateau->isEmpty())
     {
@@ -106,6 +105,9 @@ void Jeux::playGame(){
             actionPhase(player);
             buyPhase(player);
             endTurn(player);
+            if(m_plateau->isEmpty()) {
+                break;
+            }
         }
     }
     endGame();
@@ -131,8 +133,27 @@ void Jeux::endGame()
         }
     }
     //affichage des scores
+    clearTerminal();
+    afficheClassement();
     std::cout<<"Fin de la partie"<<std::endl;
 
+}
+
+void Jeux::afficheClassement() const {
+    std::vector<Player*> sortedPlayers = m_players; // Copie des joueurs pour ne pas modifier l'ordre original
+
+    // Trie les joueurs par points décroissants
+    std::sort(sortedPlayers.begin(), sortedPlayers.end(), [](Player* a, Player* b) {
+        return a->getPoints() > b->getPoints(); // Trie par points décroissants
+    });
+
+    std::cout << "-----------------------CLASSEMENT-----------------------" << std::endl;
+
+    int rank = 1; // Classement initial
+    for (auto player : sortedPlayers) {
+        std::cout <<std::setw(14) << rank << " - " << player->getName() << " (" << player->getPoints() << " points)" << std::endl;
+        ++rank;
+    }
 }
 
 /**
@@ -161,8 +182,6 @@ void Jeux::DistributeCards()
         player->shuffle();
         //pioche de 5 cartes
         player->pioche(5);
-
-
 
     }
     //mise à jour de la réserve de cartes

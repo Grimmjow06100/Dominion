@@ -140,8 +140,8 @@ Plateau::Plateau( int nbrJoueur):m_cuivre(60),m_argent(40),m_or(30)
 {
     if(nbrJoueur==2)
     {
-        m_victory=8;
-        m_kingdom=10;
+        m_victory=8;//8
+        m_kingdom=10;//10
         m_curse=10;
     }
     else if(nbrJoueur==3)
@@ -156,8 +156,7 @@ Plateau::Plateau( int nbrJoueur):m_cuivre(60),m_argent(40),m_or(30)
         m_kingdom=12;
         m_curse=30;
     }
-    else
-    {
+    else {
         m_victory=0;
         m_kingdom=0;
         m_curse=0;

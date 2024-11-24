@@ -23,8 +23,8 @@ VictoryCard::VictoryCard(std::string const&nom) : Card(normalize(nom),0), m_vict
     }
     else if(m_nom=="PROVINCE")
     {
-        m_cost=8;
-        m_victory=6;
+        m_cost=8;//8
+        m_victory=6;//6
     }
     else if(m_nom=="MALEDICTION")
     {

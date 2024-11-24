@@ -36,7 +36,6 @@ PLAY [nomCarte]
 Effet : Joue une carte d'action depuis la main du joueur actif.
 Conditions : Disponible uniquement pendant la phase d'action.
 
-
 ----------------------Phase BUY---------------------------
 
 BUY [nomCarte]
@@ -63,7 +62,7 @@ Conditions : Disponible uniquement si un pointeur cardNameOption est fourni à l
 
 int main()
 {
-
+    /*
     std::system("cls");
     KingdomCard::GenerateKingdomFromFile("royaume.txt");
     Jeux j;
@@ -83,13 +82,13 @@ int main()
         player->getHand().push_back(&village);
         player->getHand().push_back(&cave);
     }
-    j.playGame();
-    /*
+    j.playGame();*/
+
     std::system("cls");
     KingdomCard::GenerateKingdomFromFile("royaume.txt");
     Jeux j;
     j.initGame();
-    j.playGame();*/
+    j.playGame();
 
     return 0;
 }

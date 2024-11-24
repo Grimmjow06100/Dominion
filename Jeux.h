@@ -23,6 +23,8 @@ class Jeux {
     void endTurn(Player* player);
     void endGame();
 
+    void afficheClassement() const;
+
 public:
     Jeux();
     ~Jeux();
