@@ -18,6 +18,8 @@ std::vector<KingdomCard> KingdomCard::DataCards;
 std::map<std::string,KingdomCard> KingdomCard::KingdomCardMap;
 
 
+
+
 KingdomCard::KingdomCard(std::string nom, int cost, bool attack, bool reaction, std::string description,int cards,int actions,int coins,int buys)
     :Card(std::move(nom),cost),m_attack(attack),m_reaction(reaction),m_description(std::move(description)),m_cards(cards),m_actions(actions),m_coins(coins),m_buys(buys)
 {}
@@ -81,7 +83,6 @@ std::string KingdomCard::actionType(KingdomCard const&k)
 }
 
 void KingdomCard::action(Jeux &j) {
-    std::cout<<"Vous avez joue la carte "<<m_nom<<std::endl;
     Player& player=j.getActifPlayer();
     if(m_actions or m_coins or m_buys or m_cards) {
         player.AddAction(m_actions);
@@ -90,19 +91,23 @@ void KingdomCard::action(Jeux &j) {
         player.pioche(m_cards);
         if(m_actions)
         {
-            std::cout<<"Vous avez gagne "<<m_actions<<" actions"<<std::endl;
+            std::string action=m_actions>1?" actions":" action";
+            notif("Vous avez gagne "+std::to_string(m_actions)+action);
         }
         if(m_coins)
         {
-            std::cout<<"Vous avez gagne "<<m_coins<<" pieces"<<std::endl;
+            std::string coin=m_coins>1?" pieces":" piece";
+            notif("Vous avez gagne "+std::to_string(m_coins)+coin);
         }
         if(m_buys)
         {
-            std::cout<<"Vous avez gagne "<<m_buys<<" achats"<<std::endl;
+            std::string buy=m_buys>1?" achats":" achat";
+            notif("vous avez gagne "+std::to_string(m_buys)+buy);
         }
         if(m_cards)
         {
-            std::cout<<"Vous avez pioche "<<m_cards<<" cartes"<<std::endl;
+            std::string card=m_cards>1?" cartes":" carte";
+            notif("vous piochez "+std::to_string(m_cards)+card);
         }
     }
     if(m_nom=="ATELIER")
@@ -192,7 +197,7 @@ void KingdomCard::Atelier(Jeux &j)
     Plateau& p=j.getPlateau();
     Player& player=j.getActifPlayer();
     std::string nom;
-    std::string message="Gagnez une carte coutant jusqu'a 4 pieces (commande : pick [nomCarte])";
+    std::string message="Gagnez une carte coutant jusqu'a 4 pieces";
     std::cout<<message<<std::endl;
     auto* card=new std::string();
     bool valid(false);
@@ -203,15 +208,19 @@ void KingdomCard::Atelier(Jeux &j)
         if(!card->empty())
         {
             if(player.gainCard(*card,p,0,4))
+            {
                 valid=true;
+            }
+
         }
     }
+
 }
 
 void KingdomCard::Chapelle(Jeux & j)
 {
     Player &p=j.getActifPlayer();
-    std::string message="Trashez jusqu'a 4 cartes de votre main (commande : pick [nomCarte])";
+    std::string message="Trashez jusqu'a 4 cartes de votre main";
     std::cout<<message<<std::endl;
     int count(1);
     bool* exit=new bool(false);
@@ -229,6 +238,7 @@ void KingdomCard::Chapelle(Jeux & j)
         if(*exit || p.getHand().empty())
             break;
     }
+
 }
 
 void KingdomCard::Sorciere(Jeux const&j)
@@ -242,22 +252,21 @@ void KingdomCard::Sorciere(Jeux const&j)
             int index;
             if (joueur->ReactTo(index))
             {
-                std::cout << "Le joueur " << joueur->getName()
-                          << " annule votre attaque avec la carte "
-                          << joueur->getHand().at(index)->getNom() << std::endl;
+                notif(joueur->getName()+" annule votre attaque avec la carte "+joueur->getHand().at(index)->getNom());
                 continue;
             }
-            std::cout<<"Le joueur "<<joueur->getName()<<" a gagne une malediction "<<std::endl;
             joueur->gainCard("MALEDICTION",j.getPlateau());
+            notif(joueur->getName()+" a gagne une MALEDICTION");
 
         }
     }
+
 }
 
 void KingdomCard::Cave(Jeux & j)
 {
     Player &p=j.getActifPlayer();
-    std::string message="Defaussez autant de cartes que vous voulez (commande : pick [nomCarte])";
+    std::string message="Defaussez autant de cartes que vous voulez";
     std::cout<<message<<std::endl;
     int count(1);
     bool* exit=new bool(false);
@@ -276,7 +285,7 @@ void KingdomCard::Cave(Jeux & j)
         if(*exit||p.getHand().empty())
             break;
     }
-    std::cout<<"Vous piochez "<<count<<" cartes"<<std::endl;
+    notif("vous piochez "+std::to_string(count)+" cartes");
     p.pioche(count);
 }
 
@@ -290,7 +299,7 @@ void KingdomCard::Bandit(Jeux const&j)
     // 1. Le joueur actif gagne une carte Or
     Player& actif = j.getActifPlayer();
     actif.gainCard("OR", j.getPlateau());
-
+    notif("vous gagnez la carte OR");
     // 2. Pour chaque autre joueur
     for (auto& joueur : j.getPlayers())
     {
@@ -300,9 +309,7 @@ void KingdomCard::Bandit(Jeux const&j)
             int index;
             if (joueur->ReactTo(index))
             {
-                std::cout << "Le joueur " << joueur->getName()
-                          << " annule votre attaque avec la carte "
-                          << joueur->getHand().at(index)->getNom() << std::endl;
+                notif(joueur->getName() + " annule votre attaque avec la carte " + joueur->getHand().at(index)->getNom());
                 continue;
             }
             // Révéler les deux premières cartes du deck
@@ -312,8 +319,8 @@ void KingdomCard::Bandit(Jeux const&j)
                 revealedCards.push_back(joueur->drawCard());
             }
             std::endl(std::cout);
-            std::cout << "-----------------Revelation des cartes du joueur " << joueur->getName() << "-----------------" << std::endl
-            <<std::endl;
+            std::string enter;
+            std::cout << "REVELATION DES CARTES DE " << joueur->getName() << std::endl;
             afficheCards(revealedCards);
             // Chercher une carte Trésor non-Cuivre à trasher
             bool trashed = false;
@@ -322,8 +329,7 @@ void KingdomCard::Bandit(Jeux const&j)
                 auto* treasureCard = dynamic_cast<TreasureCard*>(*it);
                 if (treasureCard && treasureCard->getNom() != "CUIVRE")
                 {
-                    std::cout << "Le joueur " << joueur->getName()
-                              << " trashe la carte : " << treasureCard->getNom() << std::endl;
+                    notif( joueur->getName() + " trash la carte " + treasureCard->getNom());
                     Player::trashCard(*it);
                     revealedCards.erase(it);
                     trashed = true;
@@ -333,13 +339,14 @@ void KingdomCard::Bandit(Jeux const&j)
 
             if (!trashed)
             {
-                std::cout << "Le joueur " << joueur->getName()
-                          << " n'a pas de carte Tresor non-Cuivre a trasher " << std::endl;
+                notif( joueur->getName() + " ne trash aucune des cartes revelees");
             }
+
             // Défausser les cartes restantes
             joueur->defausseArray(revealedCards);
         }
     }
+    
 }
 
 

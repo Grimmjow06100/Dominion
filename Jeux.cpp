@@ -96,6 +96,8 @@ void Jeux::initGame(std::string const&nom1, std::string const&nom2)
     m_players.push_back(new Player(nom1));
     m_players.push_back(new Player(nom2));
     m_plateau = new Plateau(2);
+    m_plateau->built();
+
 
 }
 
@@ -212,6 +214,8 @@ void Jeux::actionPhase(Player* player)
         GameCommand::getInput(*this,ACTION,exit);
     }
     delete exit;
+    std::cout<<"Fin de la phase d'action"<<std::endl;
+    appuyerPourContinuer();
 
 }
 
@@ -225,6 +229,8 @@ void Jeux::buyPhase(Player* player)
         GameCommand::getInput(*this,BUY,exit);
     }
     delete exit;
+    std::cout<<"Fin de la phase d'achat , c'est au tour de "<<m_players[(actifIndex + 1) % m_players.size()]->getName()<<std::endl;
+    appuyerPourContinuer();
 
 }
 void Jeux::phaseMessage(Phase phase)
@@ -243,6 +249,8 @@ void Jeux::phaseMessage(Phase phase)
     }
     else
         std::cout<<"Phase inconnue"<<std::endl;
+
+    std::cout<<std::endl;
 }
 
 /**
@@ -251,11 +259,18 @@ void Jeux::phaseMessage(Phase phase)
  */
 void Jeux::endTurn(Player* player)
 {
-    size_t range=m_players.size();
-    actifIndex = (actifIndex + 1) % range;
+    actifIndex = (actifIndex + 1) % m_players.size();
     player->defausseAll();
     player->pioche(5);
 
+}
+
+
+void appuyerPourContinuer() {
+
+    std::cout << "Entrez une touche pour continuer... > " ;
+    std::cin.get();  // Attendre que l'utilisateur appuie sur une touche
+    std::cin.ignore();  // Ignorer le caractère '\n' restant
 }
 
 void Jeux::setPlayer(Player* player)

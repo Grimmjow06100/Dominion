@@ -29,6 +29,16 @@ std::string Card::getNom() const
     return m_nom;
 }
 
+void notif(std::string const& message)
+{
+    std::cout<<"\033[92m"<<message<<"\033[0m"<<std::endl;
+}
+
+void alert(std::string const& message)
+{
+    std::cout<<"\033[31m"<<message<<"\033[0m"<<std::endl;
+}
+
 void Card::afficheCards(const std::vector<Card*>& cards) {
     constexpr int maxCartesParLigne = 5;
     std::vector<std::tuple<std::string, int, std::string, std::string>> cartes;

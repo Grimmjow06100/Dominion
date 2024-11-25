@@ -45,35 +45,26 @@ void GameCommand::getInput(Jeux& j,Phase phase,bool* exitOption,std::string* car
         {
             if(cardNameOption==nullptr)
             {
-                std::cout<<"Commande indisponible"<<std::endl;
+                alert("Commande indisponible");
                 continue;
             }
             *cardNameOption=handlePick(commande.substr(5), j);
             break;
         }
-
-        //Commande desactivées pour le moment
-        /*
         if (commande == "INFO") {
-            j.getActifPlayer().info(phase);
+            handleInfo(j);
             continue;
-        }if (commande == "BOARD") {
-            j.getPlateau().affichage();
-            continue;
-        }if (commande == "DECK") {
-            j.getActifPlayer().afficheHand();
-            continue;
-        }*/
+        }
         if (commande == "END")
         {
             if (exitOption==nullptr) {
-                std::cout << "Vous ne pouvez pas terminer le tour maintenant." << std::endl;
+                alert("vous ne pouvez pas terminer le tour ou l'action en cours");
                 continue;
             }
             *exitOption = true;
             break;
         }
-        std::cout << "Commande non reconnue. Essayez 'help [nomCarte]', 'pick [nomCarte]',play [nomCarte],buy[nomCarte] ou 'end'." << std::endl;
+        alert("Commande non reconnue. Essayez 'help [nomCarte]', 'pick [nomCarte]',play [nomCarte],buy[nomCarte] ou 'end'." );
     }
 }
 
@@ -89,10 +80,10 @@ void GameCommand::handleHelp(const std::string& nomCarte, const Jeux& j) {
         } else if (auto* victory = dynamic_cast<VictoryCard*>(card)) {
             victory->details();
         } else {
-            std::cout << "Type de carte inconnu." << std::endl;
+            alert("Type de carte inconnu." );
         }
     } else {
-        std::cout << "La carte '" << nomCarte << "' n'est pas reconnue." << std::endl;
+        alert("La carte '" + nomCarte + "' n'est pas reconnue." );
     }
 }
 
@@ -103,7 +94,7 @@ std::string GameCommand::handlePick(const std::string& nomCarte, const Jeux& j) 
     {
         return nomCarte;
     }
-    std::cout<<"carte inexistant"<<std::endl;
+    alert("carte inexistant");
     return "";
 }
 
@@ -111,7 +102,7 @@ std::string GameCommand::handlePick(const std::string& nomCarte, const Jeux& j) 
 
 void GameCommand::handleBuy(const std::string& nomCarte, Jeux& j, Phase phase) {
     if (phase!=BUY) {
-        std::cout << "Commande indisponible" << std::endl;
+        alert( "Commande indisponible" );
         return;
     }
 
@@ -126,7 +117,7 @@ void GameCommand::handleBuy(const std::string& nomCarte, Jeux& j, Phase phase) {
 
 void GameCommand::handlePlay(const std::string& nomCarte, Jeux& j, Phase phase) {
     if (phase!=ACTION) {
-        std::cout << "Commande indisponible " << std::endl;
+        alert( "Commande indisponible " );
         return;
     }
 
@@ -142,7 +133,7 @@ void GameCommand::handlePlay(const std::string& nomCarte, Jeux& j, Phase phase) 
 
 void GameCommand::handleSell(const std::string& nomCarte, const Jeux& j, Phase phase) {
     if (phase!=BUY) {
-        std::cout << "Commande indisponible" << std::endl;
+        alert( "Commande indisponible" );
         return;
     }
 
@@ -158,6 +149,17 @@ void GameCommand::handleSell(const std::string& nomCarte, const Jeux& j, Phase p
         {
             j.playerBoard(&player);
             Jeux::phaseMessage(phase);
+        }
+    }
+}
+
+void GameCommand::handleInfo(Jeux const&j)
+{
+    for(auto it :j.getPlayers())
+    {
+        if(it!=&j.getActifPlayer())
+        {
+            std::cout<<it->getName()<<" "<<it->getPoints()<<" PV "<<std::endl;
         }
     }
 }

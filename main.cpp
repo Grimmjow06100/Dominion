@@ -3,6 +3,7 @@
 #include <iostream>
 #include "KingdomCard.h"
 #include "Jeux.h"
+#include "Player.h"
 /*
 
 
@@ -61,7 +62,7 @@ Conditions : Disponible uniquement si un pointeur cardNameOption est fourni à l
 
 int main()
 {
-    /*
+
     std::system("cls");
     KingdomCard::GenerateKingdomFromFile("royaume.txt");
     Jeux j;
@@ -81,13 +82,9 @@ int main()
         player->getHand().push_back(&village);
         player->getHand().push_back(&cave);
     }
-    j.playGame();*/
-
-    std::system("cls");
-    KingdomCard::GenerateKingdomFromFile("royaume.txt");
-    Jeux j;
-    j.initGame();
     j.playGame();
+
+
 
     return 0;
 }

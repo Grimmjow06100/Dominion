@@ -151,11 +151,11 @@ bool Player::playAction(const std::string& cardName, Jeux& jeux) {
         }
         if((*it)->getNom()=="JARDINS")
         {
-            std::cout<<"Vous ne pouvez pas jouer cette carte"<<std::endl;
+            alert("Vous ne pouvez pas jouer cette carte");
             return false;
         }
     }
-    std::cout << "Cette carte n'est pas dans votre main" << std::endl;
+    alert("Cette carte n'est pas dans votre main" );
     return false;
 }
 
@@ -173,10 +173,10 @@ bool Player::defausseFromHand(const std::string& cardName) {
     if (it != m_hand.end()) {
         m_defausse.push_back(*it);
         m_hand.erase(it);
-        std::cout << "La carte a ete place dans la defausse" << std::endl;
+        notif( "La carte "+ (*it)->getNom()+" a ete place dans la defausse" );
         return true;
     }
-    std::cout<<"cette carte n'est pas dans votre main ";
+    alert("cette carte n'est pas dans votre main ");
     return false;
 }
 
@@ -196,7 +196,7 @@ bool Player::defausseArray(std::vector<Card*>& cards) {
         return false; // Rien à faire
     }
     m_defausse.insert(m_defausse.end(), std::make_move_iterator(cards.begin()), std::make_move_iterator(cards.end()));
-    std::cout<<"Les cartes ont ete place dans la defausse"<<std::endl;
+    notif("les cartes ont ete place dans la defausse");
     cards.clear();
     return true;
 }
@@ -217,19 +217,22 @@ bool Player::gainCard(const std::string& cardName, Plateau& p,int minCost,int ma
             if (auto* treasure = dynamic_cast<TreasureCard*>(card)) {
                 m_defausse.push_back(new TreasureCard(*treasure));
                 p.updateReserveByName(str, 1);
+
                 return true;
             }
             if (auto* victory = dynamic_cast<VictoryCard*>(card)) {
                 m_defausse.push_back(new VictoryCard(*victory));
                 AddPoint(victory->getVictory());
                 p.updateReserveByName(str, 1);
+
                 return true;
             }
         }
-        std::cout << "La carte n'est plus disponible ou ne remplie pas les conditions de selection" << std::endl;
+        alert("La carte n'est plus disponible ou ne remplie pas les conditions de selection");
+
 
     } else {
-        std::cout << "cette carte n'est pas presente dans le jeu";
+        alert("cette carte n'est pas presente dans le jeu");
     }
     return false;
 }
@@ -271,7 +274,7 @@ bool Player::buyCard(std::string const& cardName, Jeux const& j)
                     AddBuy(-1);
                     AddCoin(-k->getCost());
                     p.updateReserveByName(k->getNom(),1);
-                    std::cout<<"Vous avez achete la carte "<<k->getNom()<<std::endl;
+                    notif("Vous avez achete la carte "+k->getNom());
                     return true;
 
                 }
@@ -281,7 +284,7 @@ bool Player::buyCard(std::string const& cardName, Jeux const& j)
                     AddBuy(-1);
                     AddCoin(-t->getCost());
                     p.updateReserveByName(t->getNom(),1);
-                    std::cout<<"Vous avez achete la carte "<<t->getNom()<<std::endl;
+                    notif("Vous avez achete la carte "+t->getNom());
                     return true;
                 }
                 if(auto* v=dynamic_cast<VictoryCard*>(it->second.getCard()))
@@ -290,18 +293,18 @@ bool Player::buyCard(std::string const& cardName, Jeux const& j)
                     AddBuy(-1);
                     AddCoin(-v->getCost());
                     p.updateReserveByName(v->getNom(),1);
-                    std::cout<<"Vous avez achete la carte "<<v->getNom()<<std::endl;
+                    notif("Vous avez achete la carte "+v->getNom());
                     AddPoint(v->getVictory());
                     return true;
                 }
 
             }
-            std::cout<<"Vous n'avez pas assez de pieces pour acheter cette carte"<<std::endl;
+            alert("Vous n'avez pas assez de pieces pour acheter cette carte");
             return false;
         }
-        std::cout<<"La carte n'est plus disponible"<<std::endl;
+        alert("La carte n'est plus disponible");
     }
-    std::cout<<"La carte n'existe pas"<<std::endl;
+    alert("La carte n'existe pas");
     return false;
 }
 
@@ -317,9 +320,10 @@ bool Player::trashCardFromHand(const std::string& cardName) {
         }
         delete *it;
         m_hand.erase(it);
+        notif("la carte "+cardName+" a ete trashee");
         return true;
     }
-    std::cout<<"cette carte n'est pas dans votre main "<<std::endl;
+    alert("cette carte n'est pas dans votre main ");
     return false;
 }
 
@@ -371,11 +375,11 @@ bool Player::sellCard(const std::string& cardName) {
             m_coins+=treasure->getTreasure();
             m_played.push_back(*it);
             m_hand.erase(it);
-            std::cout<<"La carte "<< treasure->getNom()<<" a ete vendue"<<std::endl;
+            notif("La carte "+treasure->getNom()+" a ete vendue");
             return true;
         }
     }
-    std::cout << "Impossible de vendre cette carte." << std::endl;
+    alert( "Impossible de vendre cette carte." );
     return false;
 }
 
@@ -384,7 +388,7 @@ bool Player::sellAllTreasure()
     auto it = m_hand.begin();
     if(it==m_hand.end())
     {
-        std::cout<<"Vous n'avez pas de carte a vendre"<<std::endl;
+        alert("Vous n'avez pas de carte a vendre");
         return false;
     }
     while (it != m_hand.end()) {

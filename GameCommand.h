@@ -16,6 +16,7 @@ class GameCommand {
     static void handleSell(const std::string& nomCarte,  const Jeux& j, Phase phase);
     static void handlePlay(const std::string& nomCarte,  Jeux& j, Phase phase);
     static void handleBuy(const std::string& nomCarte,  Jeux& j, Phase phase);
+    static void handleInfo(const Jeux& j);
     static std::string handlePick(const std::string& nomCarte,  const Jeux& j);
     static void displayMessage(const std::string& message);
     static std::string normalizeCommand(const std::string& input);
