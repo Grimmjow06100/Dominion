@@ -7,7 +7,7 @@
 #include <map>
 #include <string>
 #include "Reserve.h"
-
+class Jeux;
 
 class Plateau {
     std::map<std::string,Reserve>m_reserve;

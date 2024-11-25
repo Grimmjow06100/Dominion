@@ -17,7 +17,7 @@
 
 
 
-void GameCommand::getInput(Jeux& j,Phase phase,bool* exitOption, const std::string& messageOption,std::string* cardNameOption) {
+void GameCommand::getInput(Jeux& j,Phase phase,bool* exitOption,std::string* cardNameOption) {
     while (true) {
         std::cout << "> ";
         std::string commande;
@@ -51,11 +51,11 @@ void GameCommand::getInput(Jeux& j,Phase phase,bool* exitOption, const std::stri
             *cardNameOption=handlePick(commande.substr(5), j);
             break;
         }
+
+        //Commande desactivées pour le moment
+        /*
         if (commande == "INFO") {
-            j.getActifPlayer().info();
-            continue;
-        }if (commande == "?") {
-            displayMessage(messageOption);
+            j.getActifPlayer().info(phase);
             continue;
         }if (commande == "BOARD") {
             j.getPlateau().affichage();
@@ -63,7 +63,8 @@ void GameCommand::getInput(Jeux& j,Phase phase,bool* exitOption, const std::stri
         }if (commande == "DECK") {
             j.getActifPlayer().afficheHand();
             continue;
-        }if (commande == "END")
+        }*/
+        if (commande == "END")
         {
             if (exitOption==nullptr) {
                 std::cout << "Vous ne pouvez pas terminer le tour maintenant." << std::endl;
@@ -72,7 +73,7 @@ void GameCommand::getInput(Jeux& j,Phase phase,bool* exitOption, const std::stri
             *exitOption = true;
             break;
         }
-        std::cout << "Commande non reconnue. Essayez 'help [nomCarte]', 'pick [nomCarte]',play [nomCarte],buy[nomCarte], 'board', 'deck', ou 'end'." << std::endl;
+        std::cout << "Commande non reconnue. Essayez 'help [nomCarte]', 'pick [nomCarte]',play [nomCarte],buy[nomCarte] ou 'end'." << std::endl;
     }
 }
 
@@ -115,7 +116,11 @@ void GameCommand::handleBuy(const std::string& nomCarte, Jeux& j, Phase phase) {
     }
 
     Player& player = j.getActifPlayer();
-    player.buyCard(nomCarte,j);
+    if(player.buyCard(nomCarte,j)&&player.canBuy())
+    {
+        j.playerBoard(player);
+        Jeux::phaseMessage(phase);
+    }
 }
 
 
@@ -126,7 +131,11 @@ void GameCommand::handlePlay(const std::string& nomCarte, Jeux& j, Phase phase) 
     }
 
     Player& player = j.getActifPlayer();
-    player.playAction(nomCarte,j);
+    if(player.playAction(nomCarte,j)&&player.canPlayAction())
+    {
+        j.playerBoard(player);
+        Jeux::phaseMessage(phase);
+    }
 
 
 }
@@ -139,19 +148,19 @@ void GameCommand::handleSell(const std::string& nomCarte, const Jeux& j, Phase p
 
     Player& player = j.getActifPlayer();
     if (nomCarte == "ALL") {
-        player.sellAllTreasure();
+        if(player.sellAllTreasure())
+        {
+            j.playerBoard(player);
+            Jeux::phaseMessage(phase);
+        }
     }else{
-    player.sellCard(nomCarte);
+        if(player.sellCard(nomCarte))
+        {
+            j.playerBoard(player);
+            Jeux::phaseMessage(phase);
+        }
     }
-    j.playerBoard(&player);
 }
-
-
-void GameCommand::displayMessage(const std::string& message) {
-    std::cout << message << std::endl;
-}
-
-
 std::string GameCommand::normalizeCommand(const std::string& input) {
     // Étape 1 : Supprimer les espaces en début et en fin
     std::string result = input;

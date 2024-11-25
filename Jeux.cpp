@@ -15,6 +15,16 @@
 
 #include "GameCommand.h"
 
+
+
+
+
+
+const std::string BLUE_TEXT = "\033[1;34m";  // Couleur bleu
+const std::string BLINK_TEXT = "\033[5m";   // Texte clignotant
+const std::string RESET_TEXT = "\033[0m";   // Réinitialisation des styles
+
+
 /**
  * Constructeur vide
  */
@@ -45,25 +55,24 @@ void clearTerminal() {
  * Initialise une partie avec les infos
  */
 void Jeux::initGame() {
-    std::cout << "Bienvenue dans le jeu Dominion !" << std::endl;
+    std::cout << std::endl << "/////////////////////////// BIENVENUE DANS LE JEU DU DOMINION //////////////////////////////////" << std::endl;
 
     int nbJoueurs = 0;
 
     // Demande le nombre de joueurs (entre 2 et 4)
+    std::cout << "Choisissez le nombre de joueur (2-4) > ";
     while (nbJoueurs < 2 || nbJoueurs > 4) {
-        std::cout << "Combien etes-vous de joueurs ? (entre 2 et 4) : ";
         std::cin >> nbJoueurs;
         if (nbJoueurs < 2 || nbJoueurs > 4) {
-            std::cout <<std::endl<< "Le nombre de joueurs doit etre entre 2 et 4 !" << std::endl;
+            std::cout <<std::endl<< "Le nombre de joueurs doit etre entre 2 et 4 ! > " ;
         }
     }
 
     std::string nom;
 
     // Demande les noms des joueurs
-    std::cout <<std::endl<< "Entrez les noms des " << nbJoueurs << " joueurs :" << std::endl;
     for (int i = 0; i < nbJoueurs; ++i) {
-        std::cout << "Nom du joueur " << i + 1 << " : ";
+        std::cout << "Nom du joueur " << i + 1 << " > ";
         std::cin >> nom;
         m_players.push_back(new Player(nom));
     }
@@ -76,6 +85,8 @@ void Jeux::initGame() {
     //creation du plateau de jeu
     m_plateau = new Plateau(nbJoueurs);
     m_plateau->built();
+
+    std::cin.ignore();
 
 
 }
@@ -94,26 +105,19 @@ void Jeux::initGame(std::string const&nom1, std::string const&nom2)
  */
 void Jeux::playGame(){
     clearTerminal();
-    //std::cout << std::endl << "Le jeu peut commencer ! Bonne chance a tous !" << std::endl;
     DistributeCards();
     while(!m_plateau->isEmpty())
     {
-        for(auto* player : m_players)
-        {
-            setPlayer(player);
-            playerBoard(player);
-            actionPhase(player);
-            buyPhase(player);
-            endTurn(player);
-            if(m_plateau->isEmpty()) {
-                break;
-            }
+        Player* player = m_players.at(actifIndex);
+        setPlayer(player);
+        actionPhase(player);
+        buyPhase(player);
+        endTurn(player);
+        if(m_plateau->isEmpty()) {
+            break;
         }
     }
     endGame();
-
-
-
 }
 
 void Jeux::endGame()
@@ -135,7 +139,6 @@ void Jeux::endGame()
     //affichage des scores
     clearTerminal();
     afficheClassement();
-    std::cout<<"Fin de la partie"<<std::endl;
 
 }
 
@@ -143,7 +146,7 @@ void Jeux::afficheClassement() const {
     std::vector<Player*> sortedPlayers = m_players; // Copie des joueurs pour ne pas modifier l'ordre original
 
     // Trie les joueurs par points décroissants
-    std::sort(sortedPlayers.begin(), sortedPlayers.end(), [](Player* a, Player* b) {
+    std::ranges::sort(sortedPlayers.begin(), sortedPlayers.end(), [](const Player* a, const Player* b) {
         return a->getPoints() > b->getPoints(); // Trie par points décroissants
     });
 
@@ -184,50 +187,62 @@ void Jeux::DistributeCards()
         player->pioche(5);
 
     }
-    //mise à jour de la réserve de cartes
-    m_plateau->updateReserveByName("DOMAINE",3*static_cast<int>(m_players.size()));
     m_plateau->updateReserveByName("CUIVRE",7*static_cast<int>(m_players.size()));
 }
 /**
  * Affiche l'ecran de jeu du joueur (plateau,main,infos...)
  * @param player
  */
-void Jeux::playerBoard(const Player* player) const {
+void Jeux::playerBoard(const Player& player) const {
     clearTerminal();
-    m_plateau->affichage();
-    player->afficheHand();
-    player->info();
+    m_plateau->affichage(*this);
+    player.afficheHand();
+    player.info();
 }
 
 
 void Jeux::actionPhase(Player* player)
 {
-    //Phase d'action du joueur actif
-    std::cout<<std::endl<<"Phase d'action pour le joueur "<<player->getName()<<std::endl;
+
+    playerBoard(*player);
+    phaseMessage(ACTION);
     bool* exit=new bool(false);
-    std::string consigne ="Jouez une carte action ou passez a la phase d'achat ";
     while(player->canPlayAction()&&!*exit)
     {
-        GameCommand::getInput(*this,ACTION,exit,consigne);
+        GameCommand::getInput(*this,ACTION,exit);
     }
-    std::cout<<"Fin de la phase d'action"<<std::endl;
     delete exit;
 
 }
 
 void Jeux::buyPhase(Player* player)
 {
-    //Phase d'achat du joueur actif
-    std::cout<<std::endl<<"Phase d'achat pour le joueur "<<player->getName()<<std::endl;
+    playerBoard(*player);
+    phaseMessage(BUY);
     bool* exit=new bool(false);
-    std::string consigne="Achetez/Vendez une ou plusieurs cartes ou passez au tour suivant";
     while(player->canBuy()&&!*exit)
     {
-        GameCommand::getInput(*this,BUY,exit,consigne);
+        GameCommand::getInput(*this,BUY,exit);
     }
-    std::cout<<"Fin de la phase d'achat"<<std::endl;
     delete exit;
 
+}
+void Jeux::phaseMessage(Phase phase)
+{
+    if(phase==ACTION)
+    {
+        std::cout << BLUE_TEXT << BLINK_TEXT
+                  << "Jouez des cartes actions"
+                  << RESET_TEXT << std::endl;
+    }
+    else if(phase==BUY)
+    {
+        std::cout << BLUE_TEXT << BLINK_TEXT
+                 << "Achetez des cartes"
+                 << RESET_TEXT << std::endl;
+    }
+    else
+        std::cout<<"Phase inconnue"<<std::endl;
 }
 
 /**
@@ -238,8 +253,6 @@ void Jeux::endTurn(Player* player)
 {
     size_t range=m_players.size();
     actifIndex = (actifIndex + 1) % range;
-    std::cout<<std::endl<<"Fin du tour pour le joueur "<<player->getName()<<std::endl;
-    std::cout<<"Passage au joueur "<<m_players.at(actifIndex)->getName()<<std::endl;
     player->defausseAll();
     player->pioche(5);
 

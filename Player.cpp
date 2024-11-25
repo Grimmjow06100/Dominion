@@ -55,8 +55,8 @@ void Player::afficheHand() const {
     constexpr int maxCartesParLigne = 5;  // Maximum de cartes par ligne
     const auto& main = m_hand; // Récupérer la main du joueur
 
-    std::cout << "______________________________________ MAIN DU JOUEUR " << m_name<<
-        "_________________________________" << std::endl;
+    std::cout << "______________________________________ MAIN DE " << m_name<<
+        " _____________________________________________" << std::endl;
 
     // Stockage temporaire des cartes avec leurs informations
     std::vector<std::tuple<std::string, int, std::string, std::string>> cartes;
@@ -180,10 +180,16 @@ bool Player::defausseFromHand(const std::string& cardName) {
     return false;
 }
 
+#include <iostream>
+
 void Player::info() const {
-    std::cout<<m_name <<" "<<m_points << " PV | " <<m_actions<<" Actions | "<<m_buys<<" Achats | " <<m_coins
-    <<" Pieces |"<<std::endl << std::endl;  // Affiche les informations du joueur
+
+    std::cout << m_name << " " << m_points << " PV | "
+              << m_actions << " Actions | " << m_buys << " Achats | "
+              << m_coins << " Pieces |" << std::endl << std::endl;
+
 }
+
 
 bool Player::defausseArray(std::vector<Card*>& cards) {
     if (cards.empty()) {
@@ -373,9 +379,14 @@ bool Player::sellCard(const std::string& cardName) {
     return false;
 }
 
-void Player::sellAllTreasure()
+bool Player::sellAllTreasure()
 {
     auto it = m_hand.begin();
+    if(it==m_hand.end())
+    {
+        std::cout<<"Vous n'avez pas de carte a vendre"<<std::endl;
+        return false;
+    }
     while (it != m_hand.end()) {
         if (auto* t = dynamic_cast<TreasureCard*>(*it)) {
             m_coins += t->getTreasure();
@@ -385,8 +396,7 @@ void Player::sellAllTreasure()
             ++it;
         }
     }
-
-    std::cout << "Tous les tresors ont ete vendus" << std::endl;
+    return true;
 }
 
 bool Player::ReactTo(int& index) const{

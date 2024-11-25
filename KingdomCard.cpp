@@ -88,7 +88,6 @@ void KingdomCard::action(Jeux &j) {
         player.AddCoin(m_coins);
         player.AddBuy(m_buys);
         player.pioche(m_cards);
-        j.playerBoard(&player);
         if(m_actions)
         {
             std::cout<<"Vous avez gagne "<<m_actions<<" actions"<<std::endl;
@@ -200,7 +199,7 @@ void KingdomCard::Atelier(Jeux &j)
     while(card->empty() || !valid)
     {
         card->clear();
-        GameCommand::getInput(j,NONE,nullptr,message,card);
+        GameCommand::getInput(j,NONE,nullptr,card);
         if(!card->empty())
         {
             if(player.gainCard(*card,p,0,4))
@@ -220,7 +219,7 @@ void KingdomCard::Chapelle(Jeux & j)
     while (count<=4){
         card->clear();
         std::cout<<"Carte "<<count<<" ";
-        GameCommand::getInput(j,NONE,exit,message,card);
+        GameCommand::getInput(j,NONE,exit,card);
         std::cout<<std::endl;
         if(!card->empty())
         {
@@ -266,7 +265,7 @@ void KingdomCard::Cave(Jeux & j)
     while(true){
         card->clear();
         std::cout<<"Carte "<<count<<" ";
-        GameCommand::getInput(j,NONE,exit,message,card);
+        GameCommand::getInput(j,NONE,exit,card);
         if(!card->empty())
         {
             if(p.defausseFromHand(*card))

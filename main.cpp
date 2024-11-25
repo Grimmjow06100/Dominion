@@ -1,7 +1,6 @@
 
 #include <fstream>
 #include <iostream>
-#include "Player.h"
 #include "KingdomCard.h"
 #include "Jeux.h"
 /*
