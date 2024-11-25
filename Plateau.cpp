@@ -43,7 +43,7 @@ void Plateau::affichage() {
     constexpr int maxCartesParLigne = 5;  // Maximum de cartes par ligne
     const auto& reserves = this->getReserve();  // Nombre total de cartes
 
-    std::cout << "______________________________________ PLATEAU _________________________________________" << std::endl;
+    std::cout << "______________________________________ PLATEAU ___________________________________________________" << std::endl;
     std::vector<std::tuple<std::string, int, std::string, std::string, int>> cartes;
 
     for (const auto& [nomCarte, reserve] : reserves) {

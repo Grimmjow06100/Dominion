@@ -151,7 +151,7 @@ void GameCommand::handleSell(const std::string& nomCarte, const Jeux& j, Phase p
         if(player.sellAllTreasure())
         {
             j.playerBoard(&player);
-            Jeux::phaseMessage(phase);
+            Jeux::phaseMessage(BUY);
         }
     }else{
         if(player.sellCard(nomCarte))
