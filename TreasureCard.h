@@ -10,12 +10,14 @@
 
 class TreasureCard : public Card{
     int m_treasure;
+
 public:
     explicit TreasureCard(std::string const& nom);
     TreasureCard(TreasureCard const& card);
     [[nodiscard]]int getTreasure() const ;
     void affichage() const override;
     void details() const override;
+    void activerBonus(int bonus);
 };
 
 

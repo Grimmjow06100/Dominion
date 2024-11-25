@@ -73,14 +73,22 @@ int main()
     KingdomCard bandit=KingdomCard::KingdomCardMap["BANDIT"];
     KingdomCard village=KingdomCard::KingdomCardMap["VILLAGE"];
     KingdomCard cave=KingdomCard::KingdomCardMap["CAVE"];
+    KingdomCard messager=KingdomCard::KingdomCardMap["MESSAGER"];
+    KingdomCard vassal=KingdomCard::KingdomCardMap["VASSAL"];
+    KingdomCard braconnier=KingdomCard::KingdomCardMap["BRACONNIER"];
     for(auto &player:j.getPlayers())
     {
+        //main du joueur
         player->getHand().push_back(&jardins);
         player->getHand().push_back(&chapelle);
         player->getHand().push_back(&sorciere);
         player->getHand().push_back(&bandit);
         player->getHand().push_back(&village);
         player->getHand().push_back(&cave);
+        player->getHand().push_back(&messager);
+
+        //defausse du joueur
+        player->getDefausse().push_back(&jardins);
     }
     j.playGame();
 

@@ -38,7 +38,12 @@ void alert(std::string const& message)
 {
     std::cout<<"\033[31m"<<message<<"\033[0m"<<std::endl;
 }
+void appuyerPourContinuer() {
 
+    std::cout << "Entrez une touche pour continuer... > " ;
+    std::cin.get();  // Attendre que l'utilisateur appuie sur une touche
+    std::cin.ignore();  // Ignorer le caractère '\n' restant
+}
 void Card::afficheCards(const std::vector<Card*>& cards) {
     constexpr int maxCartesParLigne = 5;
     std::vector<std::tuple<std::string, int, std::string, std::string>> cartes;

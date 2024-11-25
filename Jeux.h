@@ -44,7 +44,7 @@ public:
 
 };
 
-void appuyerPourContinuer();
+
 
 
 #endif //JEUX_H

@@ -34,6 +34,8 @@ public:
     bool defausseFromHand(std::string const &cardName);
     bool defausseArray(std::vector<Card*>& cards);
     bool playAction(std::string const&cardName,Jeux &jeux);
+    bool moveCardFromDefausseToDeck(std::string const&cardName);
+    void defausseCard(std::vector<Card*> &array,int index);
     bool gainCard(std::string const&cardName,Plateau &p,int minCost=0,int maxCost=10);
     void afficheHand()const;
     void shuffle();

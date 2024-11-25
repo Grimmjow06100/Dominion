@@ -246,7 +246,7 @@ false
 0
 2
 0
-+2 pieces, deffausse la premiere carte de votre deck, si c'est une carte action, vous pouvez la jouer.
++2 pieces, defausse la premiere carte de votre deck, si c'est une carte action, vous pouvez la jouer.
 
 Marchand
 3
@@ -256,7 +256,7 @@ false
 1
 0
 0
-+1 carte, +1 action, la premiere fois que vous jouez une carte argent dans un tour, +1 carte.
++1 carte, +1 action, la premiere fois que vous jouez un argent ce tour-ci, +1 piece.
 
 Messager
 3

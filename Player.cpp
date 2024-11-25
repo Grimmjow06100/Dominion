@@ -158,7 +158,12 @@ bool Player::playAction(const std::string& cardName, Jeux& jeux) {
     alert("Cette carte n'est pas dans votre main" );
     return false;
 }
-
+void Player::defausseCard(std::vector<Card*>& array,int index) {
+    if (index >= 0 && index < array.size()) {
+        m_defausse.push_back(array[index]);
+        array.erase(array.begin() + index);
+    }
+}
 void Player::defausseAll() {
     m_defausse.insert(m_defausse.end(), std::make_move_iterator(m_hand.begin()), std::make_move_iterator(m_hand.end()));
     m_hand.clear();
@@ -307,7 +312,22 @@ bool Player::buyCard(std::string const& cardName, Jeux const& j)
     alert("La carte n'existe pas");
     return false;
 }
-
+bool Player::moveCardFromDefausseToDeck(std::string const&cardName)
+{
+    auto it=std::ranges::find_if(m_defausse.begin(),m_defausse.end(),[&cardName](const Card* c)
+    {
+        return c->getNom()==cardName;
+    });
+    if(it!=m_defausse.end())
+    {
+        m_deck.push_back(*it);
+        m_defausse.erase(it);
+        notif("La carte "+cardName+" a ete deplacee de la defausse au deck");
+        return true;
+    }
+    alert("La carte n'est pas dans la defausse");
+    return false;
+}
 
 bool Player::trashCardFromHand(const std::string& cardName) {
     auto it = std::ranges::find_if(m_hand.begin(), m_hand.end(), [&cardName](const Card* card) {

@@ -17,7 +17,7 @@
 
 
 
-void GameCommand::getInput(Jeux& j,Phase phase,bool* exitOption,std::string* cardNameOption) {
+void GameCommand::getInput(Jeux& j,Phase phase,bool* exitOption,std::string* cardNameOption,std::string* otherInput) {
     while (true) {
         std::cout << "> ";
         std::string commande;
@@ -62,6 +62,11 @@ void GameCommand::getInput(Jeux& j,Phase phase,bool* exitOption,std::string* car
                 continue;
             }
             *exitOption = true;
+            break;
+        }
+        if(otherInput!=nullptr)
+        {
+            *otherInput=commande;
             break;
         }
         alert("Commande non reconnue. Essayez 'help [nomCarte]', 'pick [nomCarte]',play [nomCarte],buy[nomCarte] ou 'end'." );

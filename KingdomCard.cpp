@@ -135,6 +135,14 @@ void KingdomCard::action(Jeux &j) {
     {
         Chapelle(j);
     }
+    else if(m_nom=="MESSAGER")
+    {
+        Messager(j);
+    }
+    else if(m_nom=="VASSAL")
+    {
+        Vassal(j);
+    }
 }
 
 
@@ -192,6 +200,43 @@ void KingdomCard::GenerateKingdomFromFile(const std::string& nomFichier) {
     fichier.close();
 }
 
+void KingdomCard::Braconnier(Jeux &j)
+{
+    Player &p=j.getActifPlayer();
+    Plateau& plateau=j.getPlateau();
+    std::map<std::string,Reserve>& reserve=plateau.getReserve();
+    std::string message="Defausse une carte par pile de reserve vide";
+    std::cout<<message<<std::endl;
+    int count(0);
+    std::string card;
+    for(auto it:reserve)
+    {
+        if(it.second.getTaille()==0)
+        {
+            count++;
+        }
+    }
+    if(count==0)
+    {
+        notif("Aucune pile de reserve n'est vide");
+        return;
+    }
+    while(count>0)
+    {
+        card.clear();
+        std::cout<<"Carte "<<count<<" ";
+        GameCommand::getInput(j,NONE,nullptr,&card);
+        if(!card.empty())
+        {
+            if(p.defausseFromHand(card))
+            {
+                count--;
+            }
+        }
+    }
+
+}
+
 void KingdomCard::Atelier(Jeux &j)
 {
     Plateau& p=j.getPlateau();
@@ -199,15 +244,15 @@ void KingdomCard::Atelier(Jeux &j)
     std::string nom;
     std::string message="Gagnez une carte coutant jusqu'a 4 pieces";
     std::cout<<message<<std::endl;
-    auto* card=new std::string();
+    std::string card;
     bool valid(false);
-    while(card->empty() || !valid)
+    while(card.empty() || !valid)
     {
-        card->clear();
-        GameCommand::getInput(j,NONE,nullptr,card);
-        if(!card->empty())
+        card.clear();
+        GameCommand::getInput(j,NONE,nullptr,&card);
+        if(!card.empty())
         {
-            if(player.gainCard(*card,p,0,4))
+            if(player.gainCard(card,p,0,4))
             {
                 valid=true;
             }
@@ -223,19 +268,19 @@ void KingdomCard::Chapelle(Jeux & j)
     std::string message="Trashez jusqu'a 4 cartes de votre main";
     std::cout<<message<<std::endl;
     int count(1);
-    bool* exit=new bool(false);
-    auto* card=new std::string();
+    bool exit(false);
+    std::string card;
     while (count<=4){
-        card->clear();
+        card.clear();
         std::cout<<"Carte "<<count<<" ";
-        GameCommand::getInput(j,NONE,exit,card);
+        GameCommand::getInput(j,NONE,&exit,&card);
         std::cout<<std::endl;
-        if(!card->empty())
+        if(!card.empty())
         {
-            if(p.trashCardFromHand(*card))
+            if(p.trashCardFromHand(card))
                 count++;
         }
-        if(*exit || p.getHand().empty())
+        if(exit || p.getHand().empty())
             break;
     }
 
@@ -263,26 +308,60 @@ void KingdomCard::Sorciere(Jeux const&j)
 
 }
 
+void KingdomCard::Vassal(Jeux& j) {
+    Player& p = j.getActifPlayer();
+    std::string message = "Défaussez la première carte de votre deck. Si c'est une carte action, vous pouvez la jouer.";
+    std::cout << message << std::endl;
+
+    Card* c = p.drawCard();
+    if (!c) {
+        notif("Votre deck est vide, vous ne pouvez pas defausse de carte.");
+        return;
+    }
+
+    if (auto* k = dynamic_cast<KingdomCard*>(c)) {  // Vérifiez si c'est une carte action
+        std::string choix;
+        do {
+            std::cout << "Voulez-vous jouer la carte " << c->getNom() << " ? (y/n) > ";
+            GameCommand::getInput(j, NONE, nullptr, nullptr,&choix);
+            if (choix == "Y") {
+                k->action(j);  // Jouez l'action
+                return;        // Terminez la fonction
+            }
+            if (choix == "N") {
+                break;  // Passez au bloc pour défausser la carte
+            }
+            std::cout << "Entrée invalide. Veuillez répondre par 'y' ou 'n'." << std::endl;
+
+        } while (true);
+    }
+
+    // Si ce n'est pas une carte action ou si le joueur refuse de jouer l'action
+    p.getDefausse().push_back(c);
+    notif("La carte " + c->getNom() + " a été défaussée.");
+}
+
+
 void KingdomCard::Cave(Jeux & j)
 {
     Player &p=j.getActifPlayer();
     std::string message="Defaussez autant de cartes que vous voulez";
     std::cout<<message<<std::endl;
     int count(1);
-    bool* exit=new bool(false);
-    auto* card=new std::string();
+    bool exit(false);
+    std::string card;
     while(true){
-        card->clear();
+        card.clear();
         std::cout<<"Carte "<<count<<" ";
-        GameCommand::getInput(j,NONE,exit,card);
-        if(!card->empty())
+        GameCommand::getInput(j,NONE,&exit,&card);
+        if(!card.empty())
         {
-            if(p.defausseFromHand(*card))
+            if(p.defausseFromHand(card))
             {
                 count++;
             }
         }
-        if(*exit||p.getHand().empty())
+        if(exit||p.getHand().empty())
             break;
     }
     notif("vous piochez "+std::to_string(count)+" cartes");
@@ -293,6 +372,34 @@ void KingdomCard::Jardins(Player& p)
 {
     int point=static_cast<int>(p.getDeck().size())/10;
     p.AddPoint(point);
+}
+
+void KingdomCard::Messager(Jeux &j)
+{
+    std::cout<<"Regarde ta pile de defausse, tu peux mettre une carte dans ton deck."<<std::endl;
+    Player &p=j.getActifPlayer();
+    bool exit(false);
+    auto*card=new std::string();
+    if(p.getDefausse().empty())
+    {
+        notif("la defausse est vide, pas de carte a deplacer");
+    }
+    afficheCards(p.getDefausse());
+    while(true)
+    {
+        card->clear();
+        GameCommand::getInput(j,NONE,&exit,card);
+        if(!card->empty())
+        {
+            if(p.moveCardFromDefausseToDeck(*card))
+            {
+                break;
+            }
+        }
+        if(exit)
+            break;
+    }
+    appuyerPourContinuer();
 }
 void KingdomCard::Bandit(Jeux const&j)
 {

@@ -208,12 +208,11 @@ void Jeux::actionPhase(Player* player)
 
     playerBoard(player);
     phaseMessage(ACTION);
-    bool* exit=new bool(false);
-    while(player->canPlayAction()&&!*exit)
+    bool exit(false);
+    while(player->canPlayAction()&&!exit)
     {
-        GameCommand::getInput(*this,ACTION,exit);
+        GameCommand::getInput(*this,ACTION,&exit);
     }
-    delete exit;
     std::cout<<"Fin de la phase d'action"<<std::endl;
     appuyerPourContinuer();
 
@@ -223,12 +222,11 @@ void Jeux::buyPhase(Player* player)
 {
     playerBoard(player);
     phaseMessage(BUY);
-    bool* exit=new bool(false);
-    while(player->canBuy()&&!*exit)
+    bool exit(false);
+    while(player->canBuy()&&!exit)
     {
-        GameCommand::getInput(*this,BUY,exit);
+        GameCommand::getInput(*this,BUY,&exit);
     }
-    delete exit;
     std::cout<<"Fin de la phase d'achat , c'est au tour de "<<m_players[(actifIndex + 1) % m_players.size()]->getName()<<std::endl;
     appuyerPourContinuer();
 
@@ -266,12 +264,7 @@ void Jeux::endTurn(Player* player)
 }
 
 
-void appuyerPourContinuer() {
 
-    std::cout << "Entrez une touche pour continuer... > " ;
-    std::cin.get();  // Attendre que l'utilisateur appuie sur une touche
-    std::cin.ignore();  // Ignorer le caractère '\n' restant
-}
 
 void Jeux::setPlayer(Player* player)
 {

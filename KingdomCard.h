@@ -26,6 +26,9 @@ class KingdomCard : public Card{
     static void Bandit(Jeux const&j);
     static void Sorciere(Jeux const&j);
     static void Chapelle(Jeux &j);
+    static void Messager(Jeux &j);
+    static void Vassal(Jeux &j);
+    static void Braconnier(Jeux &j);
 public :
     static std::vector<KingdomCard> DataCards;
     static std::map<std::string,KingdomCard> KingdomCardMap;

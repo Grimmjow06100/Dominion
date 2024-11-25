@@ -29,5 +29,6 @@ public:
 std::string normalize(const std::string& s);
 void notif(std::string const& message);
 void alert(std::string const& message);
+void appuyerPourContinuer();
 
 #endif //CARD_H

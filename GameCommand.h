@@ -22,7 +22,7 @@ class GameCommand {
     static std::string normalizeCommand(const std::string& input);
 
 public:
-    static void getInput( Jeux& j, Phase phase=NONE ,bool* exitOption =nullptr,std::string* cardNameOption=nullptr);
+    static void getInput( Jeux& j, Phase phase=NONE ,bool* exitOption =nullptr,std::string* cardNameOption=nullptr,std::string* otherInput=nullptr);
 };
 
 

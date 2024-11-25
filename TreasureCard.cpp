@@ -7,7 +7,6 @@
 #include <iomanip>
 #include <iostream>
 #include "Player.h"
-#include "Jeux.h"
 
 
 TreasureCard::TreasureCard(std::string const&nom) :  Card(normalize(nom),0),m_treasure(0)
@@ -57,6 +56,4 @@ void TreasureCard::details()const
     std::cout<<"Cout : "<<m_cost<<std::endl;
     std::cout<<"Description : +"<<m_treasure<<" pieces"<<std::endl;
 }
-
-
 
