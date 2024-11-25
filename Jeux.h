@@ -5,6 +5,7 @@
 #ifndef JEUX_H
 #define JEUX_H
 #include "vector"
+#include "GameCommand.h"
 
 
 
@@ -32,6 +33,7 @@ public:
     void playerBoard(const Player* player) const;
     void initGame(std::string const&nom1,std::string const&nom2);
     void playGame();
+    static void phaseMessage(Phase phase);
 
     //getters
     [[nodiscard]]std::vector<Player*>getPlayers()const;

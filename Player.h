@@ -44,7 +44,7 @@ public:
     void AddCoin(int coin);
     bool ReactTo(int&index)const;
     bool sellCard(const std::string&cardName);
-    void sellAllTreasure();
+    bool sellAllTreasure();
     bool buyCard(std::string const&cardName,Jeux const&j);
     Card* drawCard();
     static void trashCard(const Card* card);

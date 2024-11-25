@@ -193,18 +193,18 @@ void Jeux::DistributeCards()
  * Affiche l'ecran de jeu du joueur (plateau,main,infos...)
  * @param player
  */
-void Jeux::playerBoard(const Player& player) const {
+void Jeux::playerBoard(const Player* player) const {
     clearTerminal();
-    m_plateau->affichage(*this);
-    player.afficheHand();
-    player.info();
+    m_plateau->affichage();
+    player->afficheHand();
+    player->info();
 }
 
 
 void Jeux::actionPhase(Player* player)
 {
 
-    playerBoard(*player);
+    playerBoard(player);
     phaseMessage(ACTION);
     bool* exit=new bool(false);
     while(player->canPlayAction()&&!*exit)
@@ -217,7 +217,7 @@ void Jeux::actionPhase(Player* player)
 
 void Jeux::buyPhase(Player* player)
 {
-    playerBoard(*player);
+    playerBoard(player);
     phaseMessage(BUY);
     bool* exit=new bool(false);
     while(player->canBuy()&&!*exit)

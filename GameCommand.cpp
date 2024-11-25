@@ -118,7 +118,7 @@ void GameCommand::handleBuy(const std::string& nomCarte, Jeux& j, Phase phase) {
     Player& player = j.getActifPlayer();
     if(player.buyCard(nomCarte,j)&&player.canBuy())
     {
-        j.playerBoard(player);
+        j.playerBoard(&player);
         Jeux::phaseMessage(phase);
     }
 }
@@ -133,7 +133,7 @@ void GameCommand::handlePlay(const std::string& nomCarte, Jeux& j, Phase phase) 
     Player& player = j.getActifPlayer();
     if(player.playAction(nomCarte,j)&&player.canPlayAction())
     {
-        j.playerBoard(player);
+        j.playerBoard(&player);
         Jeux::phaseMessage(phase);
     }
 
@@ -150,13 +150,13 @@ void GameCommand::handleSell(const std::string& nomCarte, const Jeux& j, Phase p
     if (nomCarte == "ALL") {
         if(player.sellAllTreasure())
         {
-            j.playerBoard(player);
+            j.playerBoard(&player);
             Jeux::phaseMessage(phase);
         }
     }else{
         if(player.sellCard(nomCarte))
         {
-            j.playerBoard(player);
+            j.playerBoard(&player);
             Jeux::phaseMessage(phase);
         }
     }
