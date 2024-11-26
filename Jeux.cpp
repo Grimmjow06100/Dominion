@@ -164,7 +164,7 @@ void Jeux::initGame() {
     std::cout << "\n-- Les cartes du royaume sont pretes !!! --\n";
 
     spaceV(2);
-    std::cout << "\n----------------- Résumé de la partie -----------------\n";
+    std::cout << "\n----------------- Resume de la partie -----------------\n";
     std::cout << "Nombre de joueurs : " << nbJoueurs << std::endl;
     std::cout << "Ordre des joueurs : ";
     for (const auto& joueur : m_players) {
