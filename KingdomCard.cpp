@@ -115,7 +115,6 @@ void KingdomCard::action(Jeux &j) {
     }
     else if(m_nom=="CAVE")
     {
-
         Cave(j);
     }
     else if(m_nom=="JARDINS")
@@ -254,9 +253,11 @@ void KingdomCard::Festin(Jeux &j)
         GameCommand::getInput(j,NONE,nullptr,&card);
         if(!card.empty())
         {
-            if(player.gainCard(card,p,0,5)) {
-                break;
-            }
+            continue;
+        }
+        if(player.gainCard(card,p,0,5)) {
+            notif ("Vous avez gagne la carte "+card);
+            break;
         }
     }
 }
@@ -302,7 +303,7 @@ void KingdomCard::Voleur(Jeux& j) {
             // 2. Réaction à l'attaque
             int index;
             if (joueur->ReactTo(index)) {
-                notif("le joueur "+joueur->getName()+" a reagi a l'attaque");
+                notif("le joueur "+joueur->getName()+"annule l'attaque avec le carte"+joueur->getHand()[index]->getNom());
                 continue;
             }
 
@@ -330,51 +331,39 @@ void KingdomCard::Voleur(Jeux& j) {
 
             if (!treasures.empty()) {
 
-                // Lambda pour rechercher une carte trésor par nom
-                auto findTreasureByName = [&treasures](const std::string& name) -> TreasureCard* {
-                    for (auto* treasure : treasures) {
-                        if (normalize(treasure->getNom()) == name) {
-                            return treasure;
-                        }
-                    }
-                    return nullptr; // Si aucune carte correspondante n'est trouvée
-                };
-
                 // Le joueur actif choisit une carte Trésor à voler
                 std::string message = "Choisissez une carte Tresor de l'ennemi";
-                auto* card = new std::string();
+                std::string card;
                 bool valid = false;
                 TreasureCard* stolenCard = nullptr;
 
                 while (!valid) {
-                    card->clear();
-                    std::cout << message <<std::endl;
-                    GameCommand::getInput(j, NONE, nullptr, card);
-                    std::string str = normalize(*card);
-
-                    // Rechercher la carte dans treasures
-                    stolenCard = findTreasureByName(str);
-                    if (stolenCard) {
+                    card.clear();
+                    GameCommand::getInput(j, NONE, nullptr, &card);
+                    auto it=std::ranges::find_if(treasures,[&card](TreasureCard* c)
+                    {
+                        return card==c->getNom();
+                    });
+                    if (it!=treasures.end()) {
+                        stolenCard=(*it);
                         valid = true; // La carte est valide
-                    } else {
-                        std::cout << "La carte " << str << " n'est pas valide. Veuillez reessayer." << std::endl;
                     }
                 }
 
                 // Demander au joueur s'il veut voler ou supprimer la carte
-                std::cout << "Voulez-vous voler ou supprimer la carte " << stolenCard->getNom()
-                          << "? (commande : voler/supprimer) : ";
+                std::cout << "Voulez-vous voler ou supprimer la carte " << card
+                          << "? (voler/supprimer) : ";
                 std::string choice;
                 std::cin >> choice;
 
-                if (choice == "voler" || choice == "Voler" || choice == "VOLER") {
+                if (normalize(choice )== "VOLER") {
                     // Voler la carte
                     if (actif.stealCard(stolenCard, revealedCards)) { // Voler la carte depuis les cartes révélées
                         // Supprimer la carte volée des cartes révélées
                         revealedCards.erase(std::remove(revealedCards.begin(), revealedCards.end(), stolenCard),
                                             revealedCards.end());
                     }
-                } else if (choice == "supprimer" || choice == "Supprimer" || choice == "SUPPRIMER") {
+                } else if (normalize(choice) == "SUPPRIMER") {
                     // Supprimer la carte
                     std::cout << "La carte Tresor " << stolenCard->getNom() << " est trashed." << std::endl;
                     Player::trashCard(stolenCard);
@@ -452,18 +441,18 @@ void KingdomCard::Atelier(Jeux &j)
     std::string message="Gagnez une carte coutant jusqu'a 4 pieces";
     std::cout<<message<<std::endl;
     std::string card;
-    bool valid(false);
-    while(card.empty() || !valid)
+    while(true)
     {
         card.clear();
         GameCommand::getInput(j,NONE,nullptr,&card);
         if(!card.empty())
         {
-            if(player.gainCard(card,p,0,4))
-            {
-                valid=true;
-            }
-
+           continue;
+        }
+        if(player.gainCard(card,p,0,4))
+        {
+            notif("Vous avez gagne la carte "+card);
+            break;
         }
     }
 
@@ -529,7 +518,7 @@ void KingdomCard::Vassal(Jeux& j) {
     if (auto* k = dynamic_cast<KingdomCard*>(c)) {  // Vérifiez si c'est une carte action
         std::string choix;
         do {
-            std::cout << "Voulez-vous jouer la carte " << c->getNom() << " ? (y/n) > ";
+            std::cout << "Voulez-vous jouer la carte " << c->getNom() << " ? (Y/N) > ";
             GameCommand::getInput(j, NONE, nullptr, nullptr,&choix);
             if (choix == "Y") {
                 k->action(j);  // Jouez l'action

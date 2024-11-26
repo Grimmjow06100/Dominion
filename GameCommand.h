@@ -6,6 +6,12 @@
 #define GAMECOMMAND_H
 #include <string>
 #include <iostream>
+#include <vector>
+
+#include "Player.h"
+
+class Player;
+
 
 
 class Jeux;

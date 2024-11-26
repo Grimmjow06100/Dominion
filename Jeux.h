@@ -23,7 +23,7 @@ class Jeux {
     void buyPhase(Player* player);
     void endTurn(Player* player);
     void endGame();
-
+    void afficheGuide() const;
     void afficheClassement() const;
 
 public:

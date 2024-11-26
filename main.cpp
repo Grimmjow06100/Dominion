@@ -58,23 +58,6 @@ int main()
     KingdomCard::GenerateKingdomFromFile("royaume.txt");
     Jeux j;
     j.initGame();
-    KingdomCard jardins=KingdomCard::KingdomCardMap["JARDINS"];
-    KingdomCard chapelle=KingdomCard::KingdomCardMap["CHAPELLE"];
-    KingdomCard sorciere=KingdomCard::KingdomCardMap["SORCIERE"];
-    KingdomCard bandit=KingdomCard::KingdomCardMap["BANDIT"];
-    KingdomCard village=KingdomCard::KingdomCardMap["VILLAGE"];
-    KingdomCard cave=KingdomCard::KingdomCardMap["CAVE"];
-    KingdomCard messager=KingdomCard::KingdomCardMap["MESSAGER"];
-    KingdomCard vassal=KingdomCard::KingdomCardMap["VASSAL"];
-    KingdomCard braconnier=KingdomCard::KingdomCardMap["BRACONNIER"];
-    KingdomCard salle_duconseil=KingdomCard::KingdomCardMap["SALLE_DUCONSEIL"];
-    KingdomCard chancelier=KingdomCard::KingdomCardMap["CHANCELIER"];
-    KingdomCard festin=KingdomCard::KingdomCardMap["FESTIN"];
-    KingdomCard preteur=KingdomCard::KingdomCardMap["PRETEUR"];
-    KingdomCard voleur=KingdomCard::KingdomCardMap["VOLEUR"];
-    j.getPlateau().getReserve().at("ATELIER").setTaille(3);
-    j.getPlateau().getReserve().at("DOUVES").setTaille(10);
-    j.getPlateau().getReserve().at("CHAPELLE").setTaille(1);
     j.playGame();
 
 
