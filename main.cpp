@@ -3,28 +3,19 @@
 #include <iostream>
 #include "KingdomCard.h"
 #include "Jeux.h"
-#include "Player.h"
+#include "Plateau.h"
 /*
 
 
-COMMANDE GENERALE
+Guide d'utilisation du jeu Dominion
 
 HELP [nomCarte]
 Effet : Affiche les détails d'une carte spécifique (carte de trésor, royaume ou victoire) si elle existe dans la réserve.
 Exemple : HELP OR affiche les détails de la carte "OR".
 ----------------------------------------------------------------------------
 INFO
-Effet : Affiche les informations sur le joueur actif, telles que ses cartes en main, ses points, et ses ressources.
+Effet : Affiche des informations sur les autres joueurs
 -----------------------------------------------------------------------------
-BOARD
-Effet : Affiche l'état du plateau, incluant les cartes disponibles dans la réserve.
--------------------------------------------------------------------------------
-DECK
-Effet : Affiche les cartes en main du joueur actif.
---------------------------------------------------------------------------------
-?
-Effet : Affiche un message personnalisé (fourni via messageOption dans l'appel de la fonction).
--------------------------------------------------------------------------------------
 END
 Effet : Termine la phase ou l'action en cours (si exitOption est activé).
 
@@ -62,11 +53,11 @@ Conditions : Disponible uniquement si un pointeur cardNameOption est fourni à l
 
 int main()
 {
-/*
+
     std::system("cls");
     KingdomCard::GenerateKingdomFromFile("royaume.txt");
     Jeux j;
-    j.initGame("samy","mohamed");
+    j.initGame();
     KingdomCard jardins=KingdomCard::KingdomCardMap["JARDINS"];
     KingdomCard chapelle=KingdomCard::KingdomCardMap["CHAPELLE"];
     KingdomCard sorciere=KingdomCard::KingdomCardMap["SORCIERE"];
@@ -76,25 +67,14 @@ int main()
     KingdomCard messager=KingdomCard::KingdomCardMap["MESSAGER"];
     KingdomCard vassal=KingdomCard::KingdomCardMap["VASSAL"];
     KingdomCard braconnier=KingdomCard::KingdomCardMap["BRACONNIER"];
-    for(auto &player:j.getPlayers())
-    {
-        //main du joueur
-        player->getHand().push_back(&jardins);
-        player->getHand().push_back(&chapelle);
-        player->getHand().push_back(&sorciere);
-        player->getHand().push_back(&bandit);
-        player->getHand().push_back(&village);
-        player->getHand().push_back(&cave);
-        player->getHand().push_back(&messager);
-
-        //defausse du joueur
-        player->getDefausse().push_back(&jardins);
-    }
-    j.playGame();*/
-    std::system("cls");
-    KingdomCard::GenerateKingdomFromFile("royaume.txt");
-    Jeux j;
-    j.initGame();
+    KingdomCard salle_duconseil=KingdomCard::KingdomCardMap["SALLE_DUCONSEIL"];
+    KingdomCard chancelier=KingdomCard::KingdomCardMap["CHANCELIER"];
+    KingdomCard festin=KingdomCard::KingdomCardMap["FESTIN"];
+    KingdomCard preteur=KingdomCard::KingdomCardMap["PRETEUR"];
+    KingdomCard voleur=KingdomCard::KingdomCardMap["VOLEUR"];
+    j.getPlateau().getReserve().at("ATELIER").setTaille(3);
+    j.getPlateau().getReserve().at("DOUVES").setTaille(10);
+    j.getPlateau().getReserve().at("CHAPELLE").setTaille(1);
     j.playGame();
 
 

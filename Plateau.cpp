@@ -8,20 +8,13 @@
 #include "VictoryCard.h"
 #include "TreasureCard.h"
 #include <iomanip>
-
 #include <algorithm>
+#include <set>
 #include <vector>
-#include <unordered_map>
 #include <string>
 
 //carte de bases
-std::vector<std::string>BaseBoard ={"atelier","bucheron","village","festin","laboratoire","douves","jardins","chapelle","voleur","sorciere"};
 
-//carte bonus
-//std::vector<std::string>BaseBoard = {"festival","douves","bandit","marche","manufacture","preteur","chancelier","salle_du_conseil"};//ajouter messager, vassal, braconnier
-
-
-//std::vector<std::string>BaseBoard ={"atelier","bucheron","village","festival","laboratoire","douves","jardins","chapelle","bandit","sorciere"};
 
 /**
  * Trie le vecteur de cartes en fonction de son type
@@ -179,7 +172,7 @@ void Plateau::built()
     m_reserve["OR"]=Reserve(TreasureCard("OR"),m_or);
     m_reserve["DOMAINE"]=Reserve(VictoryCard("DOMAINE"),m_victory);
     m_reserve["DUCHE"]=Reserve(VictoryCard("DUCHE"),m_victory);
-    m_reserve["PROVINCE"]=Reserve(VictoryCard("PROVINCE"),1);//m_victory
+    m_reserve["PROVINCE"]=Reserve(VictoryCard("PROVINCE"),m_victory);//m_victory
     m_reserve["MALEDICTION"]=Reserve(VictoryCard("MALEDICTION"),m_curse);
     for(auto &i : BaseBoard)
     {
@@ -188,10 +181,36 @@ void Plateau::built()
         {
             m_reserve[normalize(it->second.getNom())]=Reserve(it->second, normalize(i) == "JARDIN" ? m_victory:m_kingdom);
         }
-
     }
 
 
+
+}
+
+void Plateau::built(std::vector<std::string> choice)
+{
+    m_reserve["CUIVRE"]=Reserve(TreasureCard("CUIVRE"),m_cuivre);
+    m_reserve["ARGENT"]=Reserve(TreasureCard("ARGENT"),m_argent);
+    m_reserve["OR"]=Reserve(TreasureCard("OR"),m_or);
+    m_reserve["DOMAINE"]=Reserve(VictoryCard("DOMAINE"),m_victory);
+    m_reserve["DUCHE"]=Reserve(VictoryCard("DUCHE"),m_victory);
+    m_reserve["PROVINCE"]=Reserve(VictoryCard("PROVINCE"),m_victory);//m_victory
+    m_reserve["MALEDICTION"]=Reserve(VictoryCard("MALEDICTION"),m_curse);
+    for(auto &i : choice)
+    {
+        auto it = KingdomCard::KingdomCardMap.find(normalize(i));
+        if (it != KingdomCard::KingdomCardMap.end())
+        {
+            m_reserve[normalize(it->second.getNom())]=Reserve(it->second, normalize(i) == "JARDIN" ? m_victory:m_kingdom);
+        }
+        else
+            std::cerr<<"la carte "<<i<< " est introuvable, erreur dans le build du plateau"<<std::endl;
+
+    }
+    if(m_reserve.size()<17)
+    {
+        std::cerr<<"plateau incomplet, nombre de cartes insuffisant"<<std::endl;
+    }
 
 }
 
@@ -226,3 +245,6 @@ std::map<std::string,Reserve>& Plateau::getReserve()
 {
     return m_reserve;
 }
+
+
+

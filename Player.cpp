@@ -373,6 +373,26 @@ bool Player::trashCardFromHand(const std::string& cardName) {
     return false;
 }
 
+bool Player::trashCardFromPlayed(std::string const& cardName)
+{
+    auto it = std::ranges::find_if(m_played.begin(), m_played.end(), [&cardName](const Card* card) {
+        return card->getNom() == cardName;
+    });
+    if (it != m_played.end()) {
+        if(auto *v=dynamic_cast<VictoryCard*> (*it))
+        {
+            AddPoint(-v->getVictory());
+        }
+        delete *it;
+        m_played.erase(it);
+        notif("la carte "+cardName+" a ete trashee");
+        return true;
+    }
+    alert("cette carte n'est pas dans votre main ");
+    return false;
+}
+
+
 bool Player::canPlayAction() {
 
     return std::ranges::any_of(m_hand.begin(),m_hand.end(),[this](Card *card)

@@ -35,13 +35,9 @@ public:
     bool defausseArray(std::vector<Card*>& cards);
     bool playAction(std::string const&cardName,Jeux &jeux);
     bool moveCardFromDefausseToDeck(std::string const&cardName);
-
     bool stealCard(Card *card, std::vector<Card *> &fromCards);
-
     static Card *findIndexCard(const std::vector<Card *> &vect, const std::string &name);
-
     void defausseDeck();
-
     void defausseCard(std::vector<Card*> &array,int index);
     bool gainCard(std::string const&cardName,Plateau &p,int minCost=0,int maxCost=10);
     void afficheHand()const;
@@ -58,6 +54,7 @@ public:
     Card* drawCard();
     static void trashCard(const Card* card);
     bool trashCardFromHand(std::string const&cardName);
+    bool trashCardFromPlayed(std::string const&cardName);
     bool canPlayAction();
     bool canBuy()const;
 

@@ -12,6 +12,7 @@
 #include <random>
 #include <cstdlib> // pour std::system
 #include <iomanip>
+#include <set>
 
 #include "GameCommand.h"
 
@@ -82,9 +83,32 @@ void Jeux::initGame() {
     std::mt19937 g(rd());   // Générateur Mersenne Twister
     std::ranges::shuffle(m_players.begin(),m_players.end(), g);
 
-    //creation du plateau de jeu
-    m_plateau = new Plateau(nbJoueurs);
-    m_plateau->built();
+    std::vector<std::string> royaume;
+    royaume.insert(royaume.end(),BaseBoard.begin(),BaseBoard.end());
+    royaume.insert(royaume.end(),bonus.begin(),bonus.end());
+
+    std::cout<<"Voulez-vous choisir les cartes du royaume ? (Y/N) > ";
+    std::string choix;
+    while(choix!="Y"&&choix!="N")
+    {
+        std::cin>>choix;
+        if(normalize(choix)=="Y")
+        {
+            //creation du plateau de jeu
+            m_plateau = new Plateau(nbJoueurs);
+            std::vector<std::string> reserve=choisirDixElements(royaume);
+            m_plateau->built(reserve);
+            break;
+        }
+        if(normalize(choix)=="N")
+        {
+            //creation du plateau de jeu
+            m_plateau = new Plateau(nbJoueurs);
+            m_plateau->built();
+            break;
+        }
+        std::cout<<"Entrée invalide, veuillez entrer (Y/N) > ";
+    }
 
     std::cin.ignore();
 
@@ -97,8 +121,6 @@ void Jeux::initGame(std::string const&nom1, std::string const&nom2)
     m_players.push_back(new Player(nom2));
     m_plateau = new Plateau(2);
     m_plateau->built();
-
-
 }
 
 
@@ -213,7 +235,7 @@ void Jeux::actionPhase(Player* player)
     {
         GameCommand::getInput(*this,ACTION,&exit);
     }
-    std::cout<<"Fin de la phase d'action"<<std::endl;
+    std::cout<<"Fin de la phase d'action, passage a la phase d'achat"<<std::endl;
     appuyerPourContinuer();
 
 }
@@ -227,7 +249,7 @@ void Jeux::buyPhase(Player* player)
     {
         GameCommand::getInput(*this,BUY,&exit);
     }
-    std::cout<<"Fin de la phase d'achat , c'est au tour de "<<m_players[(actifIndex + 1) % m_players.size()]->getName()<<std::endl;
+    std::cout<<"Fin de la phase d'achat, le prochain joueur est "<<m_players[(actifIndex + 1) % m_players.size()]->getName()<<std::endl;
     appuyerPourContinuer();
 
 }
@@ -292,4 +314,46 @@ Player& Jeux::getActifPlayer() const
 size_t Jeux::getActifIndex() const
 {
     return actifIndex;
+}
+
+std::vector<std::string> choisirDixElements(const std::vector<std::string>& options) {
+    if (options.size() < 10) {
+        throw std::runtime_error("Le vecteur contient moins de 10 éléments. Impossible de choisir.");
+    }
+
+    std::vector<std::string> choix;
+    std::set<int> indicesChoisis; // Pour éviter les doublons
+    int choixUtilisateur = -1;
+
+    std::cout << "Veuillez choisir 10 éléments parmi les cartes suivantes (entrez 0 pour quitter) : \n";
+    for (size_t i = 0; i < options.size(); ++i) {
+        std::cout << i + 1 << " " << options[i] << "\n"; // Affichage avec index (1-based)
+    }
+
+    while (choix.size() < 10) {
+        std::cout << "\nChoix " << choix.size() + 1 << "> "<<std::endl;
+        std::cin >> choixUtilisateur;
+        if(choixUtilisateur==0)
+            return std::vector<std::string>();
+
+        if (std::cin.fail()) {
+            std::cin.clear(); // Réinitialise l'état d'erreur
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignore la ligne courante
+            std::cout << "Entrée invalide. Veuillez entrer un numéro valide.\n";
+            continue;
+        }
+
+        // Ajuster l'index de 1-based à 0-based
+        choixUtilisateur -= 1;
+
+        if (choixUtilisateur < 0 || choixUtilisateur >= static_cast<int>(options.size())) {
+            std::cout << "Numéro invalide. Veuillez choisir un numéro entre 1 et " << options.size() << ".\n";
+        } else if (indicesChoisis.find(choixUtilisateur) != indicesChoisis.end()) {
+            std::cout << "Vous avez déjà choisi cet élément. Veuillez en choisir un autre.\n";
+        } else {
+            choix.push_back(options[choixUtilisateur]);
+            indicesChoisis.insert(choixUtilisateur);
+        }
+    }
+    return choix;
 }

@@ -44,7 +44,7 @@ public:
 
 };
 
-
+std::vector<std::string> choisirDixElements(const std::vector<std::string> &options);
 
 
 #endif //JEUX_H
