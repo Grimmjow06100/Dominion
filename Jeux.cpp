@@ -136,7 +136,7 @@ void Jeux::initGame() {
         if(!(std::cin>>choix)){
             std::cin.clear(); // Efface les erreurs
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignore les entrées incorrectes
-            std::cout << "Entree invalide, vous avez le choix en l'option 1 et 2 ! > ";
+            std::cout << "Entree invalide, vous avez le choix entre l'option 1 et 2 ! > ";
             continue;
         }
         if(choix==1)
@@ -314,6 +314,10 @@ void Jeux::actionPhase(Player* player)
 
 void Jeux::buyPhase(Player* player)
 {
+    //test pour les achats
+    player->setBuys(5);
+    player->setCoins(15);
+
     playerBoard(player);
     phaseMessage(BUY);
     bool exit(false);

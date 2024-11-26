@@ -452,7 +452,7 @@ void KingdomCard::Atelier(Jeux &j)
     {
         card.clear();
         GameCommand::getInput(j,NONE,nullptr,&card);
-        if(!card.empty())
+        if(card.empty())
         {
            continue;
         }
@@ -557,13 +557,15 @@ void KingdomCard::Cave(Jeux & j)
         card.clear();
         std::cout<<"Carte "<<count<<" ";
         GameCommand::getInput(j,NONE,&exit,&card);
-        if(!card.empty())
+        if(card.empty())
         {
-            if(p.defausseFromHand(card))
-            {
-                count++;
-            }
+            continue;
         }
+        if(p.defausseFromHand(card))
+        {
+            count++;
+        }
+
         if(exit||p.getHand().empty())
             break;
     }
