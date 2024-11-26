@@ -360,6 +360,13 @@ void KingdomCard::Voleur(Jeux& j) {
                     // Voler la carte
                     if (actif.stealCard(stolenCard, revealedCards)) { // Voler la carte depuis les cartes révélées
                         // Supprimer la carte volée des cartes révélées
+                        std::vector<Card*> deck;
+                        deck = joueur->getDeck();
+                        auto it = std::find(deck.begin(), deck.end(), stolenCard);
+                        if (it != deck.end()) {
+                            deck.erase(it);
+                        }
+                        
                         revealedCards.erase(std::remove(revealedCards.begin(), revealedCards.end(), stolenCard),
                                             revealedCards.end());
                     }
