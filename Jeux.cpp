@@ -236,13 +236,13 @@ void Jeux::phaseMessage(Phase phase)
     if(phase==ACTION)
     {
         std::cout << BLUE_TEXT << BLINK_TEXT
-                  << "Jouez des cartes actions"
+                  << "Jouez des cartes actions (-> play [nomCarte] )"
                   << RESET_TEXT << std::endl;
     }
     else if(phase==BUY)
     {
         std::cout << BLUE_TEXT << BLINK_TEXT
-                 << "Achetez des cartes"
+                 << "Achetez des cartes (-> buy [nomCarte] ou sell [nomCarte])"
                  << RESET_TEXT << std::endl;
     }
     else
