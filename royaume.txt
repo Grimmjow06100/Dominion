@@ -38,7 +38,7 @@ false
 0
 Trashing jusqu'a 4 cartes de votre main.
 
-Forge
+Manufacture
 4
 false
 false
@@ -277,3 +277,33 @@ false
 2
 1
 +1 achat, +2 pieces.
+
+Chancelier
+3
+false
+false
+0
+0
+2
+0
++2 pieces, vous pouvez defausser tout votre deck.
+
+Festin
+4
+false
+false
+0
+0
+0
+0
+Eliminez cette carte. Prenez une carte qui coute jusqu'à 5.
+
+Voleur
+4
+true
+false
+0
+0
+0
+0
+Chaque joueur devoile les 2 premiere cartes de son deck, eliminer ou voler une des cartes devoile et defausser les autres.f

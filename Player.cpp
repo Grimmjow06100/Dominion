@@ -159,7 +159,7 @@ bool Player::playAction(const std::string& cardName, Jeux& jeux) {
     return false;
 }
 void Player::defausseCard(std::vector<Card*>& array,int index) {
-    if (index >= 0 && index < array.size()) {
+    if (index >= 0 && index < static_cast<int>(array.size())) {
         m_defausse.push_back(array[index]);
         array.erase(array.begin() + index);
     }
@@ -327,6 +327,32 @@ bool Player::moveCardFromDefausseToDeck(std::string const&cardName)
     }
     alert("La carte n'est pas dans la defausse");
     return false;
+}
+
+bool Player::stealCard(Card* card, std::vector<Card*>& fromCards) {
+    auto it = std::find(fromCards.begin(), fromCards.end(), card);
+    if (it != fromCards.end()) {
+        fromCards.erase(it); // Supprime la carte des cartes révélées
+        m_defausse.push_back(card); // Ajoute à la défausse
+        std::cout << "Le joueur " << getName() << " a vole la carte : " << card->getNom() << std::endl;
+        return true;
+    }
+    std::cout << "La carte " << card->getNom() << " n'a pas pu être volee." << std::endl;
+    return false;
+}
+
+Card *Player::findIndexCard(const std::vector<Card *> &vect, const std::string &name){
+    for(auto i : vect) {
+        if(i->getNom()==name) {
+            return i;
+        }
+    }
+    return nullptr;
+}
+
+void Player::defausseDeck() {
+    m_defausse.insert(m_defausse.end(), std::make_move_iterator(m_deck.begin()), std::make_move_iterator(m_deck.end()));
+    m_deck.clear();
 }
 
 bool Player::trashCardFromHand(const std::string& cardName) {

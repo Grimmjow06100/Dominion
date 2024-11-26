@@ -11,6 +11,7 @@
 #include <fstream>
 #include <iomanip>
 #include "TreasureCard.h"
+#include <algorithm>
 
 
 
@@ -83,31 +84,29 @@ std::string KingdomCard::actionType(KingdomCard const&k)
 }
 
 void KingdomCard::action(Jeux &j) {
+    std::cout<<"Vous avez joue la carte "<<m_nom<<std::endl;
     Player& player=j.getActifPlayer();
     if(m_actions or m_coins or m_buys or m_cards) {
         player.AddAction(m_actions);
         player.AddCoin(m_coins);
         player.AddBuy(m_buys);
         player.pioche(m_cards);
+        j.playerBoard(&player);
         if(m_actions)
         {
-            std::string action=m_actions>1?" actions":" action";
-            notif("Vous avez gagne "+std::to_string(m_actions)+action);
+            std::cout<<"Vous avez gagne "<<m_actions<<" actions"<<std::endl;
         }
         if(m_coins)
         {
-            std::string coin=m_coins>1?" pieces":" piece";
-            notif("Vous avez gagne "+std::to_string(m_coins)+coin);
+            std::cout<<"Vous avez gagne "<<m_coins<<" pieces"<<std::endl;
         }
         if(m_buys)
         {
-            std::string buy=m_buys>1?" achats":" achat";
-            notif("vous avez gagne "+std::to_string(m_buys)+buy);
+            std::cout<<"Vous avez gagne "<<m_buys<<" achats"<<std::endl;
         }
         if(m_cards)
         {
-            std::string card=m_cards>1?" cartes":" carte";
-            notif("vous piochez "+std::to_string(m_cards)+card);
+            std::cout<<"Vous avez pioche "<<m_cards<<" cartes"<<std::endl;
         }
     }
     if(m_nom=="ATELIER")
@@ -135,14 +134,22 @@ void KingdomCard::action(Jeux &j) {
     {
         Chapelle(j);
     }
-    else if(m_nom=="MESSAGER")
-    {
-        Messager(j);
+    else if(m_nom=="FESTIN") {
+        Festin(j);
     }
-    else if(m_nom=="VASSAL")
-    {
-        Vassal(j);
+    else if(m_nom=="VOLEUR") {
+        Voleur(j);
     }
+    else if(m_nom=="PRETEUR") {
+        Preteur(j);
+    }
+    else if(m_nom=="CHANCELIER") {
+        Chancelier(j);
+    }
+    else if(m_nom=="SALLE_DU_CONSEIL") {
+        Salle_du_Conseil(j);
+    }
+
 }
 
 
@@ -198,6 +205,195 @@ void KingdomCard::GenerateKingdomFromFile(const std::string& nomFichier) {
         KingdomCardMap[normalize(nom)] = KingdomCard(normalize(nom), cout, attack, reaction, description,cards,actions,coins,buys);
     }
     fichier.close();
+}
+
+void KingdomCard::Salle_du_Conseil(Jeux &j) {
+    for (auto& joueur : j.getPlayers()) {
+        joueur->pioche(1);
+    }
+}
+
+void KingdomCard::Chancelier(Jeux &j) {
+    Player& player = j.getActifPlayer();
+    std::cout << "Voulez-vous defausser tout votre deck? (Y/N) :" << std::endl;
+    char choix;
+    std::cin >> choix;
+
+    // Traiter le choix
+    if (choix == 'Y' || choix == 'y') {
+        player.defausseDeck();
+        j.playerBoard(&player);
+        std::cout << "Votre deck a ete defausse" << std::endl;
+    } else {
+        j.playerBoard(&player);
+        std::cout << "Vous avez decide de ne pas defausser votre deck" << std::endl;
+    }
+}
+
+void KingdomCard::Festin(Jeux &j)
+{
+    Plateau& p=j.getPlateau();
+    Player& player=j.getActifPlayer();
+    std::string nom;
+    std::string message="Gagnez une carte coutant jusqu'a 5 pieces (commande : pick [nomCarte])";
+    std::cout<<message<<std::endl;
+    auto* card=new std::string();
+    bool valid(false);
+    while(card->empty() || !valid)
+    {
+        card->clear();
+        GameCommand::getInput(j,NONE,nullptr,card);
+        if(!card->empty())
+        {
+            if(player.gainCard(*card,p,0,5)) {
+                valid=true;
+                auto fest = Player::findIndexCard(player.getHand(), "FESTIN");
+                Player::trashCard(fest);
+                j.playerBoard(&player);
+            }
+        }
+    }
+}
+
+void KingdomCard::Preteur(Jeux& j) {
+    Player &player = j.getActifPlayer(); // Récupérer le joueur actif
+    auto cuivre = Player::findIndexCard(player.getHand(), "CUIVRE"); // Rechercher une carte Cuivre
+
+    if (cuivre != nullptr) {
+        // Proposer au joueur de défausser la carte Cuivre
+        std::cout << "Defausser une carte Cuivre de votre main pour gagner 3 pieces ? (Y/N) :" << std::endl;
+        char choix;
+        std::cin >> choix;
+
+        // Traiter le choix
+        if (choix == 'Y' || choix == 'y') {
+            player.defausseFromHand(cuivre->getNom()); // Défausser la carte Cuivre
+            player.AddCoin(3); // Ajouter 3 pièces
+            j.playerBoard(&player);//faire attention
+            std::cout << "Votre carte a ete defaussee et vous avez gagne 3 pieces !" << std::endl;
+        } else {
+            std::cout << "Vous avez decide de ne pas defausser la carte Cuivre." << std::endl;
+        }
+    } else {
+        // Si aucune carte Cuivre n'est trouvée
+        std::cout << "Vous n'avez pas de carte Cuivre a defausser :( " << std::endl;
+    }
+}
+
+void KingdomCard::Voleur(Jeux& j) {
+    Player& actif = j.getActifPlayer(); // Joueur actif qui joue la carte Voleur
+
+    // 1. Pour chaque autre joueur
+    for (auto& joueur : j.getPlayers()) {
+        std::cout<<std::endl;
+        if (joueur->getName() != actif.getName()) { // Ignorer le joueur actif
+            std::cout << "Le joueur " << joueur->getName() << " est attaque !" << std::endl;
+
+            // 2. Réaction à l'attaque
+            int index;
+            if (joueur->ReactTo(index)) {
+                std::cout << "Le joueur " << joueur->getName()
+                          << " annule l'attaque avec la carte "
+                          << joueur->getHand().at(index)->getNom() << std::endl;
+                continue;
+            }
+
+            // 3. Révéler les deux premières cartes du deck
+            std::vector<Card*> revealedCards;
+            for (int i = 0; i < 2 && !joueur->getDeck().empty(); ++i) {
+                revealedCards.push_back(joueur->drawCard());
+            }
+
+            if (revealedCards.empty()) {
+                std::cout << "Le joueur " << joueur->getName() << " n'a pas de cartes a reveler." << std::endl;
+                continue;
+            }
+
+            std::cout << "Cartes du joueur " << joueur->getName() << " :" << std::endl;
+            afficheCards(revealedCards); // Fonction d'affichage des cartes révélées
+
+            // 4. Gérer les cartes Trésor
+            std::vector<TreasureCard*> treasures;
+            for (auto* card : revealedCards) {
+                if (auto* treasure = dynamic_cast<TreasureCard*>(card)) {
+                    treasures.push_back(treasure);
+                }
+            }
+
+            if (!treasures.empty()) {
+
+                // Lambda pour rechercher une carte trésor par nom
+                auto findTreasureByName = [&treasures](const std::string& name) -> TreasureCard* {
+                    for (auto* treasure : treasures) {
+                        if (normalize(treasure->getNom()) == name) {
+                            return treasure;
+                        }
+                    }
+                    return nullptr; // Si aucune carte correspondante n'est trouvée
+                };
+
+                // Le joueur actif choisit une carte Trésor à voler
+                std::string message = "Choisissez une carte Tresor de l'ennemi (commande : pick [nomCarte])";
+                auto* card = new std::string();
+                bool valid = false;
+                TreasureCard* stolenCard = nullptr;
+
+                while (!valid) {
+                    card->clear();
+                    std::cout << message <<std::endl;
+                    GameCommand::getInput(j, NONE, nullptr, card);
+                    std::string str = normalize(*card);
+
+                    // Rechercher la carte dans treasures
+                    stolenCard = findTreasureByName(str);
+                    if (stolenCard) {
+                        valid = true; // La carte est valide
+                    } else {
+                        std::cout << "La carte " << str << " n'est pas valide. Veuillez reessayer." << std::endl;
+                    }
+                }
+
+                // Demander au joueur s'il veut voler ou supprimer la carte
+                std::cout << "Voulez-vous voler ou supprimer la carte " << stolenCard->getNom()
+                          << "? (commande : voler/supprimer) : ";
+                std::string choice;
+                std::cin >> choice;
+
+                if (choice == "voler" || choice == "Voler" || choice == "VOLER") {
+                    // Voler la carte
+                    if (actif.stealCard(stolenCard, revealedCards)) { // Voler la carte depuis les cartes révélées
+                        // Supprimer la carte volée des cartes révélées
+                        revealedCards.erase(std::remove(revealedCards.begin(), revealedCards.end(), stolenCard),
+                                            revealedCards.end());
+                    }
+                } else if (choice == "supprimer" || choice == "Supprimer" || choice == "SUPPRIMER") {
+                    // Supprimer la carte
+                    std::cout << "La carte Tresor " << stolenCard->getNom() << " est trashed." << std::endl;
+                    Player::trashCard(stolenCard);
+                    revealedCards.erase(std::remove(revealedCards.begin(), revealedCards.end(), stolenCard),
+                                        revealedCards.end());
+                } else {
+                    std::cout << "Choix invalide. Aucune action n'a ete effectuee sur la carte " << stolenCard->getNom()
+                              << "." << std::endl;
+                }
+
+                // Les autres cartes Trésor sont trashed
+                for (auto* treasure : treasures) {
+                    if (treasure != stolenCard) {
+                        std::cout << "La carte Tresor " << treasure->getNom() << " est trashed." << std::endl;
+                        Player::trashCard(treasure);
+                        revealedCards.erase(std::remove(revealedCards.begin(), revealedCards.end(), treasure),
+                                            revealedCards.end());
+                    }
+                }
+            } else {
+                std::cout << "Aucune carte Tresor revelee a voler ou trasher." << std::endl;
+            }
+
+            // 5. Défausser les autres cartes révélées
+            joueur->defausseArray(revealedCards);
+        }
+    }
 }
 
 void KingdomCard::Braconnier(Jeux &j)

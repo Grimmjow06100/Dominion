@@ -62,7 +62,7 @@ Conditions : Disponible uniquement si un pointeur cardNameOption est fourni à l
 
 int main()
 {
-
+/*
     std::system("cls");
     KingdomCard::GenerateKingdomFromFile("royaume.txt");
     Jeux j;
@@ -90,6 +90,11 @@ int main()
         //defausse du joueur
         player->getDefausse().push_back(&jardins);
     }
+    j.playGame();*/
+    std::system("cls");
+    KingdomCard::GenerateKingdomFromFile("royaume.txt");
+    Jeux j;
+    j.initGame();
     j.playGame();
 
 

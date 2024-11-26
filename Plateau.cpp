@@ -14,8 +14,14 @@
 #include <unordered_map>
 #include <string>
 
+//carte de bases
+std::vector<std::string>BaseBoard ={"atelier","bucheron","village","festin","laboratoire","douves","jardins","chapelle","voleur","sorciere"};
 
-std::vector<std::string>BaseBoard ={"atelier","bucheron","village","festival","laboratoire","douves","jardins","chapelle","bandit","sorciere"};
+//carte bonus
+//std::vector<std::string>BaseBoard = {"festival","douves","bandit","marche","manufacture","preteur","chancelier","salle_du_conseil"};//ajouter messager, vassal, braconnier
+
+
+//std::vector<std::string>BaseBoard ={"atelier","bucheron","village","festival","laboratoire","douves","jardins","chapelle","bandit","sorciere"};
 
 /**
  * Trie le vecteur de cartes en fonction de son type
