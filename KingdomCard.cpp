@@ -94,19 +94,19 @@ void KingdomCard::action(Jeux &j) {
         j.playerBoard(&player);
         if(m_actions)
         {
-            std::cout<<"Vous avez gagne "<<m_actions<<" actions"<<std::endl;
+            notif("Vous avez gagne "+std::to_string(m_actions)+" actions");
         }
         if(m_coins)
         {
-            std::cout<<"Vous avez gagne "<<m_coins<<" pieces"<<std::endl;
+            notif("Vous avez gagne "+std::to_string(m_coins)+" pieces");
         }
         if(m_buys)
         {
-            std::cout<<"Vous avez gagne "<<m_buys<<" achats"<<std::endl;
+            notif("Vous avez gagne "+std::to_string(m_buys)+" achats");
         }
         if(m_cards)
         {
-            std::cout<<"Vous avez pioche "<<m_cards<<" cartes"<<std::endl;
+            notif("Vous avez pioche "+std::to_string(m_cards)+" cartes");
         }
     }
     if(m_nom=="ATELIER")
@@ -115,7 +115,6 @@ void KingdomCard::action(Jeux &j) {
     }
     else if(m_nom=="CAVE")
     {
-
         Cave(j);
     }
     else if(m_nom=="JARDINS")
@@ -146,9 +145,15 @@ void KingdomCard::action(Jeux &j) {
     else if(m_nom=="CHANCELIER") {
         Chancelier(j);
     }
-    else if(m_nom=="SALLE_DU_CONSEIL") {
+    else if(m_nom=="SALLE_DUCONSEIL") {
         Salle_du_Conseil(j);
     }
+    else if(m_nom=="BRACONNIER")
+    {
+        Braconnier(j);
+    }
+
+    appuyerPourContinuer();
 
 }
 
@@ -215,18 +220,21 @@ void KingdomCard::Salle_du_Conseil(Jeux &j) {
 
 void KingdomCard::Chancelier(Jeux &j) {
     Player& player = j.getActifPlayer();
-    std::cout << "Voulez-vous defausser tout votre deck? (Y/N) :" << std::endl;
-    char choix;
-    std::cin >> choix;
-
-    // Traiter le choix
-    if (choix == 'Y' || choix == 'y') {
-        player.defausseDeck();
-        j.playerBoard(&player);
-        std::cout << "Votre deck a ete defausse" << std::endl;
-    } else {
-        j.playerBoard(&player);
-        std::cout << "Vous avez decide de ne pas defausser votre deck" << std::endl;
+    std::cout << "Voulez-vous defausser tout votre deck ? (Y/N) :" << std::endl;
+    std::string choix;
+    while(true)
+    {
+        GameCommand::getInput(j, NONE, nullptr, nullptr,&choix);
+        if (choix == "Y") {
+            player.defausseDeck();
+            notif("Votre deck a ete defausse");
+            break;
+        }
+        if(choix == "N") {
+            notif("Vous avez decide de ne pas defausser votre deck");
+            break;
+        }
+        alert("commande invalide");
     }
 }
 
@@ -235,49 +243,52 @@ void KingdomCard::Festin(Jeux &j)
     Plateau& p=j.getPlateau();
     Player& player=j.getActifPlayer();
     std::string nom;
-    std::string message="Gagnez une carte coutant jusqu'a 5 pieces (commande : pick [nomCarte])";
+    std::string message="Gagnez une carte coutant jusqu'a 5 pieces";
     std::cout<<message<<std::endl;
-    auto* card=new std::string();
-    bool valid(false);
-    while(card->empty() || !valid)
+    std::string card;
+    player.trashCardFromPlayed(card);
+    while(card.empty())
     {
-        card->clear();
-        GameCommand::getInput(j,NONE,nullptr,card);
-        if(!card->empty())
+        card.clear();
+        GameCommand::getInput(j,NONE,nullptr,&card);
+        if(!card.empty())
         {
-            if(player.gainCard(*card,p,0,5)) {
-                valid=true;
-                auto fest = Player::findIndexCard(player.getHand(), "FESTIN");
-                Player::trashCard(fest);
-                j.playerBoard(&player);
-            }
+            continue;
+        }
+        if(player.gainCard(card,p,0,5)) {
+            notif ("Vous avez gagne la carte "+card);
+            break;
         }
     }
 }
 
-void KingdomCard::Preteur(Jeux& j) {
+void KingdomCard::Preteur(Jeux& j)
+{
     Player &player = j.getActifPlayer(); // Récupérer le joueur actif
-    auto cuivre = Player::findIndexCard(player.getHand(), "CUIVRE"); // Rechercher une carte Cuivre
-
-    if (cuivre != nullptr) {
-        // Proposer au joueur de défausser la carte Cuivre
+    auto it=std::ranges::find_if(player.getHand(),[](Card* c)
+    {
+        return c->getNom()=="CUIVRE";
+    });
+    if (it!=player.getHand().end()) {
         std::cout << "Defausser une carte Cuivre de votre main pour gagner 3 pieces ? (Y/N) :" << std::endl;
-        char choix;
-        std::cin >> choix;
+        std::string choix;
+        while(true)
+        {
+            GameCommand::getInput(j, NONE, nullptr, nullptr,&choix);
+            if (choix == "Y")
+            {
+                player.defausseFromHand((*it)->getNom()); // Défausser la carte Cuivre
+                player.AddCoin(3); // Ajouter 3 pièces
+                notif( "Votre carte a ete defaussee et vous avez gagne 3 pieces supplementaires") ;
+                break;
 
-        // Traiter le choix
-        if (choix == 'Y' || choix == 'y') {
-            player.defausseFromHand(cuivre->getNom()); // Défausser la carte Cuivre
-            player.AddCoin(3); // Ajouter 3 pièces
-            j.playerBoard(&player);//faire attention
-            std::cout << "Votre carte a ete defaussee et vous avez gagne 3 pieces !" << std::endl;
-        } else {
-            std::cout << "Vous avez decide de ne pas defausser la carte Cuivre." << std::endl;
+            }
+            notif("Vous avez decide de ne pas defausser la carte Cuivre" );
         }
-    } else {
-        // Si aucune carte Cuivre n'est trouvée
-        std::cout << "Vous n'avez pas de carte Cuivre a defausser :( " << std::endl;
     }
+    else
+        notif("Vous n'avez pas de carte Cuivre dans votre main");
+
 }
 
 void KingdomCard::Voleur(Jeux& j) {
@@ -287,14 +298,12 @@ void KingdomCard::Voleur(Jeux& j) {
     for (auto& joueur : j.getPlayers()) {
         std::cout<<std::endl;
         if (joueur->getName() != actif.getName()) { // Ignorer le joueur actif
-            std::cout << "Le joueur " << joueur->getName() << " est attaque !" << std::endl;
+            notif("Le joueur "+joueur->getName()+" est attaque par le Voleur");
 
             // 2. Réaction à l'attaque
             int index;
             if (joueur->ReactTo(index)) {
-                std::cout << "Le joueur " << joueur->getName()
-                          << " annule l'attaque avec la carte "
-                          << joueur->getHand().at(index)->getNom() << std::endl;
+                notif("le joueur "+joueur->getName()+"annule l'attaque avec le carte"+joueur->getHand()[index]->getNom());
                 continue;
             }
 
@@ -305,7 +314,7 @@ void KingdomCard::Voleur(Jeux& j) {
             }
 
             if (revealedCards.empty()) {
-                std::cout << "Le joueur " << joueur->getName() << " n'a pas de cartes a reveler." << std::endl;
+                notif("le joueur "+joueur->getName()+" n'a pas de cartes dans son deck");
                 continue;
             }
 
@@ -322,72 +331,66 @@ void KingdomCard::Voleur(Jeux& j) {
 
             if (!treasures.empty()) {
 
-                // Lambda pour rechercher une carte trésor par nom
-                auto findTreasureByName = [&treasures](const std::string& name) -> TreasureCard* {
-                    for (auto* treasure : treasures) {
-                        if (normalize(treasure->getNom()) == name) {
-                            return treasure;
-                        }
-                    }
-                    return nullptr; // Si aucune carte correspondante n'est trouvée
-                };
-
                 // Le joueur actif choisit une carte Trésor à voler
-                std::string message = "Choisissez une carte Tresor de l'ennemi (commande : pick [nomCarte])";
-                auto* card = new std::string();
+                std::string message = "Choisissez une carte Tresor de l'ennemi";
+                std::string card;
                 bool valid = false;
                 TreasureCard* stolenCard = nullptr;
 
                 while (!valid) {
-                    card->clear();
-                    std::cout << message <<std::endl;
-                    GameCommand::getInput(j, NONE, nullptr, card);
-                    std::string str = normalize(*card);
-
-                    // Rechercher la carte dans treasures
-                    stolenCard = findTreasureByName(str);
-                    if (stolenCard) {
+                    card.clear();
+                    GameCommand::getInput(j, NONE, nullptr, &card);
+                    auto it=std::ranges::find_if(treasures,[&card](TreasureCard* c)
+                    {
+                        return card==c->getNom();
+                    });
+                    if (it!=treasures.end()) {
+                        stolenCard=(*it);
                         valid = true; // La carte est valide
-                    } else {
-                        std::cout << "La carte " << str << " n'est pas valide. Veuillez reessayer." << std::endl;
                     }
                 }
 
                 // Demander au joueur s'il veut voler ou supprimer la carte
-                std::cout << "Voulez-vous voler ou supprimer la carte " << stolenCard->getNom()
-                          << "? (commande : voler/supprimer) : ";
+                std::cout << "Voulez-vous voler ou supprimer la carte " << card
+                          << "? (voler/supprimer) : ";
                 std::string choice;
                 std::cin >> choice;
 
-                if (choice == "voler" || choice == "Voler" || choice == "VOLER") {
+                if (normalize(choice )== "VOLER") {
                     // Voler la carte
                     if (actif.stealCard(stolenCard, revealedCards)) { // Voler la carte depuis les cartes révélées
                         // Supprimer la carte volée des cartes révélées
+                        std::vector<Card*> deck;
+                        deck = joueur->getDeck();
+                        auto it = std::find(deck.begin(), deck.end(), stolenCard);
+                        if (it != deck.end()) {
+                            deck.erase(it);
+                        }
+                        
                         revealedCards.erase(std::remove(revealedCards.begin(), revealedCards.end(), stolenCard),
                                             revealedCards.end());
                     }
-                } else if (choice == "supprimer" || choice == "Supprimer" || choice == "SUPPRIMER") {
+                } else if (normalize(choice) == "SUPPRIMER") {
                     // Supprimer la carte
                     std::cout << "La carte Tresor " << stolenCard->getNom() << " est trashed." << std::endl;
                     Player::trashCard(stolenCard);
                     revealedCards.erase(std::remove(revealedCards.begin(), revealedCards.end(), stolenCard),
                                         revealedCards.end());
                 } else {
-                    std::cout << "Choix invalide. Aucune action n'a ete effectuee sur la carte " << stolenCard->getNom()
-                              << "." << std::endl;
+                    alert("choix invalide. Aucune action n'a ete effectuee sur la carte " + stolenCard->getNom() + ".");
                 }
 
                 // Les autres cartes Trésor sont trashed
                 for (auto* treasure : treasures) {
                     if (treasure != stolenCard) {
-                        std::cout << "La carte Tresor " << treasure->getNom() << " est trashed." << std::endl;
+                        notif("Les autres carte Tresor " + treasure->getNom() + " sont defaussee.");
                         Player::trashCard(treasure);
                         revealedCards.erase(std::remove(revealedCards.begin(), revealedCards.end(), treasure),
                                             revealedCards.end());
                     }
                 }
             } else {
-                std::cout << "Aucune carte Tresor revelee a voler ou trasher." << std::endl;
+                notif("Aucune carte Tresor revelee a voler ou trasher.");
             }
 
             // 5. Défausser les autres cartes révélées
@@ -414,7 +417,7 @@ void KingdomCard::Braconnier(Jeux &j)
     }
     if(count==0)
     {
-        notif("Aucune pile de reserve n'est vide");
+        notif("Aucune pile de reserve n'est vide, sans effet");
         return;
     }
     while(count>0)
@@ -424,13 +427,17 @@ void KingdomCard::Braconnier(Jeux &j)
         GameCommand::getInput(j,NONE,nullptr,&card);
         if(!card.empty())
         {
+            if(p.getHand().empty())
+            {
+                notif("Votre main est vide");
+                break;
+            }
             if(p.defausseFromHand(card))
             {
                 count--;
             }
         }
     }
-
 }
 
 void KingdomCard::Atelier(Jeux &j)
@@ -441,18 +448,18 @@ void KingdomCard::Atelier(Jeux &j)
     std::string message="Gagnez une carte coutant jusqu'a 4 pieces";
     std::cout<<message<<std::endl;
     std::string card;
-    bool valid(false);
-    while(card.empty() || !valid)
+    while(true)
     {
         card.clear();
         GameCommand::getInput(j,NONE,nullptr,&card);
         if(!card.empty())
         {
-            if(player.gainCard(card,p,0,4))
-            {
-                valid=true;
-            }
-
+           continue;
+        }
+        if(player.gainCard(card,p,0,4))
+        {
+            notif("Vous avez gagne la carte "+card);
+            break;
         }
     }
 
@@ -506,7 +513,7 @@ void KingdomCard::Sorciere(Jeux const&j)
 
 void KingdomCard::Vassal(Jeux& j) {
     Player& p = j.getActifPlayer();
-    std::string message = "Défaussez la première carte de votre deck. Si c'est une carte action, vous pouvez la jouer.";
+    std::string message = "Defaussez la première carte de votre deck. Si c'est une carte action, vous pouvez la jouer.";
     std::cout << message << std::endl;
 
     Card* c = p.drawCard();
@@ -518,7 +525,7 @@ void KingdomCard::Vassal(Jeux& j) {
     if (auto* k = dynamic_cast<KingdomCard*>(c)) {  // Vérifiez si c'est une carte action
         std::string choix;
         do {
-            std::cout << "Voulez-vous jouer la carte " << c->getNom() << " ? (y/n) > ";
+            std::cout << "Voulez-vous jouer la carte " << c->getNom() << " ? (Y/N) > ";
             GameCommand::getInput(j, NONE, nullptr, nullptr,&choix);
             if (choix == "Y") {
                 k->action(j);  // Jouez l'action
@@ -595,7 +602,6 @@ void KingdomCard::Messager(Jeux &j)
         if(exit)
             break;
     }
-    appuyerPourContinuer();
 }
 void KingdomCard::Bandit(Jeux const&j)
 {

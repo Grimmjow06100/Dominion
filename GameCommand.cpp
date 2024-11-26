@@ -16,7 +16,6 @@
 #include <algorithm>
 
 
-
 void GameCommand::getInput(Jeux& j,Phase phase,bool* exitOption,std::string* cardNameOption,std::string* otherInput) {
     while (true) {
         std::cout << "> ";

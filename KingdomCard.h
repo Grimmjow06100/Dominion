@@ -29,7 +29,7 @@ class KingdomCard : public Card{
     static void Messager(Jeux &j);
     static void Vassal(Jeux &j);
     static void Braconnier(Jeux &j);
-    static void Salle_du_Conseil(Jeux &j);
+    void Salle_du_Conseil(Jeux &j);
     static void Chancelier(Jeux &j);
     static void Festin(Jeux &j);
     static void Preteur(Jeux &j);

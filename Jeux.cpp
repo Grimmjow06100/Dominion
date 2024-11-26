@@ -12,17 +12,20 @@
 #include <random>
 #include <cstdlib> // pour std::system
 #include <iomanip>
+#include <set>
+#include <thread>
 
 #include "GameCommand.h"
 
+#define RESET   "\033[0m"
+#define RED     "\033[31m"      /* Rouge */
+#define GREEN   "\033[32m"      /* Vert */
+#define BLUE    "\033[34m"      /* Bleu */
+#define YELLOW  "\033[33m"      /* Jaune */
+#define BLINK   "\033[5m"
+#define PURPLE      "\033[35m"
 
 
-
-
-
-const std::string BLUE_TEXT = "\033[1;34m";  // Couleur bleu
-const std::string BLINK_TEXT = "\033[5m";   // Texte clignotant
-const std::string RESET_TEXT = "\033[0m";   // Réinitialisation des styles
 
 
 /**
@@ -54,26 +57,59 @@ void clearTerminal() {
 /**
  * Initialise une partie avec les infos
  */
-void Jeux::initGame() {
-    std::cout << std::endl << "/////////////////////////// BIENVENUE DANS LE JEU DU DOMINION //////////////////////////////////" << std::endl;
 
-    int nbJoueurs = 0;
 
-    // Demande le nombre de joueurs (entre 2 et 4)
-    std::cout << "Choisissez le nombre de joueur (2-4) > ";
-    while (nbJoueurs < 2 || nbJoueurs > 4) {
-        std::cin >> nbJoueurs;
-        if (nbJoueurs < 2 || nbJoueurs > 4) {
-            std::cout <<std::endl<< "Le nombre de joueurs doit etre entre 2 et 4 ! > " ;
-        }
+void spaceV(int n)
+{
+    for(int i=0;i<n;i++)
+    {
+        std::cout<<std::endl;
     }
+}
 
+std::string spaceH(int x)
+{
+    std::string res;
+    for(int i=0;i<x;i++)
+    {
+        res+=" ";
+    }
+    return res;
+}
+void Jeux::initGame() {
+    spaceV(2);
+    std::cout << BLUE <<spaceH(25)<< "//////////////////////////////////////////////////////////////////////////" << RESET << std::endl;
+    std::cout << PURPLE <<spaceH(25)<< "///                              DOMINION                              ///" << RESET << std::endl;
+    std::cout << BLUE << spaceH(25)<<"//////////////////////////////////////////////////////////////////////////" << RESET << std::endl;
+    std::cout <<spaceH(25)<< "BIENVENUE DANS LE MONDE DU DOMINION !\n";
+    std::cout <<spaceH(25)<< "Dans ce jeu, vous construirez votre royaume pour devenir le souverain ultime.\n";
+    std::cout <<spaceH(25)<< "Preparez-vous a affronter vos adversaires dans une partie strategique et captivante.\n\n";
+
+    spaceV(2);
+
+    std::cout << "------------------- Configuration des joueurs -----------------------\n";
+    int nbJoueurs = 0;
+    // Demande le nombre de joueurs
+    std::cout<<"Entrez le nombre de joueurs (2-4) > ";
+    while (!(std::cin >> nbJoueurs) || nbJoueurs < 2 || nbJoueurs > 4) {
+        std::cin.clear(); // Efface les erreurs
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignore les entrées incorrectes
+        std::cout << "Le nombre de joueurs doit etre entre 2 et 4 ! > ";
+    }
     std::string nom;
-
     // Demande les noms des joueurs
     for (int i = 0; i < nbJoueurs; ++i) {
         std::cout << "Nom du joueur " << i + 1 << " > ";
         std::cin >> nom;
+        if(auto it=std::ranges::find_if(m_players,[&nom](const Player* p)
+        {
+            return p->getName()==nom;
+        });it!=m_players.end())
+        {
+            std::cout<<"Nom deja utilise, veuillez choisir un autre nom"<<std::endl;
+            i--;
+            continue;
+        }
         m_players.push_back(new Player(nom));
     }
 
@@ -82,13 +118,71 @@ void Jeux::initGame() {
     std::mt19937 g(rd());   // Générateur Mersenne Twister
     std::ranges::shuffle(m_players.begin(),m_players.end(), g);
 
-    //creation du plateau de jeu
-    m_plateau = new Plateau(nbJoueurs);
-    m_plateau->built();
+    spaceV(3);
+
+    std::cout<<"------------------- Configuration du Plateau -----------------------\n";
+    std::vector<std::string> royaume;
+    royaume.insert(royaume.end(),BaseBoard.begin(),BaseBoard.end());
+    royaume.insert(royaume.end(),bonus.begin(),bonus.end());
+
+    int choix;
+
+    std::cout << "\n[1] Choisir les cartes du royaume\n";
+    std::cout << "[2] Utiliser un set pas defaut\n";
+    std::cout << "Votre choix > ";
+
+    while(true)
+    {
+        if(!(std::cin>>choix)){
+            std::cin.clear(); // Efface les erreurs
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignore les entrées incorrectes
+            std::cout << "Entree invalide, vous avez le choix en l'option 1 et 2 ! > ";
+            continue;
+        }
+        if(choix==1)
+        {
+            //creation du plateau de jeu
+            m_plateau = new Plateau(nbJoueurs);
+            std::vector<std::string> reserve=choisirDixElements(royaume);
+            m_plateau->built(reserve);
+            break;
+        }
+        if(choix==2)
+        {
+            //creation du plateau de jeu
+            m_plateau = new Plateau(nbJoueurs);
+            m_plateau->built();
+            break;
+        }
+        std::cout << "Entree invalide, vous avez le choix en l'option 1 et 2 ! > ";
+    }
+
+
+    std::cout << "\nPreparation du plateau...\n";
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000)); // Pause pour simuler le chargement
+
+    std::cout << "\n-- Les cartes du royaume sont pretes !!! --\n";
+
+    spaceV(2);
+    std::cout << "\n----------------- Resume de la partie -----------------\n";
+    std::cout << "Nombre de joueurs : " << nbJoueurs << std::endl;
+    std::cout << "Ordre des joueurs : ";
+    for (const auto& joueur : m_players) {
+        std::cout << joueur->getName() << " ";
+    }
+    std::cout << "\nCartes du royaume : ";
+    for (const auto& carte : m_plateau->getReserve()) {
+        if(auto k=dynamic_cast<KingdomCard*>(carte.second.getCard()))
+        {
+            std::cout << k->getNom() << " ";
+        }
+    }
+    std::cout << std::endl;
+
+    appuyerPourContinuer();
+
 
     std::cin.ignore();
-
-
 }
 //pour les test
 void Jeux::initGame(std::string const&nom1, std::string const&nom2)
@@ -97,8 +191,6 @@ void Jeux::initGame(std::string const&nom1, std::string const&nom2)
     m_players.push_back(new Player(nom2));
     m_plateau = new Plateau(2);
     m_plateau->built();
-
-
 }
 
 
@@ -145,6 +237,8 @@ void Jeux::endGame()
 }
 
 void Jeux::afficheClassement() const {
+
+    spaceV(2);
     std::vector<Player*> sortedPlayers = m_players; // Copie des joueurs pour ne pas modifier l'ordre original
 
     // Trie les joueurs par points décroissants
@@ -152,11 +246,11 @@ void Jeux::afficheClassement() const {
         return a->getPoints() > b->getPoints(); // Trie par points décroissants
     });
 
-    std::cout << "-----------------------CLASSEMENT-----------------------" << std::endl;
+    std::cout <<PURPLE<<spaceH(15)<< "-----------------------CLASSEMENT-----------------------" <<RESET<< std::endl;
 
     int rank = 1; // Classement initial
     for (auto player : sortedPlayers) {
-        std::cout <<std::setw(14) << rank << " - " << player->getName() << " (" << player->getPoints() << " points)" << std::endl;
+        std::cout <<spaceH(15) << rank << " - " << player->getName() << " (" << player->getPoints() << " points)" << std::endl;
         ++rank;
     }
 }
@@ -213,7 +307,7 @@ void Jeux::actionPhase(Player* player)
     {
         GameCommand::getInput(*this,ACTION,&exit);
     }
-    std::cout<<"Fin de la phase d'action"<<std::endl;
+    std::cout<<"Fin de la phase d'action, passage a la phase d'achat"<<std::endl;
     appuyerPourContinuer();
 
 }
@@ -227,7 +321,7 @@ void Jeux::buyPhase(Player* player)
     {
         GameCommand::getInput(*this,BUY,&exit);
     }
-    std::cout<<"Fin de la phase d'achat , c'est au tour de "<<m_players[(actifIndex + 1) % m_players.size()]->getName()<<std::endl;
+    std::cout<<"Fin de la phase d'achat, le prochain joueur est "<<m_players[(actifIndex + 1) % m_players.size()]->getName()<<std::endl;
     appuyerPourContinuer();
 
 }
@@ -235,15 +329,15 @@ void Jeux::phaseMessage(Phase phase)
 {
     if(phase==ACTION)
     {
-        std::cout << BLUE_TEXT << BLINK_TEXT
+        std::cout << BLUE << BLINK
                   << "Jouez des cartes actions (-> play [nomCarte] )"
-                  << RESET_TEXT << std::endl;
+                  << RESET << std::endl;
     }
     else if(phase==BUY)
     {
-        std::cout << BLUE_TEXT << BLINK_TEXT
+        std::cout << BLUE << BLINK
                  << "Achetez des cartes (-> buy [nomCarte] ou sell [nomCarte])"
-                 << RESET_TEXT << std::endl;
+                 << RESET << std::endl;
     }
     else
         std::cout<<"Phase inconnue"<<std::endl;
@@ -292,4 +386,43 @@ Player& Jeux::getActifPlayer() const
 size_t Jeux::getActifIndex() const
 {
     return actifIndex;
+}
+
+std::vector<std::string> choisirDixElements(const std::vector<std::string>& options) {
+    if (options.size() < 10) {
+        throw std::runtime_error("Le vecteur contient moins de 10 éléments. Impossible de choisir.");
+    }
+
+    std::vector<std::string> choix;
+    std::set<int> indicesChoisis; // Pour éviter les doublons
+    int choixUtilisateur = -1;
+
+    std::cout << "Veuillez choisir 10 elements parmi les cartes suivantes : \n";
+    for (size_t i = 0; i < options.size(); ++i) {
+        std::cout << "["<<i + 1 << "] " << options[i]<<std::endl ; // Affichage avec index (1-based)
+    }
+
+    while (choix.size() < 10) {
+        std::cout << "\nChoix " << choix.size() + 1 << " > ";
+        std::cin >> choixUtilisateur;
+        if (std::cin.fail()) {
+            std::cin.clear(); // Réinitialise l'état d'erreur
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignore la ligne courante
+            std::cout << "Entrée invalide. Veuillez entrer un numéro valide.\n";
+            continue;
+        }
+
+        // Ajuster l'index de 1-based à 0-based
+        choixUtilisateur -= 1;
+
+        if (choixUtilisateur < 0 || choixUtilisateur >= static_cast<int>(options.size())) {
+            std::cout << "Numéro invalide. Veuillez choisir un numéro entre 1 et " << options.size() << ".\n";
+        } else if (indicesChoisis.find(choixUtilisateur) != indicesChoisis.end()) {
+            std::cout << "Vous avez déjà choisi cet élément. Veuillez en choisir un autre.\n";
+        } else {
+            choix.push_back(options[choixUtilisateur]);
+            indicesChoisis.insert(choixUtilisateur);
+        }
+    }
+    return choix;
 }

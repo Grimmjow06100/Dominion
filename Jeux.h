@@ -23,7 +23,7 @@ class Jeux {
     void buyPhase(Player* player);
     void endTurn(Player* player);
     void endGame();
-
+    void afficheGuide() const;
     void afficheClassement() const;
 
 public:
@@ -44,7 +44,7 @@ public:
 
 };
 
-
+std::vector<std::string> choisirDixElements(const std::vector<std::string> &options);
 
 
 #endif //JEUX_H

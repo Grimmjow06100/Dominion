@@ -13,9 +13,13 @@
 /**
  * Constructeur de Player
  */
+
+int Player::defaultId=1;
+
 Player::Player(std::string const& name) : m_name(normalize(name)), m_actions(0), m_buys(0), m_coins(0), m_points(3)
-{
-}
+{}
+Player::Player():m_name(normalize("player"+std::to_string(defaultId))),m_actions(0), m_buys(0), m_coins(0), m_points(3){}
+
 
 Player::~Player() {
     for (auto* card : m_deck) {
@@ -185,8 +189,6 @@ bool Player::defausseFromHand(const std::string& cardName) {
     return false;
 }
 
-#include <iostream>
-
 void Player::info() const {
 
     std::cout << m_name << " " << m_points << " PV | "
@@ -222,14 +224,12 @@ bool Player::gainCard(const std::string& cardName, Plateau& p,int minCost,int ma
             if (auto* treasure = dynamic_cast<TreasureCard*>(card)) {
                 m_defausse.push_back(new TreasureCard(*treasure));
                 p.updateReserveByName(str, 1);
-
                 return true;
             }
             if (auto* victory = dynamic_cast<VictoryCard*>(card)) {
                 m_defausse.push_back(new VictoryCard(*victory));
                 AddPoint(victory->getVictory());
                 p.updateReserveByName(str, 1);
-
                 return true;
             }
         }
@@ -330,7 +330,7 @@ bool Player::moveCardFromDefausseToDeck(std::string const&cardName)
 }
 
 bool Player::stealCard(Card* card, std::vector<Card*>& fromCards) {
-    auto it = std::find(fromCards.begin(), fromCards.end(), card);
+    auto it = std::ranges::find(fromCards.begin(), fromCards.end(), card);
     if (it != fromCards.end()) {
         fromCards.erase(it); // Supprime la carte des cartes révélées
         m_defausse.push_back(card); // Ajoute à la défausse
@@ -339,15 +339,6 @@ bool Player::stealCard(Card* card, std::vector<Card*>& fromCards) {
     }
     std::cout << "La carte " << card->getNom() << " n'a pas pu être volee." << std::endl;
     return false;
-}
-
-Card *Player::findIndexCard(const std::vector<Card *> &vect, const std::string &name){
-    for(auto i : vect) {
-        if(i->getNom()==name) {
-            return i;
-        }
-    }
-    return nullptr;
 }
 
 void Player::defausseDeck() {
@@ -372,6 +363,26 @@ bool Player::trashCardFromHand(const std::string& cardName) {
     alert("cette carte n'est pas dans votre main ");
     return false;
 }
+
+bool Player::trashCardFromPlayed(std::string const& cardName)
+{
+    auto it = std::ranges::find_if(m_played.begin(), m_played.end(), [&cardName](const Card* card) {
+        return card->getNom() == cardName;
+    });
+    if (it != m_played.end()) {
+        if(auto *v=dynamic_cast<VictoryCard*> (*it))
+        {
+            AddPoint(-v->getVictory());
+        }
+        delete *it;
+        m_played.erase(it);
+        notif("la carte "+cardName+" a ete trashee");
+        return true;
+    }
+    alert("cette carte n'est pas dans votre main ");
+    return false;
+}
+
 
 bool Player::canPlayAction() {
 
