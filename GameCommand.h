@@ -17,86 +17,130 @@ class Player;
 class Jeux;
 
 /**
- * enum pour gerer les phases actuelles de la partie
+ * @brief Enumération représentant les différentes phases du jeu.
+ *
+ * Ces phases indiquent l'état actuel du jeu :
+ * - `ACTION` : Phase où les joueurs jouent des cartes Royaume.
+ * - `BUY` : Phase où les joueurs achètent des cartes.
+ * - `NONE` : Aucune phase spécifique (état par défaut).
  */
-enum Phase {ACTION,BUY,NONE};
+enum Phase { ACTION, BUY, NONE };
 
 /**
- * Classe permettant de gerer les interaction avec les utilisateur
+ * @brief Classe statique pour gérer les interactions entre les joueurs et le jeu.
+ *
+ * Cette classe regroupe des méthodes pour traiter les entrées clavier,
+ * gérer les commandes des joueurs, et faciliter la communication entre les joueurs
+ * et le moteur du jeu. Toutes les méthodes de cette classe sont statiques et ne nécessitent
+ * pas d'instanciation de `GameCommand`.
  */
 class GameCommand {
     /**
-     * Traite les entrees clavier "help" des joueurs
-     * @param nomCarte
-     * @param j
+     * @brief Gère la commande "help" pour fournir des informations à un joueur.
+     *
+     * Cette commande affiche des informations spécifiques à une carte, comme ses effets ou
+     * ses coûts, en fonction du jeu en cours.
+     *
+     * @param nomCarte Nom de la carte pour laquelle une aide est demandée.
+     * @param j Référence au jeu en cours.
      */
-    static void handleHelp(const std::string& nomCarte,  const Jeux& j);
+    static void handleHelp(const std::string& nomCarte, const Jeux& j);
 
     /**
-     * Traite les ventes de pieces des joueurs
-     * @param nomCarte
-     * @param j
-     * @param phase
+     * @brief Gère la commande "sell" pour vendre une carte ou des pièces.
+     *
+     * Cette méthode permet aux joueurs de vendre des cartes ou des pièces pendant une phase
+     * spécifique du jeu.
+     *
+     * @param nomCarte Nom de la carte ou pièce à vendre.
+     * @param j Référence au jeu en cours.
+     * @param phase Phase actuelle du jeu (`ACTION`, `BUY`, ou autre).
      */
-    static void handleSell(const std::string& nomCarte,  const Jeux& j, Phase phase);
+    static void handleSell(const std::string& nomCarte, const Jeux& j, Phase phase);
 
     /**
-     * Traite l'utilisation d'une carte royaume durant la phase action
-     * @param nomCarte
-     * @param j
-     * @param phase
+     * @brief Gère la commande "play" pour jouer une carte Royaume.
+     *
+     * Cette commande est utilisée pendant la phase ACTION. Elle permet à un joueur de jouer
+     * une carte Royaume pour déclencher son effet.
+     *
+     * @param nomCarte Nom de la carte à jouer.
+     * @param j Référence au jeu en cours.
+     * @param phase Phase actuelle du jeu (doit être `ACTION`).
      */
-    static void handlePlay(const std::string& nomCarte,  Jeux& j, Phase phase);
+    static void handlePlay(const std::string& nomCarte, Jeux& j, Phase phase);
 
     /**
-     * Traite l'achat d'une carte
-     * @param nomCarte
-     * @param j
-     * @param phase
+     * @brief Gère la commande "buy" pour acheter une carte.
+     *
+     * Pendant la phase BUY, cette commande permet au joueur d'acheter une carte
+     * disponible dans la réserve, si ses ressources le permettent.
+     *
+     * @param nomCarte Nom de la carte à acheter.
+     * @param j Référence au jeu en cours.
+     * @param phase Phase actuelle du jeu (doit être `BUY`).
      */
-    static void handleBuy(const std::string& nomCarte,  Jeux& j, Phase phase);
+    static void handleBuy(const std::string& nomCarte, Jeux& j, Phase phase);
 
     /**
-     * Traite les entrees clavier "info" du joueur sur le terminal
-     * @param j
+     * @brief Affiche les informations générales sur l'état du jeu.
+     *
+     * Cette commande est utilisée pour afficher des informations générales, comme
+     * le plateau, les cartes en jeu, ou les statistiques des joueurs.
+     *
+     * @param j Référence au jeu en cours.
      */
     static void handleInfo(const Jeux& j);
 
     /**
-     * Selectionne une carte :
-     * renvoie le nom de la carte qu'un joueur tape dans le clavier apres un pick
-     * @param nomCarte
-     * @param j
-     * @return
+     * @brief Gère la commande "pick" pour sélectionner une carte.
+     *
+     * Cette commande permet à un joueur de sélectionner une carte spécifique parmi
+     * celles proposées.
+     *
+     * @param nomCarte Nom de la carte à sélectionner.
+     * @param j Référence au jeu en cours.
+     * @return Nom de la carte sélectionnée, après traitement.
      */
-    static std::string handlePick(const std::string& nomCarte,  const Jeux& j);
+    static std::string handlePick(const std::string& nomCarte, const Jeux& j);
 
     /**
-     * Affiche un message dans le terminal
-     * @param message
+     * @brief Affiche un message générique dans le terminal.
+     *
+     * Cette méthode est utilisée pour afficher des messages informatifs ou des notifications
+     * aux joueurs.
+     *
+     * @param message Le message à afficher.
      */
     static void displayMessage(const std::string& message);
 
     /**
-     * Normalise la commande tape par le joueur dans le terminal
-     * @param input
-     * @return
+     * @brief Normalise une commande saisie par un joueur.
+     *
+     * Cette méthode transforme la commande saisie pour la rendre insensible à la casse
+     * et supprimer les espaces inutiles, afin de faciliter son traitement.
+     *
+     * @param input La commande brute saisie par le joueur.
+     * @return La commande normalisée.
      */
     static std::string normalizeCommand(const std::string& input);
 
 public:
     /**
-     * Permet de gerer les entree clavier de l'utilisateur
-     * @param j le jeu en cours
-     * @param phase la phase actuelle du jeu
-     * @param exitOption option pour quitter la phase du jeu
-     * @param cardNameOption pointeur de string qui va stocker le nom de la carte tape par le joueur
-     * @param otherInput
+     * @brief Gère les entrées clavier du joueur.
+     *
+     * Cette méthode est le point d'entrée principal pour traiter les commandes des joueurs.
+     * Elle gère les phases spécifiques du jeu (ACTION, BUY) et permet de capturer
+     * les intentions des joueurs.
+     *
+     * @param j Référence au jeu en cours.
+     * @param phase Phase actuelle du jeu (`ACTION`, `BUY`, ou `NONE`).
+     * @param exitOption Pointeur optionnel pour indiquer si le joueur souhaite quitter la phase.
+     * @param cardNameOption Pointeur optionnel pour récupérer le nom de la carte saisie.
+     * @param otherInput Pointeur optionnel pour capturer d'autres entrées utilisateur.
      */
-    static void getInput( Jeux& j, Phase phase=NONE ,bool* exitOption =nullptr,std::string* cardNameOption=nullptr,std::string* otherInput=nullptr);
+    static void getInput(Jeux& j, Phase phase = NONE, bool* exitOption = nullptr,
+                         std::string* cardNameOption = nullptr, std::string* otherInput = nullptr);
 };
 
-
-
-
-#endif //GAMECOMMAND_H
+#endif // GAMECOMMAND_H
