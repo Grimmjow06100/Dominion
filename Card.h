@@ -78,7 +78,7 @@ void notif(std::string const& message);
 void alert(std::string const& message);
 
 /**
- * Permet a l'utiliateur d'appuyer sur une touche avant de continuer
+ * Permet a l'utiliateur d'appuyer sur une touche avant de continuer.
  */
 void appuyerPourContinuer();
 
